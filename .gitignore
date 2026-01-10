@@ -1,0 +1,26 @@
+# --- 🔐 Sécurité & Secrets (CRITIQUE) ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- 📦 Dépendances Racine (ESLint/Prettier) ---
+node_modules/
+package-lock.json  # Optionnel : certains préfèrent le garder, d'autres non si géré dans les sous-projets
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- 💻 IDE & Système ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- 🐳 Docker (Volumes & Logs) ---
+postgres_data/
+pgadmin_data/
+docker-compose.override.yml

@@ -1,0 +1,44 @@
+# --- 📦 Dépendances & Node ---
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# --- ⚡ Cache & Angular Specific ---
+/.angular/cache
+.sass-cache/
+/connect.lock
+
+# --- 🏗️ Build & Distribution ---
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# --- 🧪 Tests & Couverture ---
+/coverage
+karma.conf.js
+testem.log
+/libpeerconnection.log
+/__screenshots__/
+
+# --- 💻 IDE Spécifique (VS Code, Eclipse, IntelliJ) ---
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+.project
+.settings/
+.classpath
+*.launch
+*.sublime-workspace
+
+# --- 📜 Logs & Misc ---
+*.log
+/typings
+
+# --- Système ---
+.DS_Store
+Thumbs.db

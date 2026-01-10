@@ -1,0 +1,63 @@
+services:
+  # --- Base de données PostgreSQL ---
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432" # Accessible sur localhost:5434
+
+  # --- Interface PgAdmin ---
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+
+  # --- API NestJS ---
+  api:
+    build:
+      context: ./backend/pc-tarn-logistique-api
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/pc-tarn-logistique-api:/usr/src/app
+      - /usr/src/app/node_modules
+      # Pour éviter l'erreur EBUSY (Windows) on isole le dossier de compilation
+      # pour qu'il ne soit PAS partagé avec Windows
+      - /usr/src/app/dist
+    ports:
+      - "3000:3000"
+    environment:
+      # Injection de la variable d'environnement pour que NestJS se connecte à 'db'
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - db
+      # Cette commande force NestJS à surveiller les fichiers (polling)
+      # Nécessaire pour que les changements (Hot reload) soient détectés dans Docker
+    command: npm run start:dev -- --watch --poll
+
+  # --- Frontend Angular ---
+  web:
+    build:
+      context: ./frontend/pc-tarn-logistique-web
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/pc-tarn-logistique-web:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "4200:4200"
+      # --- IMPORTANT POUR LE HOT RELOAD ANGULAR ---
+    command: npm start -- --host 0.0.0.0 --poll 2000
+
+volumes:
+  postgres_data:
+
