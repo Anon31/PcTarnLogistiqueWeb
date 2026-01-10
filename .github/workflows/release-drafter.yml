@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - develop
   pull_request:
     types: [opened, reopened, synchronize, edited]
 
@@ -18,5 +19,7 @@ jobs:
       - uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter.yml
+          # Cela désactive la création de release si on est dans une PR
+          disable-releaser: ${{ github.event_name == 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
