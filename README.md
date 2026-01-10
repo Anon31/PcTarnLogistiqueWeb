@@ -23,13 +23,14 @@ Ce projet est conçu comme un **Monorepo** regroupant l'ensemble de la stack tec
 | **Base de données** | ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white) | Hébergée via Supabase/Docker. |
 | **CI/CD** | ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?logo=github-actions&logoColor=white) | Intégration et déploiement continus. |
 
-## 🚀 Installation et Démarrage
+## 🚀 Installation et Démarrage  (Mettre à jour)
 
 ### Prérequis
-- Node.js (v20+)
-- Docker (pour la BDD locale)
+- Node.js (v24.0.0)
+- NPM (v11.7.0)
+- Docker Desktop (Dernière version 4.55.0)
 
-### Lancer le projet /!\ Mettre à jour
+### Lancer le projet
 
 ```bash
 # Cloner le dépôt
