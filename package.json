@@ -1,26 +1,26 @@
 {
-  "name": "pc-tarn-logistique",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "angular-eslint": "^21.1.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-unused-imports": "^4.3.0",
-    "globals": "^16.5.0",
-    "husky": "^9.1.7",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.1"
-  }
+    "name": "pc-tarn-logistique",
+    "version": "1.0.0",
+    "description": "Plateforme de gestion logistique centralisée pour la Protection Civile du Tarn.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky"
+    },
+    "keywords": [],
+    "author": "ESN81",
+    "license": "ISC",
+    "type": "commonjs",
+    "devDependencies": {
+        "@eslint/js": "^9.39.2",
+        "angular-eslint": "^21.1.0",
+        "eslint": "^9.39.2",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-unused-imports": "^4.3.0",
+        "globals": "^16.5.0",
+        "husky": "^9.1.7",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.50.1"
+    }
 }

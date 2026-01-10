@@ -11,9 +11,9 @@ fi
 valid_branch_regex="^(feat|fix|hotfix|docs|chore|refactor|test)\/[a-z0-9-]+(\/[a-z0-9-]+)?$"
 
 if ! echo "$branch_name" | grep -Eq "$valid_branch_regex"; then
-  echo "❌ \033[31mErreur : Le nom de la branche '$branch_name' ne respecte pas la convention.\033[0m"
+  echo "❌ Erreur : Le nom de la branche '$branch_name' ne respecte pas la convention."
   echo "👉 Format attendu : type/contexte/description-courte"
-  echo "👉 Exemple : feature/auth/login-page"
+  echo "👉 Exemple : feature/front/login-page"
   echo "🚫 Commit bloqué. Renommez votre branche avec : git branch -m nouveau-nom"
   exit 1
 fi
