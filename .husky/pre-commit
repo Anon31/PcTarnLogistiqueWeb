@@ -7,8 +7,8 @@ if [ "$branch_name" = "master" ] || [ "$branch_name" = "develop" ]; then
 fi
 
 # Regex de validation : type/scope/description ou type/description
-# Types autorisés : feat, fix, hotfix, docs, chore, refactor, test
-valid_branch_regex="^(feat|fix|hotfix|docs|chore|refactor|test)\/[a-z0-9-]+(\/[a-z0-9-]+)?$"
+# Types autorisés : feat, fix, hotfix, docs, chore, refactor, test, cicd
+valid_branch_regex="^(feat|fix|hotfix|docs|chore|refactor|test|cicd)\/[a-z0-9-]+(\/[a-z0-9-]+)?$"
 
 if ! echo "$branch_name" | grep -Eq "$valid_branch_regex"; then
   echo "❌ Erreur : Le nom de la branche '$branch_name' ne respecte pas la convention."

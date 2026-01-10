@@ -18,7 +18,7 @@ Ce projet est conçu comme un **Monorepo** regroupant l'ensemble de la stack tec
 
 | Couche              | Technologie                                                                                                | Description                                       |
 |:--------------------|:-----------------------------------------------------------------------------------------------------------|:--------------------------------------------------|
-| **Frontend**        | ![Angular](https://img.shields.io/badge/-Angular-DD0031?logo=angular&logoColor=white)                      | Application PWA (Angular v18+), Angular Material. |
+| **Frontend**        | ![Angular](https://img.shields.io/badge/-Angular-DD0031?logo=angular&logoColor=white)                      | Application PWA (Angular v21+), Angular Material. |
 | **Backend**         | ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?logo=nestjs&logoColor=white)                         | API RESTful architecture modulaire.               |
 | **Base de données** | ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?logo=postgresql&logoColor=white)             | Hébergée via Supabase/Docker.                     |
 | **CI/CD**           | ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?logo=github-actions&logoColor=white) | Intégration et déploiement continus.              |
@@ -34,6 +34,7 @@ Ce projet est conçu comme un **Monorepo** regroupant l'ensemble de la stack tec
 | **`chore`**    | Maintenance technique (config, build, CI/CD) sans impact métier. | `chore/docker/update-node-version` |
 | **`refactor`** | Réécriture de code sans changement de fonctionnalité.            | `refactor/front/auth-service`      |
 | **`test`**     | Ajout ou modification de tests.                                  | `test/e2e/login-flow`              |
+| **`cicd`**     | Maintenance GitHub, Docker, déploiement (compose, CI/CD).        | `cicd/docker/compose`              |
 
 ## 🧪 **Convention des Commits (Standard "[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)")**
 
@@ -50,6 +51,7 @@ Structure : `type(scope): description`
 | **refactor** | Amélioration code       | `refactor(db): optimisation de la requête des consommables` |
 | **test**     | Tests unitaires/E2E     | `test(auth): ajout des tests de validation de rôle`         |
 | **chore**    | Maintenance/Config      | `chore(front): mise à jour de Prisma en v5.x`               |
+| **cicd**     | Déploiement/Docker      | `cicd(docker): mise à jour du compose`                      |
 
 ## 🚀 Installation et Démarrage  (Mettre à jour)
 
