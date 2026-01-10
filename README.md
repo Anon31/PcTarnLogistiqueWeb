@@ -35,6 +35,7 @@ Ce projet est conçu comme un **Monorepo** regroupant l'ensemble de la stack tec
 | **`refactor`** | Réécriture de code sans changement de fonctionnalité.            | `refactor/front/auth-service`      |
 | **`test`**     | Ajout ou modification de tests.                                  | `test/e2e/login-flow`              |
 | **`cicd`**     | Maintenance GitHub, Docker, déploiement (compose, CI/CD).        | `cicd/docker/compose`              |
+| **`style`**    | Amélioration du style.                                           | `style/login/forms`                |
 
 ## 🧪 **Convention des Commits (Standard "[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)")**
 
