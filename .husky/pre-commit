@@ -1,19 +1,36 @@
 #!/bin/sh
-branch_name=$(git symbolic-ref --short HEAD)
 
-# Liste des branches ignorées (ex: main, develop)
-if [ "$branch_name" = "master" ] || [ "$branch_name" = "develop" ]; then
+echo "------------------------------------------------"
+echo "🤖 HUSKY : Vérification du nom de la branche..."
+echo "------------------------------------------------"
+
+# Récupérer le nom de la branche
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+echo "Branche actuelle : '$branch_name'"
+
+# Liste des branches ignorées
+if [ "$branch_name" = "master" ] || [ "$branch_name" = "main" ] || [ "$branch_name" = "develop" ]; then
+  echo "✅ Branche protégée/principale. Vérification ignorée."
   exit 0
 fi
 
-# Regex de validation : type/scope/description ou type/description
-# Types autorisés : feat, fix, hotfix, docs, chore, style, refactor, test, cicd
+# Regex de validation
 valid_branch_regex="^(feat|fix|hotfix|docs|chore|style|refactor|test|cicd)\/[a-z0-9-]+(\/[a-z0-9-]+)?$"
 
 if ! echo "$branch_name" | grep -Eq "$valid_branch_regex"; then
-  echo "❌ Erreur : Le nom de la branche '$branch_name' ne respecte pas la convention."
-  echo "👉 Format attendu : type/contexte/description-courte"
-  echo "👉 Exemple : feature/front/login-page"
-  echo "🚫 Commit bloqué. Renommez votre branche avec : git branch -m nouveau-nom"
+  echo "❌ ERREUR : Nom de branche invalide !"
+  echo "------------------------------------------------"
+  echo "Le nom '$branch_name' ne respecte pas la convention."
+  echo "Format attendu : type/contexte/description-courte"
+  echo "Exemples valides :"
+  echo "  - feat/front/login-page"
+  echo "  - fix/api/user-controller"
+  echo "  - chore/docker/setup"
+  echo "------------------------------------------------"
+  echo "🚫 COMMIT BLOQUÉ."
   exit 1
 fi
+
+echo "✅ Nom de branche valide. Commit autorisé."
+exit 0
