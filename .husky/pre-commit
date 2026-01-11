@@ -1,8 +1,15 @@
 #!/bin/sh
-branch_name=$(git symbolic-ref --short HEAD)
 
-# Liste des branches ignorées (ex: main, develop)
-if [ "$branch_name" = "master" ] || [ "$branch_name" = "develop" ]; then
+# Récupération plus robuste du nom de la branche
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+# Si on est en mode "HEAD détachée" (cas rare mais possible), on ignore la vérif
+if [ "$branch_name" = "HEAD" ]; then
+  exit 0
+fi
+
+# Liste des branches ignorées (ex: master, main, develop)
+if [ "$branch_name" = "master" ] || [ "$branch_name" = "main" ] || [ "$branch_name" = "develop" ]; then
   exit 0
 fi
 
@@ -13,7 +20,7 @@ valid_branch_regex="^(feat|fix|hotfix|docs|chore|style|refactor|test|cicd)\/[a-z
 if ! echo "$branch_name" | grep -Eq "$valid_branch_regex"; then
   echo "❌ Erreur : Le nom de la branche '$branch_name' ne respecte pas la convention."
   echo "👉 Format attendu : type/contexte/description-courte"
-  echo "👉 Exemple : feature/front/login-page"
+  echo "👉 Exemple : feat/front/login-page"
   echo "🚫 Commit bloqué. Renommez votre branche avec : git branch -m nouveau-nom"
   exit 1
 fi
