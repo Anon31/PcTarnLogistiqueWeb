@@ -1,12 +1,12 @@
+import { ToggleDarkMode } from './shared/components/toggle-dark-mode/toggle-dark-mode';
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { z } from 'zod';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet],
+    imports: [ButtonModule, ToggleDarkMode],
     templateUrl: './app.html',
-    styleUrl: './app.scss',
+    styleUrl: './app.css',
 })
 export class App {
     protected readonly title = signal('pc-tarn-logistique-web');

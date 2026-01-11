@@ -1,0 +1,32 @@
+html, body {
+    font-family: 'custom-font', sans-serif;
+    height: 100%;
+    min-height: 100vh;
+    padding: 0;
+    /* Par défaut (Light) */
+    background-color: var(--surface-ground);
+    color: var(--text-main);
+}
+
+.dark-mode body {
+    /* On force la couleur de fond pour le mode sombre */
+    background-color: var(--primary-800) !important;
+    color: #ffffff;
+}
+
+@font-face {
+    font-family: 'custom-font';
+    src: url('../../assets/fonts/Poppins-Light.ttf') format('truetype');
+}
+
+/*body::-webkit-scrollbar {*/
+/*    background-color: rgb(49, 46, 51);*/
+/*    width: 0.75rem;*/
+/*}*/
+
+/*body::-webkit-scrollbar-thumb {*/
+/*    background-color: var(--p-primary-color);*/
+/*    border-radius: 9999px;*/
+/*    border: 2px solid rgb(49, 46, 51);*/
+/*}*/
+
