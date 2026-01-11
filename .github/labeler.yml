@@ -1,0 +1,24 @@
+feature:
+  - '^feat(\([^)]+\))?:'
+
+fix:
+  - '^fix(\([^)]+\))?:'
+
+documentation:
+  - '^docs(\([^)]+\))?:'
+
+style:
+  - '^style(\([^)]+\))?:'
+
+refactor:
+  - '^refactor(\([^)]+\))?:'
+
+test:
+  - '^test(\([^)]+\))?:'
+
+chore:
+  - '^chore(\([^)]+\))?:'
+
+cicd:
+  - '^cicd(\([^)]+\))?:'
+  - '^ci(\([^)]+\))?:'
