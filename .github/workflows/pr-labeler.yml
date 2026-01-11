@@ -6,12 +6,12 @@ on:
 
 permissions:
   pull-requests: write
-  contents: read
 
 jobs:
   label:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v5
+      - uses: TimonWong/labeler-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/pr-labeler.yml
