@@ -18,6 +18,8 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, pc-tarn-logistique-web');
+    expect(compiled.querySelector('h1')?.textContent).toContain(
+        '🌍 Welcome to the Tarn Civil Protection Angular web application ! 🚀 ',
+    );
   });
 });

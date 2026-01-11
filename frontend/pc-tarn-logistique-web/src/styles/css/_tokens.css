@@ -1,0 +1,43 @@
+:root {
+    /* --- 🔵 COULEUR PRIMAIRE (Bleu PC) --- */
+    /* Nuances générées pour les états (hover, focus) */
+    --primary-50: #e6f0ff;
+    --primary-100: #b3d1ff;
+    --primary-200: #80b3ff;
+    --primary-300: #4d94ff;
+    --primary-400: #1a75ff;
+    --primary-500: #004080; /* 📍 BLEU OFFICIEL */
+    --primary-600: #00366d;
+    --primary-700: #002b59;
+    --primary-800: #002146;
+    --primary-900: #001633;
+    --primary-950: #000b1a;
+
+    /* --- 🟠 COULEUR SECONDAIRE (Orange PC) --- */
+    /* Palette étendue générée à partir de #F08700 */
+    --secondary-50: #fff8f1;  /* Très clair (fonds) */
+    --secondary-100: #ffebd4;
+    --secondary-200: #ffd29a;
+    --secondary-300: #ffb660;
+    --secondary-400: #ff9d2e;
+    --secondary-500: #F08700; /* 📍 ORANGE OFFICIEL */
+    --secondary-600: #d67000; /* Hover */
+    --secondary-700: #aa5300;
+    --secondary-800: #853e00;
+    --secondary-900: #622d00;
+    --secondary-950: #3d1a00; /* Très foncé (texte sur fond orange) */
+
+    /* --- 🌫️ SURFACES (Fonds) --- */
+    --surface-ground: #ffffff;
+    --surface-card: #ffffff;
+    --surface-border: #e2e8f0;
+
+    /* --- ✒️ TEXTE --- */
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+
+    /* --- 🔗 MAPPING PRIMENG --- */
+    /* On force PrimeNG à utiliser nos variables */
+    --primary-color: var(--primary-500);
+    --primary-color-text: #ffffff;
+}
