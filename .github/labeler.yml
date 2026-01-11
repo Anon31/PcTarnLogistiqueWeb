@@ -1,24 +1,32 @@
 feature:
-  - '^feat(\([^)]+\))?:'
+  - title:
+      - '^feat(\([^)]+\))?:'
 
 fix:
-  - '^fix(\([^)]+\))?:'
+  - title:
+      - '^fix(\([^)]+\))?:'
 
 documentation:
-  - '^docs(\([^)]+\))?:'
+  - title:
+      - '^docs(\([^)]+\))?:'
 
 style:
-  - '^style(\([^)]+\))?:'
+  - title:
+      - '^style(\([^)]+\))?:'
 
 refactor:
-  - '^refactor(\([^)]+\))?:'
+  - title:
+      - '^refactor(\([^)]+\))?:'
 
 test:
-  - '^test(\([^)]+\))?:'
+  - title:
+      - '^test(\([^)]+\))?:'
 
 chore:
-  - '^chore(\([^)]+\))?:'
+  - title:
+      - '^chore(\([^)]+\))?:'
 
 cicd:
-  - '^cicd(\([^)]+\))?:'
-  - '^ci(\([^)]+\))?:'
+  - title:
+      - '^cicd(\([^)]+\))?:'
+      - '^ci(\([^)]+\))?:'
