@@ -1,11 +1,10 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal, inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { inject } from 'vitest';
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { IUser } from '../../../../../../shared/interfaces/user';
 import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
@@ -16,6 +15,10 @@ export class Auth {
     // Signal to hold the connected user information
     private userConnectedSignal = signal<IUser>({} as IUser);
     readonly userConnected = computed(() => this.userConnectedSignal());
+
+    // Nouvelle méthode utilisant HttpClient directement (A voir..)
+    // private user$ = this.http.get<User>('/api/me');
+    // readonly currentUser = toSignal(this.user$);
 
     jwtToken: string = '';
     loggedUser: string = '';
@@ -32,14 +35,6 @@ export class Auth {
     registerUser(user: Partial<IUser>) {
         return this.httpClient.post<IUser>(`${environment.API_URL}/register`, user).pipe(
             tap((user: IUser) => {
-                this.userConnectedSignal.set(user);
-            }),
-        );
-    }
-
-    registerUserConfirmationEmail(code: string): Observable<IUser> {
-        return this.httpClient.get<IUser>(`${environment.API_URL}/verifyEmail/${code}`).pipe(
-            tap((user: any) => {
                 this.userConnectedSignal.set(user);
             }),
         );
