@@ -1,7 +1,7 @@
 import { computed, Injectable, signal, inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { IUser } from '../../../../../../shared/interfaces/user';
+import { IUser } from '../../shared/interfaces/user';
 import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
