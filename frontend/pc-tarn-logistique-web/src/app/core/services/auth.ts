@@ -49,7 +49,7 @@ export class Auth {
         return this.httpClient
             .post<IUser>(`${environment.API_URL}/login`, credential, { observe: 'response' })
             .pipe(
-                tap((response) => {
+                tap((response: any) => {
                     const jwtToken = response.headers.get('Authorization')!;
                     this.saveToken(jwtToken);
                 }),
