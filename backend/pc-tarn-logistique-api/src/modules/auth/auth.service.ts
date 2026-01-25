@@ -11,6 +11,10 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
+    /**
+     * Connexion d'un utilisateur
+     * @param loginDto
+     */
     async login(loginDto: LoginDto) {
         const { email, password } = loginDto;
 
@@ -34,7 +38,7 @@ export class AuthService {
         // 4. Retourner Token + Info User + Message
         return {
             access_token: await this.jwtService.signAsync(payload),
-            message: 'Connexion réussie',
+            message: 'Connexion réussie 🎯',
             user: {
                 id: user.id,
                 email: user.email,
