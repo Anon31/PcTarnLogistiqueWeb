@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
             envFilePath: '../../.env', // Chemin vers le .env racine du monorepo
         }),
         UsersModule,
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],
