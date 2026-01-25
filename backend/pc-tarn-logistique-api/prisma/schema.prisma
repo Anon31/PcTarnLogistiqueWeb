@@ -3,8 +3,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  // "linux-musl-openssl-3.0.x" est nécessaire pour l'image Docker Alpine
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -12,11 +11,35 @@ datasource db {
   provider = "postgresql"
 }
 
-// --- Exemple de modèle ---
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      String   @default("BENEVOLE")
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String    @unique
+  password  String // Sera hashé dans le UsersService
+  phone     String? // Ajouté
+  birthDate DateTime? // Ajouté
+  enabled   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  // Relations
+  address   Address?
+  roles     Role[]
+}
+
+model Address {
+  id      Int    @id @default(autoincrement())
+  number  Int
+  street  String
+  city    String
+  zipCode String
+  state   String
+  userId  Int    @unique
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique // Correspond au 'role' de l'interface IRole
+  users User[]
 }
