@@ -41,10 +41,18 @@ export class CreateUserDto {
     @IsNotEmpty()
     lastname: string;
 
+    /**
+     * L'adresse email de l'utilisateur (doit être unique)
+     * @example 'jean.dupont@email.com'
+     */
     @IsEmail({}, { message: "Format d'email invalide" })
     @IsNotEmpty()
     email: string;
 
+    /**
+     * Le mot de passe de l'utilisateur (au moins 8 caractères)
+     * @example 'P@ssw0rd123'
+     */
     @IsString()
     @IsNotEmpty()
     @MinLength(8, { message: 'Mot de passe trop court' })
@@ -54,7 +62,11 @@ export class CreateUserDto {
     @IsOptional()
     phone?: string;
 
-    @IsDateString() // Valide le format ISO 8601 (envoyé par Angular)
+    /**
+     * La date de naissance de l'utilisateur au format ISO 8601 (YYYY-MM-DD)
+     * @example '1990-05-15'
+     */
+    @IsDateString()
     @IsOptional()
     birthDate?: string;
 
