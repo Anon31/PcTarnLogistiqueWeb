@@ -1,0 +1,4 @@
+.custom-spinner .p-progressspinner-circle {
+    stroke: var(--secondary-300) !important;
+    stroke-width: 5;
+}

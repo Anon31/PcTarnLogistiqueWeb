@@ -1,8 +1,9 @@
 @if (loadingService.loading()) {
     <div class="flex justify-center items-center fixed inset-0 z-50">
         <p-progress-spinner
+            class="custom-spinner"
             aria-label="Loading"
-            animationDuration=".5s"
+            fill="transparent"
             [style]="{ width: '60px', height: '60px' }"
         />
     </div>

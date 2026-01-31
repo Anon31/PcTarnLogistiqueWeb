@@ -1,0 +1,37 @@
+<form [formGroup]="form" (ngSubmit)="submittingForm()" class="w-full flex flex-col space-y-6">
+    <!-- Email -->
+    <p-floatlabel variant="in" pStyleClass="w-full">
+        <input pInputText id="email" formControlName="email" class="w-full" />
+        <label for="email">Email professionnel</label>
+    </p-floatlabel>
+    <!-- Password -->
+    <p-floatlabel variant="in" pStyleClass="w-full">
+        <input pInputText id="password" type="password" formControlName="password" class="w-full" />
+        <label for="password">Mot de passe</label>
+    </p-floatlabel>
+    <!-- Mot de passe oublié -->
+    <div class="flex justify-end">
+        <a
+            class="text-sm font-medium text-surface-500 dark:text-surface-600 hover:underline cursor-pointer transition-colors"
+        >
+            Mot de passe oublié ?
+        </a>
+    </div>
+
+    <!-- Bouton Submit -->
+    <p-button
+        label="Se connecter"
+        type="submit"
+        styleClass="w-full py-3 font-semibold"
+        icon="pi pi-sign-in"
+        iconPos="right"
+        [loading]="false"
+    >
+    </p-button>
+
+    <!-- Lien Inscription -->
+    <div class="text-center mt-4 text-sm text-surface-500">
+        Pas encore de compte ?
+        <a class="text-primary-500 font-medium hover:underline cursor-pointer">Créer une demande</a>
+    </div>
+</form>

@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     registerUser(user: Partial<IUser>) {
-        return this.httpClient.post<IUser>(`${environment.API_URL}/register`, user).pipe(
+        return this.httpClient.post<IUser>(`${environment.API_URL}/users`, user).pipe(
             tap((user: IUser) => {
                 this.userConnectedSignal.set(user);
             }),
@@ -42,7 +42,7 @@ export class AuthService {
 
     login(credential: Partial<IUser>): Observable<HttpResponse<IUser>> {
         return this.httpClient
-            .post<IUser>(`${environment.API_URL}/login`, credential, { observe: 'response' })
+            .post<IUser>(`${environment.API_URL}/auth/login`, credential, { observe: 'response' })
             .pipe(
                 tap((response: any) => {
                     const jwtToken = response.headers.get('Authorization')!;

@@ -1,5 +1,5 @@
-import { Routes } from '@angular/router';
 import { MainLayout } from './main-layout/main-layout';
+import { Routes } from '@angular/router';
 
 export const mainLayoutRoutes: Routes = [
     {
@@ -12,11 +12,6 @@ export const mainLayoutRoutes: Routes = [
                 data: {},
                 loadComponent: () => import('./../pages/home/home').then((m) => m.Home),
             },
-            // {
-            //     path: 'administration',
-            //     title: 'Administration',
-            //     children: adminRoutes,
-            // },
         ],
     },
 ];

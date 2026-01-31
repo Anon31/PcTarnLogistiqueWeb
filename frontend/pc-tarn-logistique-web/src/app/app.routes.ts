@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
-import { Login } from './views/pages/login/login';
 import { PageNotFound } from './shared/components/page-not-found/page-not-found';
+import { Login } from './views/pages/login/login';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {

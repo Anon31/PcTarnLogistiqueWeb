@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { LoadingService } from '../../../core/services/loading-service';
+import { LoadingService } from '../../../core/services/loading.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { Component, inject } from '@angular/core';
 
 @Component({
     selector: 'app-loading-spinner',

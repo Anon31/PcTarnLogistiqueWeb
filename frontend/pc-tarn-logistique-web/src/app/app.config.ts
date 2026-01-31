@@ -6,6 +6,8 @@ import { CustomTheme } from '../styles/themes/custom-theme';
 import { providePrimeNG } from 'primeng/config';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
+import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -21,5 +23,7 @@ export const appConfig: ApplicationConfig = {
                 },
             },
         }),
+        MessageService,
+        DialogService,
     ],
 };
