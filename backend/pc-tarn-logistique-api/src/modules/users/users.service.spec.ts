@@ -44,7 +44,7 @@ describe('UsersService', () => {
                 updatedAt: new Date(),
                 enabled: true,
                 phone: null,
-                birthDate: null,
+                birthdate: null,
             });
 
             // ACTION

@@ -25,7 +25,7 @@ export class CreateAddressDto {
 
     @IsString()
     @IsNotEmpty()
-    zipCode: string;
+    zipcode: string;
 
     @IsString()
     @IsNotEmpty()
@@ -68,7 +68,7 @@ export class CreateUserDto {
      */
     @IsDateString()
     @IsOptional()
-    birthDate?: string;
+    birthdate?: string;
 
     // Optionnel : Permet de créer l'adresse en même temps
     @IsOptional()

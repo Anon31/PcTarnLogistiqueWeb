@@ -8,7 +8,7 @@ export interface IUser {
     email: string;
     password: string;
     phone: string;
-    birthDate: Date;
+    birthdate: Date;
     createdAt: Date;
     updatedAt: Date;
     enabled: boolean;

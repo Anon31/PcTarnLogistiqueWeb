@@ -15,7 +15,7 @@ export class UsersService {
 
     // --- CREATE ---
     async create(dto: CreateUserDto) {
-        const { email, password, address, birthDate, ...rest } = dto;
+        const { email, password, address, birthdate, ...rest } = dto;
 
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -26,7 +26,7 @@ export class UsersService {
                     ...rest,
                     email,
                     password: hashedPassword,
-                    birthDate: birthDate ? new Date(birthDate) : undefined,
+                    birthdate: birthdate ? new Date(birthdate) : undefined,
                     enabled: true,
                     roles: {
                         connectOrCreate: {
@@ -78,7 +78,7 @@ export class UsersService {
         // Vérifier si l'utilisateur existe
         await this.findOne(id);
 
-        const { password, address, birthDate, ...rest } = dto;
+        const { password, address, birthdate, ...rest } = dto;
         const dataToUpdate: any = { ...rest };
 
         // Si un mot de passe est fourni, on le hache
@@ -88,8 +88,8 @@ export class UsersService {
         }
 
         // Gestion de la date
-        if (birthDate) {
-            dataToUpdate.birthDate = new Date(birthDate);
+        if (birthdate) {
+            dataToUpdate.birthdate = new Date(birthdate);
         }
 
         // Gestion de l'adresse (Upsert : Met à jour ou Crée si n'existe pas)

@@ -2,6 +2,6 @@ export interface IAddress {
     number: number;
     street: string;
     city: string;
-    zipCode: string;
+    zipcode: string;
     state: string;
 }

@@ -9,7 +9,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 @Injectable({
     providedIn: 'root',
 })
-export class Auth {
+export class AuthService {
     isAuthenticated = signal<boolean>(false);
     isAdmin = signal<boolean>(false);
     // Signal to hold the connected user information
