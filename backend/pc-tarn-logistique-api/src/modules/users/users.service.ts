@@ -1,9 +1,4 @@
-import {
-    Injectable,
-    ConflictException,
-    InternalServerErrorException,
-    NotFoundException,
-} from '@nestjs/common';
+import { Injectable, ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -15,10 +10,17 @@ export class UsersService {
 
     // --- CREATE ---
     async create(dto: CreateUserDto) {
-        const { email, password, address, birthdate, ...rest } = dto;
+        // 1. Extraire 'roles' du DTO pour qu'il ne traîne pas dans 'rest'
+        const { email, password, address, birthdate, roles, ...rest } = dto;
 
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
+
+        // 2. Déterminer le rôle à attribuer
+        // Si 'roles' est fourni dans le payload (ex : "ADMIN"), on l'utilise.
+        // Sinon, on applique "BÉNÉVOLE" par défaut.
+        // Note : 'roles' est un string dans CreateUserDto.
+        const roleToAssign = roles ? roles : 'BENEVOLE';
 
         try {
             const newUser = await this.prisma.user.create({
@@ -28,10 +30,11 @@ export class UsersService {
                     password: hashedPassword,
                     birthdate: birthdate ? new Date(birthdate) : undefined,
                     enabled: true,
+                    // 3. Utiliser la variable dynamique
                     roles: {
                         connectOrCreate: {
-                            where: { name: 'BENEVOLE' },
-                            create: { name: 'BENEVOLE' },
+                            where: { name: roleToAssign },
+                            create: { name: roleToAssign },
                         },
                     },
                     address: address ? { create: { ...address } } : undefined,
@@ -43,6 +46,7 @@ export class UsersService {
             return result;
         } catch (error) {
             if (error.code === 'P2002') throw new ConflictException('Email déjà utilisé');
+            console.error(error); // Ajoute un log pour voir les autres erreurs
             throw new InternalServerErrorException('Erreur création utilisateur');
         }
     }

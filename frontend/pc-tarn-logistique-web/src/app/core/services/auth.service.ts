@@ -1,52 +1,78 @@
 import { computed, Injectable, signal, inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { IUser } from '../../shared/interfaces/user';
 import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { IAuthUser, ILoginDto, ILoginPayload } from '../../shared/interfaces/login';
+import { IUserDto, IUserPayload } from '../../shared/interfaces/user';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
-    isAuthenticated = signal<boolean>(false);
-    isAdmin = signal<boolean>(false);
-    // Signal to hold the connected user information
-    private userConnectedSignal = signal<IUser>({} as IUser);
-    readonly userConnected = computed(() => this.userConnectedSignal());
-
-    // Nouvelle méthode utilisant HttpClient directement (A voir..)
-    // private user$ = this.http.get<User>('/api/me');
-    // readonly currentUser = toSignal(this.user$);
-
-    jwtToken: string = '';
-    loggedUser: string = '';
-    roles: string[] = [];
-
     private jwtHelperService = new JwtHelperService();
     private httpClient = inject(HttpClient);
     private router = inject(Router);
+
+    // --- STATE (SIGNALS) ---
+    // Le token est la source de vérité pour l'état de connexion
+    private tokenSignal = signal<string | null>(null);
+
+    // On type avec IAuthUser (l'utilisateur connecté) ou null
+    private userConnectedSignal = signal<IAuthUser | null>(null);
+
+    // Les rôles sont extraits du token pour un accès rapide
+    private rolesSignal = signal<string[]>([]);
+
+    // --- COMPUTED VALUES (Lecture seule pour les composants) ---
+
+    // isAuthenticated est automatiquement recalculé si le token change
+    readonly isAuthenticated = computed(() => {
+        const token = this.tokenSignal();
+        return !!token && !this.jwtHelperService.isTokenExpired(token);
+    });
+
+    // isAdmin vérifie la présence du rôle dans le signal des rôles
+    readonly isAdmin = computed(() => this.rolesSignal().includes('ADMIN'));
+
+    // Exposition publique de l'utilisateur connecté
+    readonly userConnected = computed(() => this.userConnectedSignal());
 
     constructor() {
         this.loadToken();
     }
 
-    registerUser(user: Partial<IUser>) {
-        return this.httpClient.post<IUser>(`${environment.API_URL}/users`, user).pipe(
-            tap((user: IUser) => {
-                this.userConnectedSignal.set(user);
+    // Inscription
+    // On peut utiliser Partial<IUser> ici ou créer un IRegisterPayload spécifique plus tard
+    registerUser(user: IUserPayload) {
+        return this.httpClient.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
+            tap((createdUser: IUserDto) => {
+                // Logique optionnelle post-inscription (ex: auto-login)
+                console.log('Utilisateur créé avec succès:', createdUser);
             }),
         );
     }
 
-    login(credential: Partial<IUser>): Observable<HttpResponse<IUser>> {
+    // Connexion
+    // Utilisation stricte de ILoginPayload (entrée) et ILoginDto (sortie)
+    login(payload: ILoginPayload): Observable<HttpResponse<ILoginDto>> {
         return this.httpClient
-            .post<IUser>(`${environment.API_URL}/auth/login`, credential, { observe: 'response' })
+            .post<ILoginDto>(`${environment.API_URL}/auth/login`, payload, {
+                observe: 'response',
+            })
             .pipe(
-                tap((response: any) => {
-                    const jwtToken = response.headers.get('Authorization')!;
-                    this.saveToken(jwtToken);
+                tap((response: HttpResponse<ILoginDto>) => {
+                    const body = response.body;
+
+                    if (body && body.access_token) {
+                        // 1. Sauvegarde du token (déclenche isAuthenticated)
+                        this.saveToken(body.access_token);
+                        // 2. Mise à jour du signal utilisateur avec les données reçues
+                        if (body.user) {
+                            this.userConnectedSignal.set(body.user);
+                        }
+                    }
                 }),
             );
     }
@@ -57,50 +83,55 @@ export class AuthService {
         this.router.navigate(['/connexion']).then();
     }
 
+    // --- GESTION DU TOKEN ---
+
     saveToken(jwt: string) {
         localStorage.setItem('JWT_TOKEN', jwt);
-        this.jwtToken = jwt;
-        this.isAuthenticated.set(true);
-        this.decodeJwtToken();
+        this.tokenSignal.set(jwt);
+        this.decodeJwtToken(jwt);
     }
 
-    decodeJwtToken() {
-        if (this.jwtToken == undefined) return;
-
-        const decodedToken = this.jwtHelperService.decodeToken(this.jwtToken);
-        this.roles = decodedToken.roles;
-        this.loggedUser = decodedToken.sub;
-
-        if (this.roles.includes('ADMIN')) {
-            this.isAdmin.set(true);
+    private decodeJwtToken(token: string) {
+        try {
+            const decodedToken = this.jwtHelperService.decodeToken(token);
+            if (decodedToken) {
+                const roles = decodedToken.roles || [];
+                this.rolesSignal.set(roles);
+                // Si besoin, extraire d'autres infos du token ici
+            }
+        } catch (error) {
+            console.error('Erreur décodage token:', error);
+            this.logout();
         }
     }
 
-    getToken() {
-        return this.jwtToken;
+    getToken(): string | null {
+        return this.tokenSignal();
     }
 
+    // Chargement initial au démarrage de l'app
     loadToken(): void {
         const token = localStorage.getItem('JWT_TOKEN');
+
         if (token && !this.jwtHelperService.isTokenExpired(token)) {
-            this.jwtToken = token;
-            this.isAuthenticated.set(true);
-            this.decodeJwtToken();
+            this.tokenSignal.set(token);
+            this.decodeJwtToken(token);
+            // Note: userConnectedSignal restera null au F5 tant qu'on ne refait pas un appel /me
+            // ou qu'on ne stocke pas le user dans le localStorage aussi.
         } else {
             this.clearState();
         }
     }
 
     isTokenExpired(): boolean {
-        return this.jwtHelperService.isTokenExpired(this.jwtToken);
+        const token = this.tokenSignal();
+        return !token || this.jwtHelperService.isTokenExpired(token);
     }
 
     private clearState(): void {
-        this.jwtToken = '';
-        this.loggedUser = '';
-        this.roles = [];
-        this.isAuthenticated.set(false);
-        this.isAdmin.set(false);
         localStorage.removeItem('JWT_TOKEN');
+        this.tokenSignal.set(null);
+        this.userConnectedSignal.set(null);
+        this.rolesSignal.set([]);
     }
 }

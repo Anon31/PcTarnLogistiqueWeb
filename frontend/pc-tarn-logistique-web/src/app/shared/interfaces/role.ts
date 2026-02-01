@@ -1,4 +1,4 @@
-export interface IRole {
+export interface IRoleDto {
     id: number;
-    role: string;
+    name: string;
 }

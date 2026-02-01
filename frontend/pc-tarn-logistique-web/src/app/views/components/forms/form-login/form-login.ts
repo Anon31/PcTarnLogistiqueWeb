@@ -16,8 +16,6 @@ import { StyleClass } from 'primeng/styleclass';
     styleUrl: './form-login.css',
 })
 export class FormLogin extends FormBase implements OnInit {
-    public showLoginForm = false;
-
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private toastService = inject(ToasterService);
@@ -31,7 +29,7 @@ export class FormLogin extends FormBase implements OnInit {
         this.buildForm();
     }
 
-    submittingForm() {
+    submitForm() {
         if (this.form.invalid) return;
 
         this.authService.login(this.form.value).subscribe({

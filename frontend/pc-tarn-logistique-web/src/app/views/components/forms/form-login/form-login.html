@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="submittingForm()" class="w-full flex flex-col space-y-6">
+<form [formGroup]="form" (ngSubmit)="submitForm()" class="w-full flex flex-col space-y-6">
     <!-- Email -->
     <p-floatlabel variant="in" pStyleClass="w-full">
         <input pInputText id="email" formControlName="email" class="w-full" />
@@ -17,8 +17,6 @@
             Mot de passe oublié ?
         </a>
     </div>
-
-    <!-- Bouton Submit -->
     <p-button
         label="Se connecter"
         type="submit"
@@ -28,7 +26,6 @@
         [loading]="false"
     >
     </p-button>
-
     <!-- Lien Inscription -->
     <div class="text-center mt-4 text-sm text-surface-500">
         Pas encore de compte ?

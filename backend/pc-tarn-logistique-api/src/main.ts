@@ -13,8 +13,9 @@ async function bootstrap() {
     // Activation de la validation automatique (DTOs)
     app.useGlobalPipes(
         new ValidationPipe({
-            whitelist: true, // Retire automatiquement les champs non déclarés dans le DTO
+            whitelist: true, // Attention : Retire automatiquement les champs non déclarés dans le DTO
             transform: true, // Transforme les types primitifs (ex: string '1' -> number 1)
+            forbidNonWhitelisted: true,
         }),
     );
 
