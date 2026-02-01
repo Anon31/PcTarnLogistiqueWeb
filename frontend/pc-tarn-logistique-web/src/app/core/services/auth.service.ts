@@ -1,11 +1,10 @@
+import { IAuthUser, ILoginDto, ILoginPayload } from '../../shared/interfaces/login';
 import { computed, Injectable, signal, inject } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { IAuthUser, ILoginDto, ILoginPayload } from '../../shared/interfaces/login';
-import { IUserDto, IUserPayload } from '../../shared/interfaces/user';
 
 @Injectable({
     providedIn: 'root',
@@ -18,10 +17,8 @@ export class AuthService {
     // --- STATE (SIGNALS) ---
     // Le token est la source de vérité pour l'état de connexion
     private tokenSignal = signal<string | null>(null);
-
     // On type avec IAuthUser (l'utilisateur connecté) ou null
     private userConnectedSignal = signal<IAuthUser | null>(null);
-
     // Les rôles sont extraits du token pour un accès rapide
     private rolesSignal = signal<string[]>([]);
 
@@ -32,10 +29,8 @@ export class AuthService {
         const token = this.tokenSignal();
         return !!token && !this.jwtHelperService.isTokenExpired(token);
     });
-
     // isAdmin vérifie la présence du rôle dans le signal des rôles
     readonly isAdmin = computed(() => this.rolesSignal().includes('ADMIN'));
-
     // Exposition publique de l'utilisateur connecté
     readonly userConnected = computed(() => this.userConnectedSignal());
 
@@ -43,19 +38,11 @@ export class AuthService {
         this.loadToken();
     }
 
-    // Inscription
-    // On peut utiliser Partial<IUser> ici ou créer un IRegisterPayload spécifique plus tard
-    registerUser(user: IUserPayload) {
-        return this.httpClient.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
-            tap((createdUser: IUserDto) => {
-                // Logique optionnelle post-inscription (ex: auto-login)
-                console.log('Utilisateur créé avec succès:', createdUser);
-            }),
-        );
-    }
-
-    // Connexion
-    // Utilisation stricte de ILoginPayload (entrée) et ILoginDto (sortie)
+    /**
+     * Connexion de l'utilisateur
+     * Utilisation stricte de ILoginPayload (entrée) et ILoginDto (sortie)
+     * @param payload
+     */
     login(payload: ILoginPayload): Observable<HttpResponse<ILoginDto>> {
         return this.httpClient
             .post<ILoginDto>(`${environment.API_URL}/auth/login`, payload, {
@@ -71,12 +58,17 @@ export class AuthService {
                         // 2. Mise à jour du signal utilisateur avec les données reçues
                         if (body.user) {
                             this.userConnectedSignal.set(body.user);
+                            console.log('🚀 this.userConnected() :', this.userConnected());
+                            console.log('🚀 this.isAdmin() :', this.isAdmin());
                         }
                     }
                 }),
             );
     }
 
+    /**
+     * Déconnexion de l'utilisateur
+     */
     logout() {
         this.clearState();
         localStorage.removeItem('THEME');
@@ -85,12 +77,21 @@ export class AuthService {
 
     // --- GESTION DU TOKEN ---
 
+    /**
+     * Sauvegarde du token JWT dans le localStorage et mise à jour des signaux
+     * @param jwt
+     */
     saveToken(jwt: string) {
         localStorage.setItem('JWT_TOKEN', jwt);
         this.tokenSignal.set(jwt);
         this.decodeJwtToken(jwt);
     }
 
+    /**
+     * Décodage du token JWT pour extraire les rôles et autres infos
+     * @param token
+     * @private
+     */
     private decodeJwtToken(token: string) {
         try {
             const decodedToken = this.jwtHelperService.decodeToken(token);
@@ -105,29 +106,41 @@ export class AuthService {
         }
     }
 
+    /**
+     * Récupération du token JWT actuel
+     */
     getToken(): string | null {
         return this.tokenSignal();
     }
 
-    // Chargement initial au démarrage de l'app
+    /**
+     * Chargement du token depuis le localStorage au démarrage de l'application
+     */
     loadToken(): void {
         const token = localStorage.getItem('JWT_TOKEN');
 
         if (token && !this.jwtHelperService.isTokenExpired(token)) {
             this.tokenSignal.set(token);
             this.decodeJwtToken(token);
-            // Note: userConnectedSignal restera null au F5 tant qu'on ne refait pas un appel /me
-            // ou qu'on ne stocke pas le user dans le localStorage aussi.
+            // Note : userConnectedSignal restera null au F5 tant qu'on ne refait pas un appel /me
+            // ou qu'on ne stocke pas l'user dans le localStorage aussi.
         } else {
             this.clearState();
         }
     }
 
+    /**
+     * Vérifie si le token est expiré
+     */
     isTokenExpired(): boolean {
         const token = this.tokenSignal();
         return !token || this.jwtHelperService.isTokenExpired(token);
     }
 
+    /**
+     * Réinitialisation de l'état d'authentification
+     * @private
+     */
     private clearState(): void {
         localStorage.removeItem('JWT_TOKEN');
         this.tokenSignal.set(null);

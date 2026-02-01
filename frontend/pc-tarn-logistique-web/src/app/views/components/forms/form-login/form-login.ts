@@ -36,7 +36,7 @@ export class FormLogin extends FormBase implements OnInit {
             next: (response) => {
                 this.router.navigate(['/', 'accueil']).then(() => {
                     this.toastService.success(
-                        '🚀 Décollage immédiat !',
+                        `🚀 Décollage immédiat ${response.body?.user.firstname} !`,
                         `🌿 Bienvenue dans votre application.`,
                     );
                 });
