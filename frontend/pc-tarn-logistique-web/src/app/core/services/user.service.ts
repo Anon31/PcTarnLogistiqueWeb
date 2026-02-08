@@ -17,12 +17,13 @@ export class UserService {
      * @param user
      */
     createUser(user: IUserPayload) {
-        return this.httpClient.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
-            tap((createdUser: IUserDto) => {
-                // Logique optionnelle post-inscription (ex: auto-login)
-                console.log('🚀 Utilisateur créé avec succès:', createdUser);
-            }),
-        );
+        console.log('Creating user:', user);
+        // return this.httpClient.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
+        //     tap((createdUser: IUserDto) => {
+        //         // Logique optionnelle post-inscription (ex: auto-login)
+        //         console.log('🚀 Utilisateur créé avec succès:', createdUser);
+        //     }),
+        // );
     }
 
     getUserById(userId: number) {

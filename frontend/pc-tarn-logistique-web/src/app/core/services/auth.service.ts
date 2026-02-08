@@ -5,6 +5,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { EnumRolesName } from '../../shared/enums/roles.enum';
 
 @Injectable({
     providedIn: 'root',
@@ -30,7 +31,7 @@ export class AuthService {
         return !!token && !this.jwtHelperService.isTokenExpired(token);
     });
     // isAdmin vérifie la présence du rôle dans le signal des rôles
-    readonly isAdmin = computed(() => this.rolesSignal().includes('ADMIN'));
+    readonly isAdmin = computed(() => this.rolesSignal().includes(EnumRolesName.ADMIN));
     // Exposition publique de l'utilisateur connecté
     readonly userConnected = computed(() => this.userConnectedSignal());
 
@@ -58,6 +59,9 @@ export class AuthService {
                         // 2. Mise à jour du signal utilisateur avec les données reçues
                         if (body.user) {
                             this.userConnectedSignal.set(body.user);
+                            // Persister l'utilisateur
+                            localStorage.setItem('USER_DATA', JSON.stringify(body.user));
+
                             console.log('🚀 this.userConnected() :', this.userConnected());
                             console.log('🚀 this.isAdmin() :', this.isAdmin());
                         }
@@ -118,12 +122,21 @@ export class AuthService {
      */
     loadToken(): void {
         const token = localStorage.getItem('JWT_TOKEN');
+        const userStr = localStorage.getItem('USER_DATA'); // AJOUT : Récupérer le user stocké
 
         if (token && !this.jwtHelperService.isTokenExpired(token)) {
             this.tokenSignal.set(token);
             this.decodeJwtToken(token);
             // Note : userConnectedSignal restera null au F5 tant qu'on ne refait pas un appel /me
             // ou qu'on ne stocke pas l'user dans le localStorage aussi.
+            // AJOUT : Restaurer le signal utilisateur si présent
+            if (userStr) {
+                try {
+                    this.userConnectedSignal.set(JSON.parse(userStr));
+                } catch (e) {
+                    console.error('Erreur parsing user data', e);
+                }
+            }
         } else {
             this.clearState();
         }
@@ -143,6 +156,7 @@ export class AuthService {
      */
     private clearState(): void {
         localStorage.removeItem('JWT_TOKEN');
+        localStorage.removeItem('USER_DATA');
         this.tokenSignal.set(null);
         this.userConnectedSignal.set(null);
         this.rolesSignal.set([]);

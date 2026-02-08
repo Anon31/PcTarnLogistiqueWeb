@@ -1,0 +1,9 @@
+app-toggle-dark-mode {
+    position: fixed;
+    bottom: 20px; /* Ajuste selon ta préférence */
+    right: 20px;
+    z-index: 9999; /* Toujours au dessus */
+    display: block;
+    width: auto;
+    height: auto;
+}

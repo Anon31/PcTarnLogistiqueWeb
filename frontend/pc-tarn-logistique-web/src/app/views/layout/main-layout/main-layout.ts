@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Footer } from '../../../shared/components/footer/footer';
 import { Header } from '../../../shared/components/header/header';
+import { Sidebar } from '../../../shared/components/sidebar/sidebar';
 
 @Component({
     selector: 'app-main-layout',
-    imports: [RouterOutlet, Footer, Header],
+    imports: [RouterOutlet, Footer, Header, Sidebar],
     templateUrl: './main-layout.html',
     styleUrl: './main-layout.css',
 })

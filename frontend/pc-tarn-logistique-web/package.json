@@ -24,6 +24,7 @@
   "private": true,
   "packageManager": "npm@11.3.0",
   "dependencies": {
+    "@angular-eslint/template-parser": "^21.1.0",
     "@angular/common": "^21.1.1",
     "@angular/compiler": "^21.1.1",
     "@angular/core": "^21.1.1",

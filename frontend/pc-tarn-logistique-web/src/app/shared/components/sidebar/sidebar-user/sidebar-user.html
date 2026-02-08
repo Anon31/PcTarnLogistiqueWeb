@@ -1,0 +1,19 @@
+<div class="p-4 mt-auto border-t border-white/20 shrink-0 mb-4">
+    <div class="user-card flex items-center gap-3 p-3 rounded-xl transition-all cursor-pointer group">
+        <div class="w-10 h-10 rounded-full text-white flex items-center justify-center font-bold text-sm shadow-sm border-2 border-white/10 logo-bg shrink-0">
+            {{ authService.userConnected()?.firstname?.charAt(0)?.toUpperCase() }}{{ authService.userConnected()?.lastname?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div class="flex flex-col overflow-hidden min-w-0 flex-1">
+                    <span class="user-name text-sm font-bold truncate group-hover:text-(--secondary-500) transition-colors cursor-pointer">
+                        {{ this.authService.userConnected()?.firstname }}
+                        {{ this.authService.userConnected()?.lastname }}
+                    </span>
+            <span class="text-xs opacity-70 truncate" title="{{ this.authService.userConnected()?.roles?.[0]?.name! | roleLabel }}">
+                        {{ this.authService.userConnected()?.roles?.[0]?.name! | roleLabel }}
+                    </span>
+        </div>
+        @if (this.authService.isAuthenticated()) {
+            <p-button ariaLabel="logout" icon="pi pi-sign-out" text styleClass="btn-custom shrink-0" (click)="this.authService.logout()"/>
+        }
+    </div>
+</div>

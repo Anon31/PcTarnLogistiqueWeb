@@ -4,10 +4,10 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { FormBase } from '../../../../shared/class/form-base';
 import { Component, inject, OnInit } from '@angular/core';
 import { FloatLabel } from 'primeng/floatlabel';
+import { StyleClass } from 'primeng/styleclass';
 import { InputText } from 'primeng/inputtext';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
-import { StyleClass } from 'primeng/styleclass';
 
 @Component({
     selector: 'app-form-login',

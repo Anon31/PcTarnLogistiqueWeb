@@ -1,6 +1,5 @@
 :root {
     /* --- 🔵 COULEUR PRIMAIRE (Bleu PC) --- */
-    /* Nuances générées pour les états (hover, focus) */
     --primary-50: #e6f0ff;
     --primary-100: #b3d1ff;
     --primary-200: #80b3ff;
@@ -14,8 +13,7 @@
     --primary-950: #000b1a;
 
     /* --- 🟠 COULEUR SECONDAIRE (Orange PC) --- */
-    /* Palette étendue générée à partir de #F08700 */
-    --secondary-50: #fff8f1;  /* Très clair (fonds) */
+    --secondary-50: #fff8f1;
     --secondary-100: #ffebd4;
     --secondary-200: #ffd29a;
     --secondary-300: #ffb660;
@@ -40,4 +38,16 @@
     /* On force PrimeNG à utiliser nos variables */
     --primary-color: var(--primary-500);
     --primary-color-text: #ffffff;
+
+    /* 🎨 THEME HEADER */
+    --custom-header-bg: var(--primary-500);
+    --custom-header-text: #ffffff;
+    --custom-header-border: rgba(255, 255, 255);
+}
+
+:root[data-theme="dark"],
+.dark-mode {
+    --custom-header-bg: var(--primary-900);
+    --custom-header-text: var(--primary-50);
+    --custom-header-border: var(--secondary-500);
 }

@@ -1,0 +1,33 @@
+.user-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+:host-context(.dark) .user-card,
+.layout-sidebar.dark .user-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.user-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--secondary-500);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+:host ::ng-deep .user-name {
+    transition: color 0.2s ease;
+}
+
+:host ::ng-deep .user-name:hover {
+    color: var(--secondary-500) !important;
+}
+
+.logo-bg {
+    background-color: var(--secondary-500) !important;
+    color: white;
+}

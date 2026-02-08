@@ -3,10 +3,11 @@
     "trailingComma": "all",
     "tabWidth": 4,
     "semi": true,
-    "printWidth": 140,
+    "printWidth": 150,
     "bracketSpacing": true,
     "arrowParens": "always",
     "endOfLine": "lf",
     "bracketSameLine": true,
-    "htmlWhitespaceSensitivity": "ignore"
+    "htmlWhitespaceSensitivity": "ignore",
+    "singleAttributePerLine": false
 }

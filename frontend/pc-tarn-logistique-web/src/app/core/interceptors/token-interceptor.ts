@@ -1,11 +1,13 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { inject } from '@angular/core';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
     const toExclude = '/auth/login';
-    // Check if the request URL does not contain the login path
+    /**
+     * Si la requête n'est pas pour le login, ajouter le token JWT dans les en-têtes
+     */
     if (req.url.search(toExclude) === -1) {
         let jwt = authService.getToken();
         let reqWithToken = req.clone({
@@ -15,6 +17,8 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
         });
         return next(reqWithToken);
     }
-    // If the request is for login, just pass it through without adding the token
+    /**
+     * Sinon, continuer sans modifier la requête
+     */
     return next(req);
 };
