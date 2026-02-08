@@ -53,7 +53,7 @@ export class SidebarMenu implements OnInit {
             },
             {
                 label: 'Administration',
-                icon: 'pi pi-fw pi-cog',
+                icon: 'pi pi-cog',
                 items: [
                     {
                         label: 'Utilisateurs',

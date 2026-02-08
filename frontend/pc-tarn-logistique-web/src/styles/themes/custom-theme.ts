@@ -200,21 +200,5 @@ export const CustomTheme = definePreset(Material, {
                 },
             },
         },
-        panelmenu: {
-            // --- STRUCTURE UNIQUEMENT (Pas de couleurs ici pour éviter les erreurs de type) ---
-            root: {
-                gap: '0.25rem', // Espace vertical entre les éléments
-            },
-            item: {
-                // Cible les liens des sous-menus
-                padding: '0.35rem 1rem', // Padding vertical réduit
-                borderRadius: '12px',
-            },
-            submenu: {
-                indent: '1rem',
-            },
-            // NOTE : On ne déclare PAS 'header' ni 'focusColor' en objet ici.
-            // Tout est géré dans le CSS pour garantir le switch Light/Dark sans conflit.
-        },
     },
 });
