@@ -1,0 +1,32 @@
+/* COULEUR DE FOND DYNAMIQUE */
+.layout-sidebar {
+    background-color: var(--custom-header-bg);
+    color: var(--custom-header-text);
+    border-right: 1px solid var(--custom-header-border) !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    height: 100%;
+}
+
+/* TABLETTE */
+.custom-drawer {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.custom-drawer .p-drawer-content {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
+/* MOBILE DRAWER */
+.custom-drawer .p-drawer-header {
+    display: none !important;
+}
+
+.custom-drawer .p-drawer-content {
+    padding: 0 !important;
+    background: transparent !important;
+}

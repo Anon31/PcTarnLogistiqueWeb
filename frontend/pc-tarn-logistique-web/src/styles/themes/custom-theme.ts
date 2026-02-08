@@ -1,5 +1,5 @@
-import { definePreset } from '@primeuix/themes';
 import Material from '@primeuix/themes/material';
+import { definePreset } from '@primeuix/themes';
 
 // Nom de variable	                        Description
 // --p-primary-color	                    Couleur principale (emerald.500, ou autre)
@@ -11,7 +11,6 @@ import Material from '@primeuix/themes/material';
 // --p-highlight-color	                    Texte sur fond sélection
 // --p-highlight-focus-color	            Texte sur fond focusé
 
-// On étend le thème Material par défaut
 export const CustomTheme = definePreset(Material, {
     semantic: {
         primary: {
@@ -57,8 +56,6 @@ export const CustomTheme = definePreset(Material, {
             },
             dark: {
                 // --- CONFIGURATION DARK MODE "BLEU NUIT" ---
-
-                // 1. On remplace la palette "Surface" par notre palette "Primary" (Bleu)
                 surface: {
                     0: 'var(--primary-950)', // Fond principal (Bleu très sombre)
                     50: 'var(--primary-900)', // Cartes / Menus
@@ -73,16 +70,14 @@ export const CustomTheme = definePreset(Material, {
                     900: 'var(--primary-50)', // Texte principal
                     950: '#ffffff', // Texte accentué
                 },
-
-                // 2. On adapte la couleur Primaire pour qu'elle ressorte sur le fond bleu
+                // On adapte la couleur Primaire pour qu'elle ressorte sur le fond bleu
                 primary: {
-                    color: 'var(--primary-400)', // Bleu clair vibrant
+                    color: 'var(--primary-400)',
                     inverseColor: 'var(--primary-950)', // Texte foncé sur le bouton
                     hoverColor: 'var(--primary-300)',
                     activeColor: 'var(--primary-200)',
                 },
-
-                // 3. Highlight subtil
+                // Highlight subtil
                 highlight: {
                     background: 'rgba(255,255,255,0.1)',
                     focusBackground: 'rgba(255,255,255,0.15)',

@@ -1,0 +1,23 @@
+<header class="container-fluid p-0 shadow-2 mb-4">
+    <p-toolbar>
+        <ng-template #start> </ng-template>
+        <ng-template #center>
+            <p-iconfield iconPosition="right">
+                <p-inputicon class="pi pi-search" />
+                <input type="text" class="w-lg" pInputText placeholder="Rechercher" />
+            </p-iconfield>
+        </ng-template>
+        <ng-template #end>
+            <div class="lg:hidden">
+                <p-button
+                    ariaLabel="Menu"
+                    icon="pi pi-bars"
+                    [text]="true"
+                    styleClass="btn-custom shrink-0"
+                    (onClick)="sidebarService.setOpen(true)"
+                >
+                </p-button>
+            </div>
+        </ng-template>
+    </p-toolbar>
+</header>

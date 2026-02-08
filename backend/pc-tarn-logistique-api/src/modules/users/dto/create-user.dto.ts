@@ -1,13 +1,4 @@
-import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MinLength,
-    IsOptional,
-    ValidateNested,
-    IsInt,
-    IsDateString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, ValidateNested, IsInt, IsDateString, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateAddressDto {
@@ -25,7 +16,7 @@ export class CreateAddressDto {
 
     @IsString()
     @IsNotEmpty()
-    zipCode: string;
+    zipcode: string;
 
     @IsString()
     @IsNotEmpty()
@@ -68,7 +59,16 @@ export class CreateUserDto {
      */
     @IsDateString()
     @IsOptional()
-    birthDate?: string;
+    birthdate?: string;
+
+    /**
+     * Le rôle de l'utilisateur (OBLIGATOIRE)
+     * L'admin doit explicitement choisir un rôle.
+     */
+    @IsString()
+    @IsNotEmpty({ message: 'Le rôle est obligatoire (ex: ADMIN, BENEVOLE)' })
+    @IsIn(['ADMIN', 'BENEVOLE', 'MANAGER'], { message: 'Rôle invalide' })
+    roles: string;
 
     // Optionnel : Permet de créer l'adresse en même temps
     @IsOptional()

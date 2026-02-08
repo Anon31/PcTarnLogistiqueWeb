@@ -1,0 +1,31 @@
+:host ::ng-deep .p-panel-menu .p-panel-menu-header-content,
+:host ::ng-deep .p-panel-menu .p-panel-menu-content,
+:host ::ng-deep .p-menuitem-content {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Style des liens (Textes et Icones) */
+:host ::ng-deep .p-panel-menu .p-menuitem-text,
+:host ::ng-deep .p-panel-menu .p-menuitem-icon {
+    color: var(--custom-header-text) !important; /* S'adapte au thème */
+}
+
+/* HOVER : Fond blanc très léger */
+:host ::ng-deep .p-panel-menu .p-panel-menu-header-action:hover,
+:host ::ng-deep .p-menuitem-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px;
+}
+
+/* ACTIF : Fond Orange ou style distinct */
+:host ::ng-deep .p-menuitem-link-active {
+    background-color: var(--secondary-500) !important;
+    border-radius: 8px;
+}
+
+:host ::ng-deep .p-menuitem-link-active .p-menuitem-text,
+:host ::ng-deep .p-menuitem-link-active .p-menuitem-icon {
+    color: #ffffff !important;
+    font-weight: bold;
+}

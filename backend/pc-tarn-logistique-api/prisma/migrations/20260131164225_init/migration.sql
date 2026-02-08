@@ -6,7 +6,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "phone" TEXT,
-    "birthDate" TIMESTAMP(3),
+    "birthdate" TIMESTAMP(3),
     "enabled" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE "Address" (
     "number" INTEGER NOT NULL,
     "street" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "zipCode" TEXT NOT NULL,
+    "zipcode" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
 

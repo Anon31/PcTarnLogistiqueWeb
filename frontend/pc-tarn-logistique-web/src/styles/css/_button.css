@@ -1,0 +1,13 @@
+.btn-custom {
+    color: var(--primary-50) !important; /* Blanc cassé par défaut */
+    padding: 0.5rem !important;
+    width: auto !important;
+    background: transparent !important; /* Force la transparence de base */
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-custom:hover {
+    background: transparent !important; /* Empêche le fond blanc par défaut de PrimeNG */
+    color: var(--secondary-500) !important;
+    transform: scale(1.1);
+}

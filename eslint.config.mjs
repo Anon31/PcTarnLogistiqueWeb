@@ -7,6 +7,8 @@ import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import angularTemplatePlugin from '@angular-eslint/eslint-plugin-template';
+import angularTemplateParser from '@angular-eslint/template-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,35 +16,30 @@ const __dirname = dirname(__filename);
 export default tseslint.config(
     // 1. Ignorer les dossiers de build et caches
     {
-        ignores: [
-            '**/dist/**',
-            '**/node_modules/**',
-            '**/coverage/**',
-            '**/.angular/**',
-            '**/.nx/**',
-        ],
+        ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', '**/.angular/**', '**/.nx/**'],
     },
-
     // 2. Configuration de base JS
     eslint.configs.recommended,
-
-    // 3. Configuration TypeScript RECOMMANDÉE (Type Checked)
-    // On applique ces règles uniquement aux fichiers TS
+    // 3. Prettier GLOBAL (On le place AVANT les overrides spécifiques pour pouvoir le surcharger)
+    eslintPluginPrettierRecommended,
+    {
+        rules: {
+            // On force les fins de ligne auto pour éviter les conflits Windows/Linux
+            'prettier/prettier': ['error', { endOfLine: 'auto' }],
+        },
+    },
+    // 4. Configuration TypeScript RECOMMANDÉE (Type Checked)
     {
         files: ['**/*.ts'],
-        extends: [
-            ...tseslint.configs.recommendedTypeChecked, // Recommandation officielle pour TS avec typage
-            ...tseslint.configs.stylisticTypeChecked, // Règles de style TS
-        ],
+        extends: [...tseslint.configs.recommendedTypeChecked, ...tseslint.configs.stylisticTypeChecked],
         languageOptions: {
             parserOptions: {
-                projectService: true, // Active le nouveau service de projet (plus rapide)
+                projectService: true,
                 tsconfigRootDir: __dirname,
             },
         },
     },
-
-    // 4. Configuration Spécifique FRONTEND (Angular)
+    // 5. Configuration Spécifique FRONTEND (Angular)
     {
         files: ['frontend/pc-tarn-logistique-web/**/*.ts'],
         extends: [...angular.configs.tsRecommended],
@@ -50,66 +47,41 @@ export default tseslint.config(
         languageOptions: {
             globals: { ...globals.browser },
             parserOptions: {
-                // Chemin explicite pour le frontend
                 project: ['frontend/pc-tarn-logistique-web/tsconfig.json'],
                 tsconfigRootDir: __dirname,
             },
         },
         rules: {
-            '@angular-eslint/directive-selector': [
-                'error',
-                { type: 'attribute', prefix: 'app', style: 'camelCase' },
-            ],
-            '@angular-eslint/component-selector': [
-                'error',
-                { type: 'element', prefix: 'app', style: 'kebab-case' },
-            ],
+            '@angular-eslint/directive-selector': ['error', { type: 'attribute', prefix: 'app', style: 'camelCase' }],
+            '@angular-eslint/component-selector': ['error', { type: 'element', prefix: 'app', style: 'kebab-case' }],
         },
     },
-
-    // 5. Configuration Spécifique BACKEND (NestJS)
+    // 6. Configuration Spécifique BACKEND (NestJS)
     {
         files: ['backend/pc-tarn-logistique-api/**/*.ts'],
         languageOptions: {
             globals: { ...globals.node },
             parserOptions: {
-                // Chemin explicite pour le backend
                 project: ['backend/pc-tarn-logistique-api/tsconfig.json'],
                 tsconfigRootDir: __dirname,
             },
         },
         rules: {
-            // Règles "relax" typiques NestJS
             '@typescript-eslint/interface-name-prefix': 'off',
             '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
-            // Parfois NestJS utilise des injections non sécurisées, on peut assouplir si besoin
             '@typescript-eslint/no-unsafe-argument': 'warn',
         },
     },
-
-    // 6. Configuration HTML (Angular Templates)
-    {
-        files: ['**/*.html'],
-        extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
-        rules: {},
-    },
-
-    // 7. RÈGLES GLOBALES CLEAN CODE (Prioritaires)
-    // Appliquées à TOUS les fichiers TS (Front et Back)
+    // 7. RÈGLES GLOBALES CLEAN CODE (Prioritaires sur le TS de base)
     {
         files: ['**/*.ts'],
         plugins: {
             'unused-imports': unusedImports,
         },
         rules: {
-            // 🚫 Interdire le type 'any'
             '@typescript-eslint/no-explicit-any': 'error',
-
-            // ⚠️ Règles Type-Checked supplémentaires (Activées par recommendedTypeChecked)
-            '@typescript-eslint/no-floating-promises': 'warn', // Attraper les promesses non gérées
-
-            // 🧹 Suppression automatique des variables/imports inutilisés
+            '@typescript-eslint/no-floating-promises': 'warn',
             '@typescript-eslint/no-unused-vars': 'off',
             'unused-imports/no-unused-imports': 'error',
             'unused-imports/no-unused-vars': [
@@ -123,12 +95,22 @@ export default tseslint.config(
             ],
         },
     },
-
-    // 8. Prettier (Toujours en dernier)
-    eslintPluginPrettierRecommended,
+    // 8. Configuration HTML (Angular Templates)
+    // PLACÉ À LA FIN pour écraser la config Prettier globale sur les fichiers HTML
     {
+        files: ['**/*.html'],
+        plugins: {
+            '@angular-eslint/template': angularTemplatePlugin,
+        },
+        languageOptions: {
+            parser: angularTemplateParser,
+        },
         rules: {
-            'prettier/prettier': ['error', { endOfLine: 'auto' }],
+            // On a décidé que Prettier ne touche pas au HTML
+            'prettier/prettier': 'off',
+
+            // Exemples de règles utiles
+            '@angular-eslint/template/no-negated-async': 'error',
         },
     },
 );

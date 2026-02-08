@@ -1,0 +1,15 @@
+/* Force la transparence des composants PrimeNG dans le header */
+header p-toolbar {
+    background: transparent !important;
+    border: none !important;
+}
+
+header {
+    background-color: var(--custom-header-bg);
+    border-bottom: 1px solid var(--custom-header-border);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.p-toolbar {
+    border-radius: 0 !important;
+}
