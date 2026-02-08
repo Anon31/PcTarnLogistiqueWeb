@@ -1,12 +1,11 @@
 import { SidebarService } from '../../../../core/services/sidebar.service';
 import { Component, inject, OnInit } from '@angular/core';
-import { ClassNames } from 'primeng/classnames';
 import { PanelMenu } from 'primeng/panelmenu';
 import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'app-sidebar-menu',
-    imports: [ClassNames, PanelMenu],
+    imports: [PanelMenu],
     templateUrl: './sidebar-menu.html',
     styleUrl: './sidebar-menu.css',
 })
@@ -47,10 +46,28 @@ export class SidebarMenu implements OnInit {
                 command: () => this.closeSidebar(),
             },
             {
+                label: 'Messagerie',
+                icon: 'pi pi-envelope',
+                routerLink: '/messagerie',
+                command: () => this.closeSidebar(),
+            },
+            {
                 label: 'Administration',
                 icon: 'pi pi-fw pi-cog',
-                routerLink: '/signalements',
-                command: () => this.closeSidebar(),
+                items: [
+                    {
+                        label: 'Utilisateurs',
+                        icon: 'pi pi-fw pi-users',
+                        routerLink: '/admin/users',
+                        command: () => this.closeSidebar(),
+                    },
+                    {
+                        label: 'Rôles & Droits',
+                        icon: 'pi pi-fw pi-lock',
+                        routerLink: '/admin/roles',
+                        command: () => this.closeSidebar(),
+                    },
+                ],
             },
         ];
     }

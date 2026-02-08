@@ -22,6 +22,7 @@ import { DrawerModule } from 'primeng/drawer';
 })
 export class Sidebar {
     sidebarService = inject(SidebarService);
+    appVersion: string = '1.0.0';
 
     onDrawerHide() {
         this.sidebarService.setOpen(false);

@@ -1,0 +1,111 @@
+.panel-menu-custom {
+    /* Nettoyage du conteneur par défaut */
+    .p-panelmenu-panel {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        margin-bottom: 2px;
+    }
+
+    .p-panelmenu-header-content {
+        /* STRUCTURE */
+        border-radius: 50px;
+        padding: 0.4rem 0.8rem; /* Padding réduit pour gagner de la place */
+        border: 1px solid transparent;
+
+        /* TRANSITIONS */
+        transition: all 0.2s ease-in-out;
+
+        /* COULEURS BASE (Toujours Blanc car sidebar foncée) */
+        color: rgba(255, 255, 255, 0.9);
+
+        /* CONTENU */
+        .p-panelmenu-header-action {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.85rem; /* RÉDUIT (approx 13-14px) pour éviter le retour ligne */
+            line-height: 1.2;
+            white-space: nowrap; /* Empêche le retour à la ligne forcé */
+        }
+
+        .p-panelmenu-header-icon {
+            font-size: 1rem; /* Icone réduite (était 1.1rem) */
+            margin-right: 0.6rem;
+            color: inherit;
+        }
+
+        .p-submenu-icon {
+            margin-left: auto;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            color: inherit;
+        }
+
+        /* Hover Inactif (Commun) */
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+    }
+
+    /* --- ITEMS (Sous-menus) --- */
+    .p-panelmenu-item-link {
+        transition: transform 0.2s ease-out, color 0.2s, background 0.2s;
+        color: rgba(255, 255, 255, 0.7); /* Gris clair */
+        padding: 0.3rem 1rem; /* Compact */
+
+        &:hover {
+            transform: translateX(4px);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .p-menuitem-icon {
+            margin-right: 0.5rem;
+            color: inherit;
+            font-size: 0.85rem; /* Plus petit */
+        }
+
+        .p-menuitem-text {
+            font-size: 0.85rem; /* Plus petit */
+        }
+    }
+
+    /* =========================================
+       ☀️ MODE LIGHT (Sélection Bleu PC)
+       ========================================= */
+    &:not(.dark-mode) {
+        /* Header ACTIF */
+        .p-panelmenu-panel[data-p-active="true"] .p-panelmenu-header-content {
+            background: var(--primary-500, #004080);
+            color: #ffffff;
+            box-shadow: 0 4px 12px -2px rgba(0, 64, 128, 0.25);
+
+            .p-panelmenu-header-icon, .p-submenu-icon {
+                color: #ffffff;
+            }
+        }
+    }
+
+    /* =========================================
+       🌙 MODE DARK (Sélection Orange Web3)
+       ========================================= */
+    .dark-mode & {
+        /* Header ACTIF */
+        .p-panelmenu-panel[data-p-active="true"] .p-panelmenu-header-content {
+            background: linear-gradient(90deg, rgba(0, 64, 128, 0.5) 0%, rgba(0, 64, 128, 0.1) 100%);
+            color: var(--secondary-500, #F08700);
+            border-left: 3px solid var(--secondary-500, #F08700);
+            padding-left: calc(0.8rem - 3px);
+            box-shadow: 15px 0 30px -10px rgba(240, 135, 0, 0.2);
+
+            .p-panelmenu-header-icon {
+                color: var(--secondary-500, #F08700);
+            }
+            .p-submenu-icon {
+                color: rgba(255,255,255,0.5);
+            }
+        }
+    }
+}
