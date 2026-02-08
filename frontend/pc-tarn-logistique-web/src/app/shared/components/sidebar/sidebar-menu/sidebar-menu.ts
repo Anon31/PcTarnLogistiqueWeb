@@ -24,19 +24,19 @@ export class SidebarMenu implements OnInit {
             {
                 label: 'Gestion des stocks',
                 icon: 'pi pi-fw pi-box',
-                routerLink: '/stocks',
+                routerLink: '/gestion-stocks',
                 command: () => this.closeSidebar(),
             },
             {
                 label: 'Contrôle des lots',
                 icon: 'pi pi-fw pi-check-square',
-                routerLink: '/lots',
+                routerLink: '/controle-lots',
                 command: () => this.closeSidebar(),
             },
             {
                 label: 'Suivi des véhicules',
                 icon: 'pi pi-fw pi-truck',
-                routerLink: '/vehicules',
+                routerLink: '/suivi-vehicules',
                 command: () => this.closeSidebar(),
             },
             {
@@ -58,13 +58,13 @@ export class SidebarMenu implements OnInit {
                     {
                         label: 'Utilisateurs',
                         icon: 'pi pi-fw pi-users',
-                        routerLink: '/admin/users',
+                        routerLink: '/administration/utilisateurs',
                         command: () => this.closeSidebar(),
                     },
                     {
-                        label: 'Rôles & Droits',
-                        icon: 'pi pi-fw pi-lock',
-                        routerLink: '/admin/roles',
+                        label: 'Stocks',
+                        icon: 'pi pi-fw pi-box',
+                        routerLink: '/administration/stocks',
                         command: () => this.closeSidebar(),
                     },
                 ],

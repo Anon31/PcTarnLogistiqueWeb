@@ -34,7 +34,7 @@ export class FormLogin extends FormBase implements OnInit {
 
         this.authService.login(this.form.value).subscribe({
             next: (response) => {
-                this.router.navigate(['/', 'accueil']).then(() => {
+                this.router.navigate(['/', 'dashboard']).then(() => {
                     this.toastService.success(
                         `Bonjour ${response.body?.user.firstname}.`,
                         `🌿 Bienvenue dans votre application.`,
