@@ -1,4 +1,3 @@
-import { adminRoutes } from '../pages/admin/admin.routes';
 import { MainLayout } from './main-layout/main-layout';
 import { Routes } from '@angular/router';
 
@@ -8,51 +7,54 @@ export const mainLayoutRoutes: Routes = [
         component: MainLayout,
         children: [
             {
-                path: 'dashboard',
-                title: 'Dashboard',
-                data: {},
+                path: 'tableau-de-bord',
+                title: 'Tableau de bord',
                 loadComponent: () =>
-                    import('./../pages/dashboard/dashboard').then((m) => m.Dashboard),
+                    import('./../pages/dashboard/dashboard.component').then(
+                        (m) => m.DashboardComponent,
+                    ),
             },
             {
-                path: 'gestion-stocks',
+                path: 'utilisateurs',
+                title: 'Utilisateurs',
+                loadComponent: () =>
+                    import('./../pages/user/user.component').then((m) => m.UserComponent),
+            },
+            {
+                path: 'stocks',
                 title: 'Gestion des stocks',
-                data: {},
-                loadComponent: () => import('./../pages/stock/stock').then((m) => m.Stock),
+                loadComponent: () =>
+                    import('./../pages/stock/stock.component').then((m) => m.StockComponent),
             },
             {
-                path: 'controle-lots',
+                path: 'lots',
                 title: 'Contrôle des lots',
-                data: {},
                 loadComponent: () =>
-                    import('./../pages/batch-control/batch-control').then((m) => m.BatchControl),
+                    import('./../pages/batch-control/batch-control.component').then(
+                        (m) => m.BatchControlComponent,
+                    ),
             },
             {
-                path: 'suivi-vehicules',
+                path: 'vehicules',
                 title: 'Suivi des véhicules',
-                data: {},
                 loadComponent: () =>
-                    import('./../pages/vehicle-tracking/vehicle-tracking').then(
-                        (m) => m.VehicleTracking,
+                    import('./../pages/vehicle-tracking/vehicle-tracking.component').then(
+                        (m) => m.VehicleTrackingComponent,
                     ),
             },
             {
                 path: 'signalements',
                 title: 'Signalements',
-                data: {},
-                loadComponent: () => import('./../pages/reports/reports').then((m) => m.Reports),
+                loadComponent: () =>
+                    import('./../pages/report/report.component').then((m) => m.ReportComponent),
             },
             {
                 path: 'messagerie',
                 title: 'Messagerie',
-                data: {},
                 loadComponent: () =>
-                    import('./../pages/messaging/messaging').then((m) => m.Messaging),
-            },
-            {
-                path: 'administration',
-                title: 'Administration',
-                children: adminRoutes,
+                    import('./../pages/messaging/messaging.component').then(
+                        (m) => m.MessagingComponent,
+                    ),
             },
         ],
     },
