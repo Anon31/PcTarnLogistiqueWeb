@@ -1,0 +1,136 @@
+/* --- 1. CONFIGURATION DU FOND & STRUCTURE --- */
+.page-404-container {
+    /* Fond Light par défaut (Primary-50 : Bleu très pâle) */
+    background-color: var(--primary-50);
+    transition: background-color 0.5s ease;
+
+    /* Fond Dark (Géré via votre classe globale .dark-mode ou :host-context) */
+    :host-context(.dark-mode) & {
+        background-color: var(--primary-950); /* Bleu nuit profond */
+    }
+}
+
+/* Grille technique en arrière-plan */
+.grid-background {
+    opacity: 0.05;
+    background-image: radial-gradient(var(--primary-500) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+/* --- 2. LES "BLOBS" ANIMÉS (Formes floues) --- */
+.blob {
+    border-radius: 50%;
+    filter: blur(80px); /* L'effet diffus */
+    opacity: 0.6;
+    animation: float 6s ease-in-out infinite;
+    z-index: 0;
+
+    :host-context(.dark-mode) & {
+        opacity: 0.3; /* Plus subtil en dark mode */
+    }
+}
+
+.blob-orange {
+    background-color: var(--secondary-400); /* Orange PC */
+}
+
+.blob-blue {
+    background-color: var(--primary-500); /* Bleu PC */
+    animation-delay: 3s; /* Décalage pour effet organique */
+}
+
+/* --- 3. GLASS CARD (La carte centrale) --- */
+.glass-card {
+    /* Light Mode : Blanc vitré */
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    transition: all 0.3s ease;
+
+    /* Dark Mode : Bleu Nuit vitré */
+    :host-context(.dark-mode) & {
+        background: rgba(0, 22, 51, 0.4); /* Base bleu nuit transparente */
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    }
+}
+
+/* --- 4. TYPOGRAPHIE & COULEURS --- */
+.icon-wrapper {
+    background-color: var(--secondary-100);
+    color: var(--secondary-500);
+
+    :host-context(.dark-mode) & {
+        background-color: rgba(240, 135, 0, 0.15);
+        color: var(--secondary-500);
+    }
+
+    /* Animation pulsation */
+    animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.text-neon {
+    color: var(--primary-900);
+
+    :host-context(.dark-mode) & {
+        color: #ffffff;
+        /* Lueur orange subtile sur le 404 */
+        text-shadow: 0 0 20px rgba(240, 135, 0, 0.3);
+    }
+}
+
+.message-title {
+    color: var(--text-main);
+    :host-context(.dark-mode) & { color: #ffffff; }
+}
+
+.text-muted {
+    color: var(--text-muted);
+    :host-context(.dark-mode) & { color: var(--primary-200); }
+}
+
+/* --- 5. BOUTONS --- */
+/* Bouton Principal (Tableau de bord) */
+.btn-primary {
+    background-color: var(--secondary-500);
+    color: #ffffff;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(240, 135, 0, 0.4); /* Glow Orange */
+    }
+}
+
+/* Bouton Secondaire (Retour) */
+.btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border-color: transparent;
+
+    &:hover {
+        background-color: rgba(0,0,0,0.05);
+        color: var(--text-main);
+    }
+
+    :host-context(.dark-mode) & {
+        color: var(--primary-200);
+        &:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: #ffffff;
+        }
+    }
+}
+
+/* --- 6. ANIMATIONS (Keyframes standards) --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .8; transform: scale(1.05); }
+}

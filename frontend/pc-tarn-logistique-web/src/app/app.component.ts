@@ -8,9 +8,9 @@ import { Toast } from 'primeng/toast';
 @Component({
     selector: 'app-root',
     imports: [ButtonModule, ToggleDarkModeComponent, LoadingSpinnerComponent, RouterOutlet, Toast],
-    templateUrl: './app.html',
-    styleUrl: './app.css',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
 })
-export class App {
+export class AppComponent {
     protected readonly title = signal('pc-tarn-logistique-web');
 }

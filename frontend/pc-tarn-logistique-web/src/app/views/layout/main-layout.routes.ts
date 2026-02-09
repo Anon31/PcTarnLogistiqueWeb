@@ -1,10 +1,10 @@
-import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { Routes } from '@angular/router';
 
 export const mainLayoutRoutes: Routes = [
     {
         path: '',
-        component: MainLayoutComponent,
+        loadComponent: () =>
+            import('./main-layout/main-layout.component').then((m) => m.MainLayoutComponent),
         children: [
             {
                 path: 'tableau-de-bord',

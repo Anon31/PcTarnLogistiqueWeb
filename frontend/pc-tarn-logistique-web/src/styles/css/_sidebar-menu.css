@@ -1,13 +1,11 @@
 .panel-menu-custom {
     /* Structure globale */
     .p-panelmenu-panel {
-        /*color: white !important;*/
         background: transparent !important;
         border: none !important;
-        margin-bottom: 0.25rem; /* Espacement entre les "îlots" */
+        margin-bottom: 0.5rem; /* Espacement entre les "îlots" */
         box-shadow: none !important;
     }
-
     /* HEADER */
     .p-panelmenu-header-content {
         border-radius: 16px;
@@ -60,7 +58,6 @@
             color: white;
             font-size: 0.9rem;
         }
-
         .p-panelmenu-item-icon {
             color: var(--menu-icon-color);
             margin-right: 0.75rem;
@@ -70,15 +67,14 @@
     }
 }
 
-/* Configuration de la scrollbar */
 .hide-scrollbar {
-    /* Pour Firefox */
+    /* Firefox */
     scrollbar-width: none;
-    /* Pour IE et Edge legacy */
+    /* IE & Edge legacy */
     -ms-overflow-style: none;
 }
 
-/* Pour Chrome, Safari et Opera */
+/* Chrome, Safari & Opera */
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
