@@ -1,5 +1,3 @@
-import { PageNotFound } from './shared/components/page-not-found/page-not-found';
-import { Login } from './views/pages/login/login';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -11,7 +9,8 @@ export const routes: Routes = [
     {
         path: 'connexion',
         title: 'Connexion',
-        component: Login,
+        loadComponent: () =>
+            import('./views/pages/login/login.component').then((m) => m.LoginComponent),
     },
     {
         path: '',
@@ -21,6 +20,9 @@ export const routes: Routes = [
     {
         path: '**',
         title: 'Page non trouvée',
-        component: PageNotFound,
+        loadComponent: () =>
+            import('./views/pages/page-not-found/page-not-found.component').then(
+                (m) => m.PageNotFoundComponent,
+            ),
     },
 ];

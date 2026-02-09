@@ -35,7 +35,6 @@
     --text-muted: #64748b;
 
     /* --- 🔗 MAPPING PRIMENG --- */
-    /* On force PrimeNG à utiliser nos variables */
     --primary-color: var(--primary-500);
     --primary-color-text: #ffffff;
 
@@ -43,11 +42,51 @@
     --custom-header-bg: var(--primary-500);
     --custom-header-text: #ffffff;
     --custom-header-border: rgba(255, 255, 255);
+
+    /* =========================================
+       🔮 MENU WEB3 & SCROLLBAR (ADD-ON)
+       ========================================= */
+
+    /* Aliases pour compatibilité avec le code du Menu */
+    --pc-blue-900: var(--primary-900);
+    --pc-orange-500: var(--secondary-500);
+    --pc-orange-glow: rgba(240, 135, 0, 0.4);
+
+    /* Light Mode Menu Tokens */
+    --menu-bg-hover: rgba(0, 64, 128, 0.05);
+    --menu-border-hover: var(--surface-border);
+    --menu-text: var(--text-muted);
+    --menu-text-hover: var(--primary-500);
+    --menu-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --menu-icon-color: var(--text-muted);
+
+    /* Scrollbar Light */
+    --scrollbar-track: transparent;
+    --scrollbar-thumb: #cbd5e1; /* Gris clair */
+    --scrollbar-border: #ffffff; /* Bordure pour effet détaché */
 }
 
 :root[data-theme="dark"],
 .dark-mode {
+    /* --- Dark Mode Theme Base --- */
     --custom-header-bg: var(--primary-900);
     --custom-header-text: var(--primary-50);
     --custom-header-border: var(--secondary-500);
+
+    /* --- 🔮 MENU WEB3 DARK TOKENS (Cyberpunk Style) --- */
+    --menu-bg-hover: rgba(255, 255, 255, 0.03);
+    --menu-border-hover: rgba(240, 135, 0, 0.5);
+    --menu-text: rgba(255, 255, 255, 0.7);
+    --menu-text-hover: #ffffff;
+
+    /* Effet Neon */
+    --menu-shadow-hover: 0 0 15px var(--pc-orange-glow), inset 0 0 10px rgba(255, 255, 255, 0.02);
+    --menu-glass-blur: blur(12px);
+    --menu-icon-color: rgba(255, 255, 255, 0.5);
+    --menu-icon-active: var(--secondary-500);
+
+    /* Scrollbar Dark (Neon) */
+    --scrollbar-track: rgba(0, 22, 51, 0.5); /* Fond sombre subtil */
+    --scrollbar-thumb: var(--secondary-500); /* Orange Neon */
+    --scrollbar-border: var(--primary-900); /* Couleur du fond pour détourage */
 }

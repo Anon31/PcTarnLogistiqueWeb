@@ -30,3 +30,38 @@
     padding: 0 !important;
     background: transparent !important;
 }
+
+/* SIDEBAR VERSION BADGE */
+app-sidebar-user > div {
+    margin-bottom: 0.25rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.version-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 1rem;
+}
+
+.version-badge {
+    padding: 0.1rem 0.5rem;
+    border-radius: 99px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    /* Style Glassmorphism */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    cursor: default;
+    user-select: none;
+}
+
+.version-badge:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+}

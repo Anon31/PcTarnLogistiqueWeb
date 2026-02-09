@@ -1,0 +1,33 @@
+<div class="page-404-container w-full h-screen flex items-center justify-center relative overflow-hidden">
+    <!-- 1. BACKGROUND ANIMÉ (Blobs) -->
+    <!-- Blob Orange (Haut Gauche) -->
+    <div class="blob blob-orange w-64 h-64 absolute -top-10 -left-10"></div>
+    <!-- Blob Bleu (Bas Droit) -->
+    <div class="blob blob-blue w-80 h-80 absolute bottom-0 right-0"></div>
+    <!-- Grille subtile en fond -->
+    <div class="grid-background absolute inset-0 z-0"></div>
+    <!-- 2. CONTENU CENTRAL (GLASS CARD) -->
+    <main class="glass-card relative z-10 p-8 md:p-12 rounded-3xl max-w-lg w-full text-center mx-4 flex flex-col items-center">
+        <div class="icon-wrapper mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full">
+            <i class="pi pi-compass text-4xl"></i>
+        </div>
+        <h1 class="text-8xl font-extrabold mb-2 tracking-tighter text-neon">
+            404
+        </h1>
+        <h2 class="text-2xl font-bold mb-4 message-title">
+            Perdu dans les stocks ?
+        </h2>
+        <p class="text-muted mb-10 leading-relaxed">
+            Désolé, la page que vous recherchez semble introuvable ou a été déplacée.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center w-full">
+            <button (click)="goBack()" class="btn-ghost px-6 py-3 rounded-xl font-semibold transition border cursor-pointer">
+                Retour
+            </button>
+            <a routerLink="/tableau-de-bord" class="btn-primary px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer">
+                <i class="pi pi-home"></i>
+                Tableau de bord
+            </a>
+        </div>
+    </main>
+</div>

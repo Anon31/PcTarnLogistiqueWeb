@@ -1,0 +1,80 @@
+.panel-menu-custom {
+    /* Structure globale */
+    .p-panelmenu-panel {
+        background: transparent !important;
+        border: none !important;
+        margin-bottom: 0.5rem; /* Espacement entre les "îlots" */
+        box-shadow: none !important;
+    }
+    /* HEADER */
+    .p-panelmenu-header-content {
+        border-radius: 16px;
+        background: transparent;
+        border: 1px solid transparent;
+        padding: 0.25rem 0.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+
+        .p-panelmenu-header-label {
+            color: #ffffff;
+        }
+
+        .p-panelmenu-header-icon, .p-menuitem-icon {
+            color: var(--menu-icon-color);
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        /* SUPPRESSION CHEVRON */
+        .p-icon {
+            display: none;
+        }
+    }
+
+    /* INTERACTION & HOVER */
+    .p-panelmenu-header:not(.p-disabled) .p-panelmenu-header-content:hover {
+        background: var(--menu-bg-hover);
+        border-color: var(--menu-border-hover);
+        box-shadow: var(--menu-shadow-hover);
+        backdrop-filter: var(--menu-glass-blur, none);
+        transform: translateX(4px); /* Petit mouvement vers la droite */
+
+        .p-panelmenu-header-icon {
+            color: var(--menu-icon-active, var(--pc-orange-500));
+            transform: scale(1.1); /* Petit pop de l'icône */
+        }
+    }
+
+    /* SOUS-MENUS */
+    .p-panelmenu-item-link {
+        padding: 0.8rem;
+        border-radius: 16px;
+        transition: all 0.2s;
+        background: transparent;
+
+        .p-panelmenu-item-label {
+            color: white;
+            font-size: 0.9rem;
+        }
+        .p-panelmenu-item-icon {
+            color: var(--menu-icon-color);
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+    }
+}
+
+.hide-scrollbar {
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE & Edge legacy */
+    -ms-overflow-style: none;
+}
+
+/* Chrome, Safari & Opera */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
