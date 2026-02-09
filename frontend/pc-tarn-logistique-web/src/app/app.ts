@@ -1,5 +1,5 @@
-import { ToggleDarkMode } from './shared/components/toggle-dark-mode/toggle-dark-mode';
-import { LoadingSpinner } from './shared/components/loading-spinner/loading-spinner';
+import { ToggleDarkModeComponent } from './shared/components/toggle-dark-mode/toggle-dark-mode.component';
+import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -7,7 +7,7 @@ import { Toast } from 'primeng/toast';
 
 @Component({
     selector: 'app-root',
-    imports: [ButtonModule, ToggleDarkMode, LoadingSpinner, RouterOutlet, Toast],
+    imports: [ButtonModule, ToggleDarkModeComponent, LoadingSpinnerComponent, RouterOutlet, Toast],
     templateUrl: './app.html',
     styleUrl: './app.css',
 })

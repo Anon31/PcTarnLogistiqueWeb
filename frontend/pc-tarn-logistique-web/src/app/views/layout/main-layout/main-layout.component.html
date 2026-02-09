@@ -1,0 +1,18 @@
+<div class="flex h-screen w-full overflow-hidden">
+    <!-- 1. GAUCHE : SIDEBAR -->
+    <!-- Elle se gère elle-même (largeur fixe sur desktop, drawer sur mobile) -->
+    <!-- flex-none empêche la sidebar de s'écraser -->
+    <app-sidebar class="flex-none"></app-sidebar>
+    <!-- 2. DROITE : WRAPPER CONTENU (Flex COLUMN) -->
+    <!-- flex-1 : Prend tout l'espace restant à droite de la sidebar -->
+    <!-- flex-col : Empile HeaderComponent -> RouterOutlet -> FooterComponent verticalement -->
+    <div class="flex flex-col flex-1 min-w-0 relative transition-all duration-300">
+        <app-header class="flex-none z-10"></app-header>
+        <!-- B. ROUTER OUTLET (Zone Scrollable) -->
+        <!-- flex-1 : Prend toute la hauteur disponible entre le header et le footer -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
+            <router-outlet> </router-outlet>
+        </main>
+        <app-footer class="flex-none mt-auto"></app-footer>
+    </div>
+</div>
