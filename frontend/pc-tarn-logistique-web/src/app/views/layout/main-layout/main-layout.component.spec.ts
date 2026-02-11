@@ -8,18 +8,13 @@ describe('MainLayoutComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MainLayoutComponent], // Source: Standalone[_MainLayoutComponent].
-            providers: [
-                // Corrige l'erreur NG0201: No provider found for `ActivatedRoute`.
-                provideRouter([]),
-            ],
+            imports: [MainLayoutComponent],
+            providers: [provideRouter([])],
         }).compileComponents();
 
         fixture = TestBed.createComponent(MainLayoutComponent);
         component = fixture.componentInstance;
 
-        // detectChanges() est souvent préférable à whenStable() pour l'initialisation
-        // car il déclenche ngOnInit et les bindings initiaux
         fixture.detectChanges();
     });
 
