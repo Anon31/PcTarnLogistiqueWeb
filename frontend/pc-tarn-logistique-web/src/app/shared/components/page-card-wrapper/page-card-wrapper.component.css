@@ -1,0 +1,7 @@
+:host {
+    ::ng-deep .p-card {
+        border-radius: 16px;
+        border: 1px solid var(--secondary-500);
+        box-shadow: none;
+    }
+}

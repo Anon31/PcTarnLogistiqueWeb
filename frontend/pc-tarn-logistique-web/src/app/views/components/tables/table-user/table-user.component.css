@@ -1,0 +1,136 @@
+/* --- Web3 Glassmorphism Card --- */
+.web3-card {
+    /* Fond basé sur le Bleu Primaire 900 (#001633) avec transparence pour l'effet Glass */
+    background: linear-gradient(180deg, rgba(0, 22, 51, 0.8) 0%, rgba(0, 22, 51, 0.95) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    /* Bordure subtile basée sur le bleu plus clair */
+    border: 1px solid var(--primary-700);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* --- Input de recherche moderne --- */
+:host ::ng-deep .web3-input {
+    background: var(--primary-800); /* Fond input légèrement plus clair */
+    border: 1px solid var(--primary-600);
+    color: var(--primary-50);
+    border-radius: 12px;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* Espace pour l'icône */
+    transition: all 0.3s ease;
+}
+
+:host ::ng-deep .web3-input:focus {
+    border-color: var(--secondary-500); /* Focus Orange */
+    box-shadow: 0 0 0 2px var(--pc-orange-glow); /* Glow Orange */
+    background: var(--primary-700);
+}
+
+:host ::ng-deep .p-input-icon {
+    color: var(--primary-200);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* --- Bouton Primaire (Orange Action) --- */
+:host ::ng-deep .web3-button-primary {
+    /* Gradient Orange Officiel */
+    background: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    color: #fff !important; /* Texte blanc sur orange */
+    box-shadow: 0 4px 12px rgba(240, 135, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+:host ::ng-deep .web3-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(240, 135, 0, 0.5);
+    background: linear-gradient(135deg, var(--secondary-400) 0%, var(--secondary-500) 100%) !important;
+}
+
+/* --- Table Headers --- */
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    background: rgba(0, 22, 51, 0.5); /* Fond très sombre pour le header */
+    color: var(--primary-200); /* Texte bleu clair */
+    border-bottom: 1px solid var(--primary-700);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    padding: 1.2rem 1rem;
+}
+
+:host ::ng-deep .p-sortable-column:hover {
+    color: var(--secondary-400) !important; /* Hover orange sur les headers */
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+:host ::ng-deep .p-sorticon {
+    color: var(--primary-400);
+}
+
+/* --- Table Rows --- */
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+    background: transparent;
+    color: var(--primary-50);
+    border-bottom: 1px solid var(--primary-800); /* Séparateur subtil */
+    transition: background-color 0.2s;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+    background: rgba(240, 135, 0, 0.05) !important; /* Léger effet orange au survol */
+}
+
+/* --- Paginator --- */
+:host ::ng-deep .p-paginator {
+    background: transparent;
+    border: none;
+    margin-top: 1.5rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-element {
+    color: var(--primary-200);
+    border-radius: 8px;
+    min-width: 2rem;
+    height: 2rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-element:hover {
+    background: var(--primary-700);
+    color: #fff;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-element.p-highlight {
+    background: var(--secondary-500); /* Orange pour la page active */
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(240, 135, 0, 0.4);
+}
+
+/* --- Animations --- */
+.fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Styles spécifiques pour l'édition (Inputs dans le tableau) --- */
+:host ::ng-deep .web3-input-sm {
+    background: var(--primary-950) !important;
+    border: 1px solid var(--primary-600) !important;
+    color: #fff !important;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+:host ::ng-deep .web3-input-sm:focus {
+    border-color: var(--secondary-500) !important;
+    box-shadow: 0 0 0 1px var(--secondary-500);
+}

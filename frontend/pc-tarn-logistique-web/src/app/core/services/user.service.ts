@@ -1,16 +1,42 @@
 import { IUserDto, IUserPayload } from '../../shared/interfaces/user';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { inject, Injectable } from '@angular/core';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { ToasterService } from './toaster.service';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserService {
-    private httpClient = inject(HttpClient);
-    private router = inject(Router);
+    private http = inject(HttpClient);
+    private toaster = inject(ToasterService);
+
+    // Le signal privé contient l'état brut
+    private usersSignal = signal<IUserDto[]>([]);
+    // Le signal public en lecture seule pour les composants
+    readonly users = computed(() => this.usersSignal());
+
+    /**
+     * Charge les utilisateurs et met à jour le signal.
+     * Le composant n'a pas besoin de subscribe, juste d'appeler cette méthode.
+     */
+    getAllUsers(): void {
+        this.http
+            .get<IUserDto[]>(`${environment.API_URL}/users`)
+            .pipe(
+                tap((users) => this.usersSignal.set(users)),
+                catchError((err) => {
+                    console.error('Erreur chargement users', err);
+                    this.toaster.error(
+                        'Tous nos utilisateurs',
+                        'Une erreur est survenue lors de la récupération des utilisateurs',
+                    );
+                    return throwError(() => err);
+                }),
+            )
+            .subscribe();
+    }
 
     /**
      * Création d'un nouvel utilisateur
@@ -18,7 +44,7 @@ export class UserService {
      */
     createUser(user: IUserPayload) {
         console.log('Creating user:', user);
-        // return this.httpClient.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
+        // return this.http.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
         //     tap((createdUser: IUserDto) => {
         //         // Logique optionnelle post-inscription (ex: auto-login)
         //         console.log('🚀 Utilisateur créé avec succès:', createdUser);
@@ -27,28 +53,36 @@ export class UserService {
     }
 
     getUserById(userId: number) {
-        return this.httpClient.get<IUserDto>(`${environment.API_URL}/users/${userId}`);
+        return this.http.get<IUserDto>(`${environment.API_URL}/users/${userId}`);
     }
 
     getUserByEmail(email: string) {
-        return this.httpClient.get<IUserDto>(`${environment.API_URL}/users/email/${email}`);
+        return this.http.get<IUserDto>(`${environment.API_URL}/users/email/${email}`);
     }
 
-    getAllUsers() {
-        return this.httpClient.get<IUserDto[]>(`${environment.API_URL}/users`);
-    }
-
-    updateUser(userId: string, user: Partial<IUserPayload>) {
-        return this.httpClient.put<IUserDto>(`${environment.API_URL}/users/${userId}`, user).pipe(
-            tap((updatedUser: IUserDto) => {
+    /**
+     * Met à jour un utilisateur (API + State Local)
+     */
+    updateUser(id: number, user: Partial<IUserDto>): Observable<IUserDto> {
+        return this.http.put<IUserDto>(`${environment.API_URL}/users/${id}`, user).pipe(
+            tap((updatedUser) => {
+                // Mise à jour locale optimiste du tableau
+                this.usersSignal.update((users) =>
+                    users.map((u) => (u.id === id ? { ...u, ...updatedUser } : u)),
+                );
                 console.log('🚀 Utilisateur mis à jour avec succès:', updatedUser);
             }),
         );
     }
 
-    deleteUser(userId: string) {
-        return this.httpClient.delete<void>(`${environment.API_URL}/users/${userId}`).pipe(
+    /**
+     * Supprime un utilisateur (API + State Local)
+     */
+    deleteUser(id: number): Observable<void> {
+        return this.http.delete<void>(`${environment.API_URL}/users/${id}`).pipe(
             tap(() => {
+                // Suppression locale instantanée
+                this.usersSignal.update((users) => users.filter((u) => u.id !== id));
                 console.log('🚀 Utilisateur supprimé avec succès');
             }),
         );
