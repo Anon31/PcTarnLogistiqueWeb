@@ -1,153 +1,138 @@
 <div>
-    <span class="text-sm font-bold">Au total, il y a {{ userService.users() ? userService.users().length : 0 }} utilisateurs.</span>
+    <span class="text-sm">Au total, il y a {{ userService.users() ? userService.users().length : 0 }} utilisateurs.</span>
 </div>
-<p-table
-    [value]="userService.users()"
-    dataKey="id"
-    editMode="row"
-    [tableStyle]="{'min-width': '60rem'}"
-    class="web3-table web3-card fade-in">
+
+<p-table [value]="userService.users()" dataKey="id" editMode="row" [size]="'small'" [resizableColumns]="true">
     <ng-template pTemplate="header">
         <tr>
-            <th style="width:25%">Utilisateur</th>
-            <th style="width:20%">Email</th>
-            <th style="width:15%">Rôle</th>
-            <th style="width:15%">Ville</th>
-            <th style="width:10%">Statut</th>
-            <th style="width:15%" class="text-center">Actions</th>
+            <th pSortableColumn="firstname" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Prénom
+                    <p-sortIcon field="firstname" />
+                </div>
+            </th>
+            <th pSortableColumn="lastname" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Nom
+                    <p-sortIcon field="lastname" />
+                </div>
+            </th>
+            <th pSortableColumn="email" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Email
+                    <p-sortIcon field="email" />
+                </div>
+            </th>
+            <th style="width:20%">
+                <div class="flex items-center gap-2">
+                    Téléphone
+                </div>
+            </th>
+            <th pSortableColumn="address.city" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Ville
+                    <p-sortIcon field="address.city" />
+                </div>
+            </th>
+            <th pSortableColumn="user.roles[0]?.name" style="width:20%">
+            <div class="flex items-center gap-2">
+                    Rôle
+                    <p-sortIcon field="user.roles[0]?.name" />
+                </div>
+            </th>
+            <th pSortableColumn="status" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Statut
+                    <p-sortIcon field="status" />
+                </div>
+            </th>
+            <th style="width:15%" class="text-center"></th>
         </tr>
     </ng-template>
-
-    <ng-template pTemplate="body" let-user let-editing="editing" let-ri="rowIndex">
-        <tr [pEditableRow]="user" class="web3-row">
-
-            <!-- COLONNE 1: Identité (Avatar + Nom/Prénom) -->
+    <ng-template #body let-user let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="user">
             <td>
                 <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <div class="flex flex-col gap-2">
-                            <input pInputText type="text" [(ngModel)]="user.lastname" placeholder="Nom" class="web3-input-sm" />
-                            <input pInputText type="text" [(ngModel)]="user.firstname" placeholder="Prénom" class="web3-input-sm" />
-                        </div>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.firstname" />
                     </ng-template>
-                    <ng-template pTemplate="output">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-linear-to-tr from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-lg">
-                                {{ user.firstname?.charAt(0) }}{{ user.lastname?.charAt(0) }}
-                            </div>
-                            <span class="font-semibold text-gray-100">{{ user.lastname }} {{ user.firstname }}</span>
-                        </div>
+                    <ng-template #output>
+                        {{user.firstname}}
                     </ng-template>
                 </p-cellEditor>
             </td>
-
-            <!-- COLONNE 2: Email -->
             <td>
                 <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <input pInputText type="text" [(ngModel)]="user.email" class="web3-input-sm w-full" />
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.lastname" />
                     </ng-template>
-                    <ng-template pTemplate="output">
-                        <span class="text-gray-300">{{ user.email }}</span>
+                    <ng-template #output>
+                        {{user.lastname}}
                     </ng-template>
                 </p-cellEditor>
             </td>
-
-            <!-- COLONNE 3: Rôle (Dropdown) -->
             <td>
                 <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.email" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{user.email}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.phone" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{user.phone}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                {{user.address?.city}}
+            </td>
+            <td>
+            <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-select
                             [options]="rolesOptions"
                             [(ngModel)]="user.roles[0].name"
                             appendTo="body"
+                            optionLabel="label"
+                            optionValue="value"
                             [style]="{'width':'100%'}">
                         </p-select>
                     </ng-template>
-                    <ng-template pTemplate="output">
-                        <span class="px-2 py-1 rounded text-xs font-bold tracking-wide border border-opacity-20"
-                            [ngClass]="{
-                                'bg-blue-500/10 text-blue-400 border-blue-500': user.roles[0]?.name === 'ADMIN',
-                                'bg-gray-700/30 text-gray-400 border-gray-600': user.roles[0]?.name !== 'ADMIN'
-                            }">
-                            {{ user.roles[0]?.name }}
-                        </span>
+                    <ng-template #output>
+                        {{ user.roles[0]?.name | roleLabel }}
                     </ng-template>
                 </p-cellEditor>
             </td>
-
-            <!-- COLONNE 4: Ville (Donnée imbriquée) -->
             <td>
-                <p-cellEditor>
-<!--                        <ng-template pTemplate="input">-->
-<!--                            &lt;!&ndash; Vérification optionnelle pour éviter erreur sur null &ndash;&gt;-->
-<!--                            <input pInputText type="text" [(ngModel)]="user.address && user.address.city" class="web3-input-sm w-full" />-->
-<!--                        </ng-template>-->
-                    <ng-template pTemplate="output">
-                        <span class="text-gray-400">{{ user.address?.city || '-' }}</span>
-                    </ng-template>
-                </p-cellEditor>
+                <p-tag [rounded]="true" [value]="user.enabled ? 'ACTIF' : 'INACTIF'" [severity]="user.enabled ? 'success' : 'danger'"></p-tag>
             </td>
-
-            <!-- COLONNE 5: Statut -->
             <td>
-                <p-tag [value]="user.enabled ? 'ACTIF' : 'INACTIF'" [severity]="user.enabled ? 'success' : 'danger'"></p-tag>
-            </td>
-
-            <!-- COLONNE 6: Actions (Édition en ligne) -->
-            <td class="text-center">
                 <div class="flex items-center justify-center gap-2">
-                    @if (editing) {
-                        <p-button
-                            [rounded]="true"
-                            [outlined]="true"
-                            severity="info"
-                            type="button"
-                            pSaveEditableRow
-                            icon="pi pi-check"
-                            (click)="onRowEditSave(user)"
-                            class="p-button-rounded p-button-text p-button-success mr-2"
-                        />
-                    }
-                    @if (editing) {
-                        <p-button
-                            [rounded]="true"
-                            [outlined]="true"
-                            severity="info"
-                            type="button"
-                            pSaveEditableRow
-                            icon="pi pi-times"
-                            (click)="onRowEditCancel(user, ri)"
-                            class="p-button-rounded p-button-text p-button-danger"
-                        />
+                    @if (!editing) {
+                        <p-button pInitEditableRow icon="pi pi-user-edit" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onRowEditInit(user)" />
                     }
                     @if (!editing) {
-                        <p-button
-                            [rounded]="true"
-                            [outlined]="true"
-                            severity="info"
-                            type="button"
-                            pSaveEditableRow
-                            icon="pi pi-pencil"
-                            (click)="onRowEditInit(user)"
-                            class="p-button-rounded p-button-text p-button-info"
-                        />
+                        <p-button icon="pi pi-eye" [rounded]="true" [text]="true" [raised]="true" severity="success" />
                     }
                     @if (!editing) {
-                        <p-button
-                            [rounded]="true"
-                            [outlined]="true"
-                            severity="info"
-                            type="button"
-                            pSaveEditableRow
-                            icon="pi pi-trash"
-                            (click)="onDelete(user.id)"
-                            class="p-button-rounded p-button-text p-button-danger"
-                        />
+                        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onDelete(user.id)" />
+                    }
+                    @if (editing) {
+                        <p-button pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onRowEditSave(user)" />
+                    }
+                    @if (editing) {
+                        <p-button pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onRowEditCancel(user, ri)" />
                     }
                 </div>
             </td>
         </tr>
     </ng-template>
 </p-table>
-

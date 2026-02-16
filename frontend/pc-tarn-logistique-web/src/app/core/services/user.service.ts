@@ -63,8 +63,8 @@ export class UserService {
     /**
      * Met à jour un utilisateur (API + State Local)
      */
-    updateUser(id: number, user: Partial<IUserDto>): Observable<IUserDto> {
-        return this.http.put<IUserDto>(`${environment.API_URL}/users/${id}`, user).pipe(
+    patchUser(id: number, user: Partial<IUserPayload>): Observable<IUserDto> {
+        return this.http.patch<IUserDto>(`${environment.API_URL}/users/${id}`, user).pipe(
             tap((updatedUser) => {
                 // Mise à jour locale optimiste du tableau
                 this.usersSignal.update((users) =>
