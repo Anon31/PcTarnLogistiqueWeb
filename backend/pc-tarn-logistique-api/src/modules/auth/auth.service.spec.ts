@@ -1,8 +1,8 @@
+import { UnauthorizedException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 // 1. On mock le module bcrypt globalement pour éviter les erreurs de redéfinition (Cannot redefine property)
@@ -23,11 +23,7 @@ describe('AuthService', () => {
         };
 
         const module: TestingModule = await Test.createTestingModule({
-            providers: [
-                AuthService,
-                { provide: UsersService, useValue: usersService },
-                { provide: JwtService, useValue: jwtService },
-            ],
+            providers: [AuthService, { provide: UsersService, useValue: usersService }, { provide: JwtService, useValue: jwtService }],
         }).compile();
 
         authService = module.get<AuthService>(AuthService);

@@ -1,11 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, ValidateNested, IsInt, IsDateString, IsEnum } from 'class-validator';
+import { UserRole } from '../../../enums/user-role.enum';
 import { Type } from 'class-transformer';
-
-export enum UserRole {
-    ADMIN = 'ADMIN',
-    MANAGER = 'MANAGER',
-    BENEVOLE = 'BENEVOLE',
-}
 
 export class CreateAddressDto {
     @IsInt()

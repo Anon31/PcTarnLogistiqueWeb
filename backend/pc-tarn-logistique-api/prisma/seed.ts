@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'; // Import de l'enum généré par Prisma
+import { PrismaClient, Role } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
@@ -10,12 +10,8 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
     console.log('🌱 Début du seeding...');
-
-    // Note : Plus de création de table "Role" ici.
-
     // 1. Préparation des données
     const password = await bcrypt.hash('Secret123!', 10);
-
     const users = [
         {
             email: 'admin@test.com',
@@ -76,7 +72,6 @@ async function main() {
                 lastname: u.lastname,
                 phone: u.phone,
                 birthdate: u.birthdate,
-                // Assignation directe de la valeur Enum
                 role: u.role,
                 enabled: true,
                 address: {

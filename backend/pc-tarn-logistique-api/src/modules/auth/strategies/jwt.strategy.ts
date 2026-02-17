@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     /**
-     * Validate the JWT payload
+     * Cette méthode est appelée automatiquement par Passport après avoir vérifié la validité du token JWT.
      * @param payload
      */
     async validate(payload: any) {
