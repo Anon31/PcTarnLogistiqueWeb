@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { EnumsModule } from './modules/enums/enums.module';
 import { UsersModule } from './modules/users/users.module';
-import { PrismaService } from './prisma/prisma.service';
-import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
+import { PrismaService } from './prisma/prisma.service';
+import { AppController } from './app.controller';
+import { ConfigModule } from '@nestjs/config';
+import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module';
         }),
         UsersModule,
         AuthModule,
+        EnumsModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],
