@@ -1,5 +1,11 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, ValidateNested, IsInt, IsDateString, IsIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, ValidateNested, IsInt, IsDateString, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
+
+export enum UserRole {
+    ADMIN = 'ADMIN',
+    MANAGER = 'MANAGER',
+    BENEVOLE = 'BENEVOLE',
+}
 
 export class CreateAddressDto {
     @IsInt()
@@ -32,18 +38,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     lastname: string;
 
-    /**
-     * L'adresse email de l'utilisateur (doit être unique)
-     * @example 'jean.dupont@email.com'
-     */
     @IsEmail({}, { message: "Format d'email invalide" })
     @IsNotEmpty()
     email: string;
 
-    /**
-     * Le mot de passe de l'utilisateur (au moins 8 caractères)
-     * @example 'P@ssw0rd123'
-     */
     @IsString()
     @IsNotEmpty()
     @MinLength(8, { message: 'Mot de passe trop court' })
@@ -53,24 +51,15 @@ export class CreateUserDto {
     @IsOptional()
     phone?: string;
 
-    /**
-     * La date de naissance de l'utilisateur au format ISO 8601 (YYYY-MM-DD)
-     * @example '1990-05-15'
-     */
     @IsDateString()
     @IsOptional()
     birthdate?: string;
 
-    /**
-     * Le rôle de l'utilisateur (OBLIGATOIRE)
-     * L'admin doit explicitement choisir un rôle.
-     */
-    @IsString()
-    @IsNotEmpty({ message: 'Le rôle est obligatoire (ex: ADMIN, BENEVOLE)' })
-    @IsIn(['ADMIN', 'BENEVOLE', 'MANAGER'], { message: 'Rôle invalide' })
-    roles: string;
+    // Validation stricte basée sur l'Enum
+    @IsEnum(UserRole, { message: 'Le rôle doit être ADMIN, MANAGER ou BENEVOLE' })
+    @IsNotEmpty({ message: 'Le rôle est obligatoire' })
+    role: UserRole;
 
-    // Optionnel : Permet de créer l'adresse en même temps
     @IsOptional()
     @ValidateNested()
     @Type(() => CreateAddressDto)

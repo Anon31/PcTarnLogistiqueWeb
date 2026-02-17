@@ -1,7 +1,3 @@
-// This is your Prisma schema file, learn more about it in the docs: https://pris.ly/d/prisma-schema
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
@@ -11,20 +7,73 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  MANAGER
+  BENEVOLE
+}
+
+enum ItemCategory {
+  BILAN
+  TRAUMA
+  PLAIE
+  HYGIENE
+  MALAISE
+  OXY
+  KITS
+  FORMATION
+  LOGISTIQUE
+}
+
+enum Condition {
+  BON
+  MOYEN
+  A_CHANGER
+  HS
+}
+
+enum VehicleStatus {
+  OPERATIONAL
+  WARNING
+  NON_COMPLIANT
+}
+
+enum LotStatus {
+  DISPONIBLE
+  NON_OPERATIONNEL
+}
+
+enum CheckType {
+  DEPARTURE
+  RETURN
+  PERIODIC
+}
+
+enum ReportStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum ReportUrgency {
+  LOW
+  MEDIUM
+  CRITICAL
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   firstname String
   lastname  String
   email     String    @unique
-  password  String // Sera hashé dans le UsersService
-  phone     String? // Ajouté
-  birthdate DateTime? // Ajouté
+  password  String
+  phone     String?
+  birthdate DateTime?
   enabled   Boolean   @default(false)
+  role      Role      @default(BENEVOLE)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  // Relations
   address   Address?
-  roles     Role[]
 }
 
 model Address {
@@ -36,10 +85,4 @@ model Address {
   state   String
   userId  Int    @unique
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Role {
-  id    Int    @id @default(autoincrement())
-  name  String @unique // Correspond au 'role' de l'interface IRole
-  users User[]
 }
