@@ -127,7 +127,7 @@ export class AuthService {
         if (token && !this.jwtHelperService.isTokenExpired(token)) {
             this.tokenSignal.set(token);
             this.decodeJwtToken(token);
-            // Note : userConnectedSignal restera null au F5 tant qu'on ne refait pas un appel /me
+            // Note : userConnectedSignal restera null au F5 tant qu'on ne refait pas un appel
             // ou qu'on ne stocke pas l'user dans le localStorage aussi.
             // AJOUT : Restaurer le signal utilisateur si présent
             if (userStr) {

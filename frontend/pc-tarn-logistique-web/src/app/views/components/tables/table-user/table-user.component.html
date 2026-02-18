@@ -1,0 +1,138 @@
+<div>
+    <span class="text-sm">Au total, il y a {{ userService.users() ? userService.users().length : 0 }} utilisateurs.</span>
+</div>
+
+<p-table [value]="userService.users()" dataKey="id" editMode="row" [size]="'small'" [resizableColumns]="true">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="firstname" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Prénom
+                    <p-sortIcon field="firstname" />
+                </div>
+            </th>
+            <th pSortableColumn="lastname" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Nom
+                    <p-sortIcon field="lastname" />
+                </div>
+            </th>
+            <th pSortableColumn="email" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Email
+                    <p-sortIcon field="email" />
+                </div>
+            </th>
+            <th style="width:20%">
+                <div class="flex items-center gap-2">
+                    Téléphone
+                </div>
+            </th>
+            <th pSortableColumn="address.city" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Ville
+                    <p-sortIcon field="address.city" />
+                </div>
+            </th>
+            <th pSortableColumn="user.roles[0]?.name" style="width:20%">
+            <div class="flex items-center gap-2">
+                    Rôle
+                    <p-sortIcon field="user.roles[0]?.name" />
+                </div>
+            </th>
+            <th pSortableColumn="status" style="width:20%">
+                <div class="flex items-center gap-2">
+                    Statut
+                    <p-sortIcon field="status" />
+                </div>
+            </th>
+            <th style="width:15%" class="text-center"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-user let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="user">
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.firstname" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{user.firstname}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.lastname" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{user.lastname}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.email" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{user.email}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="user.phone" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{user.phone}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                {{user.address?.city}}
+            </td>
+            <td>
+            <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-select
+                            [options]="rolesOptions"
+                            [(ngModel)]="user.role"
+                            appendTo="body"
+                            optionLabel="label"
+                            optionValue="value"
+                            [style]="{'width':'100%'}">
+                        </p-select>
+                    </ng-template>
+                    <ng-template #output>
+                        {{ user.role | roleLabel }}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-tag [rounded]="true" [value]="user.enabled ? 'ACTIF' : 'INACTIF'" [severity]="user.enabled ? 'success' : 'danger'"></p-tag>
+            </td>
+            <td>
+                <div class="flex items-center justify-center gap-2">
+                    @if (!editing) {
+                        <p-button pInitEditableRow icon="pi pi-user-edit" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onRowEditInit(user)" />
+                    }
+                    @if (!editing) {
+                        <p-button icon="pi pi-eye" [rounded]="true" [text]="true" [raised]="true" severity="success" />
+                    }
+                    @if (!editing) {
+                        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onDelete(user.id)" />
+                    }
+                    @if (editing) {
+                        <p-button pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onRowEditSave(user)" />
+                    }
+                    @if (editing) {
+                        <p-button pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="onRowEditCancel(user, ri)" />
+                    }
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

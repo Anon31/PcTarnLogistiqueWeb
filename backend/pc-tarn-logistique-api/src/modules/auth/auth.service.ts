@@ -11,31 +11,27 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    /**
-     * Connexion d'un utilisateur
-     * @param loginDto
-     */
     async login(loginDto: LoginDto) {
         const { email, password } = loginDto;
 
-        // 1. Chercher l'utilisateur
+        // Vérification de l'utilisateur
         const user = await this.usersService.findByEmail(email);
 
-        // 2. Vérifier existence + Mot de passe + Activé
+        // Vérification de l'existence, de l'activation et du mot de passe
         if (!user || !user.enabled || !(await bcrypt.compare(password, user.password))) {
             throw new UnauthorizedException('Identifiants incorrects ou compte désactivé');
         }
 
-        // 3. Créer le payload du token (C'est ICI que ça se passe pour le token décodé)
+        // Création du Payload JWT
         const payload = {
             sub: user.id,
             email: user.email,
-            roles: user.roles.map((r) => r.name),
+            role: user.role,
             firstname: user.firstname,
             lastname: user.lastname,
         };
 
-        // 4. Retourner Token + Info User + Message
+        // 4. Réponse
         return {
             access_token: await this.jwtService.signAsync(payload),
             message: 'Connexion réussie 🎯',
@@ -44,7 +40,7 @@ export class AuthService {
                 email: user.email,
                 firstname: user.firstname,
                 lastname: user.lastname,
-                roles: user.roles,
+                role: user.role,
             },
         };
     }

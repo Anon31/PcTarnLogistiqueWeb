@@ -1,13 +1,10 @@
 import { IUserDto } from './user';
-import { IRoleDto } from './role';
 
 /**
  * TYPE DÉDIÉ À L'UTILISATEUR CONNECTÉ (Session)
- * Utilisé pour typer currentUser le AuthService
+ * Utilisé pour typer userConnectedSignal dans AuthService
  */
-export type IAuthUser = Pick<IUserDto, 'id' | 'email' | 'firstname' | 'lastname'> & {
-    roles: IRoleDto[];
-};
+export type IAuthUser = Pick<IUserDto, 'id' | 'email' | 'firstname' | 'lastname' | 'role'>;
 
 /**
  * DTO DE RÉPONSE LOGIN
