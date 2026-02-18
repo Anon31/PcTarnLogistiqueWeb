@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
@@ -10,20 +10,8 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
     console.log('🌱 Début du seeding...');
-
-    // 1. Rôles
-    const roles = ['ADMIN', 'BENEVOLE', 'MANAGER'];
-    for (const roleName of roles) {
-        await prisma.role.upsert({
-            where: { name: roleName },
-            update: {},
-            create: { name: roleName },
-        });
-    }
-
-    // 2. Users de test
+    // 1. Préparation des données
     const password = await bcrypt.hash('Secret123!', 10);
-
     const users = [
         {
             email: 'admin@test.com',
@@ -31,7 +19,7 @@ async function main() {
             lastname: 'Admin',
             phone: '0601020304',
             birthdate: new Date('1980-01-01'),
-            role: 'ADMIN',
+            role: Role.ADMIN, // Utilisation de l'enum typé
             address: {
                 number: 10,
                 street: 'Rue de la Paix',
@@ -46,7 +34,7 @@ async function main() {
             lastname: 'Manager',
             phone: '0612345678',
             birthdate: new Date('1985-05-15'),
-            role: 'MANAGER',
+            role: Role.MANAGER,
             address: {
                 number: 42,
                 street: 'Avenue Foch',
@@ -61,7 +49,7 @@ async function main() {
             lastname: 'Bénévole',
             phone: '0698765432',
             birthdate: new Date('1995-12-25'),
-            role: 'BENEVOLE',
+            role: Role.BENEVOLE,
             address: {
                 number: 5,
                 street: 'Vieux Port',
@@ -72,11 +60,11 @@ async function main() {
         },
     ];
 
-    // 4. Boucle de création uniquement
+    // 2. Boucle de création
     for (const u of users) {
         await prisma.user.upsert({
             where: { email: u.email },
-            update: {}, // Ne fait rien si l'utilisateur existe déjà (protection)
+            update: { role: u.role }, // Mise à jour du rôle si existant
             create: {
                 email: u.email,
                 password: password,
@@ -84,8 +72,8 @@ async function main() {
                 lastname: u.lastname,
                 phone: u.phone,
                 birthdate: u.birthdate,
+                role: u.role,
                 enabled: true,
-                roles: { connect: { name: u.role } },
                 address: {
                     create: u.address,
                 },

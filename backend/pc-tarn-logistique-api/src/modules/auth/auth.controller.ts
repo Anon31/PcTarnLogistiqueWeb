@@ -1,19 +1,10 @@
-import {
-    Controller,
-    Post,
-    Body,
-    HttpCode,
-    HttpStatus,
-    Get,
-    UseGuards,
-    Request,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Request } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Authentification') // Regroupe-les endpoints sous la section "Authentification"
+@ApiTags('Authentification') // Regroupe pour Sagger les endpoints sous la section "Authentification"
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
@@ -31,7 +22,7 @@ export class AuthController {
     @ApiBearerAuth()
     @HttpCode(HttpStatus.OK)
     async logout(@Request() req: any) {
-        // Note : Le vrai logout se fait côté client en supprimant le token.
+        // Le vrai logout se fait côté client en supprimant le token.
         // Ici, on peut logger l'action ou invalider un cache si besoin.
         return { message: 'Déconnexion réussie' };
     }
