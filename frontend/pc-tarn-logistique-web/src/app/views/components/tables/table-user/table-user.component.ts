@@ -52,20 +52,7 @@ export class TableUserComponent implements OnInit {
         if (user.lastname !== original.lastname) payload.lastname = user.lastname;
         if (user.email !== original.email) payload.email = user.email;
         if (user.phone !== original.phone) payload.phone = user.phone;
-
-        // 2. Gestion Spéciale des Rôles
-        const newRole = user.roles?.[0]?.name;
-        const oldRole = original.roles?.[0]?.name;
-
-        if (newRole !== oldRole && newRole) {
-            payload.roles = newRole;
-        }
-
-        // 3. Si aucune modification
-        if (Object.keys(payload).length === 0) {
-            delete this.clonedUsers[user.id];
-            return;
-        }
+        if (user.role !== original.role) payload.role = user.role;
 
         console.log('Payload Patch envoyé :', payload);
 
@@ -78,13 +65,13 @@ export class TableUserComponent implements OnInit {
             )
             .subscribe({
                 next: (updatedUser) => {
-                    // Ici tu peux ajouter ton toaster de succès
+                    // Ajouter toaster de succès
                     console.log('Succès update');
                     delete this.clonedUsers[user.id];
                 },
                 error: (err) => {
                     console.error('Erreur Update:', err);
-                    // Ici tu peux ajouter ton toaster d'erreur
+                    // Ajouter toaster d'erreur
                     this.onRowEditCancel(user, -1);
                 },
             });

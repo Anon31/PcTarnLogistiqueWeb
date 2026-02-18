@@ -99,7 +99,7 @@
                     <ng-template pTemplate="input">
                         <p-select
                             [options]="rolesOptions"
-                            [(ngModel)]="user.roles[0].name"
+                            [(ngModel)]="user.role"
                             appendTo="body"
                             optionLabel="label"
                             optionValue="value"
@@ -107,7 +107,7 @@
                         </p-select>
                     </ng-template>
                     <ng-template #output>
-                        {{ user.roles[0]?.name | roleLabel }}
+                        {{ user.role | roleLabel }}
                     </ng-template>
                 </p-cellEditor>
             </td>
