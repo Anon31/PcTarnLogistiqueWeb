@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-
+import { Controller, Get, Req } from '@nestjs/common';
+import type {Request} from 'express';
+import { ApiOperation } from '@nestjs/swagger';
 @Controller()
 export class AppController {
-    constructor(private readonly appService: AppService) {}
+    constructor() {}
 
     @Get()
-    getHello(): string {
-        return this.appService.getHello();
+   @ApiOperation({ summary: "Endpoint d'accueil de l'API" })
+   async getHello(@Req() request:Request): Promise<string> {
+
+        return 'Welcome to Protection civile API';
     }
 }
