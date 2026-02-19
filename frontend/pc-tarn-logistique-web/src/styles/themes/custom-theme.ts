@@ -98,7 +98,7 @@ export const CustomTheme = definePreset(Material, {
             },
             colorScheme: {
                 light: {
-                    // --- SUCCESS (Light) - Validé ---
+                    // --- SUCCESS (Light) ---
                     success: {
                         background: 'rgba(209, 250, 229, 0.95)',
                         color: '#047857',
@@ -108,8 +108,6 @@ export const CustomTheme = definePreset(Material, {
                     },
                     // --- INFO (Light) - Bleu Ciel Frais ---
                     info: {
-                        // Avant: Blanc vitré
-                        // Après: Bleu ciel soutenu (Blue 100)
                         background: 'rgba(219, 234, 254, 0.95)',
                         color: '#1e40af', // Bleu roi foncé
                         detailColor: '#1e3a8a',
@@ -118,8 +116,6 @@ export const CustomTheme = definePreset(Material, {
                     },
                     // --- WARN (Light) - Orange Crème ---
                     warn: {
-                        // Avant: Blanc vitré
-                        // Après: Orange crème (Orange 100)
                         background: 'rgba(255, 237, 213, 0.95)',
                         color: '#9a3412', // Orange brûlé foncé
                         detailColor: '#7c2d12',
@@ -128,8 +124,6 @@ export const CustomTheme = definePreset(Material, {
                     },
                     // --- ERROR (Light) - Rose Rouge ---
                     error: {
-                        // Avant: Blanc vitré
-                        // Après: Rouge rose pâle (Red 100)
                         background: 'rgba(254, 226, 226, 0.95)',
                         color: '#991b1b', // Rouge sang
                         detailColor: '#7f1d1d',
@@ -138,7 +132,7 @@ export const CustomTheme = definePreset(Material, {
                     },
                 },
                 dark: {
-                    // --- SUCCESS (Dark) - Validé ---
+                    // --- SUCCESS (Dark) ---
                     success: {
                         background:
                             'linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.4) 100%)',
@@ -167,7 +161,7 @@ export const CustomTheme = definePreset(Material, {
                         borderColor: 'rgba(251, 146, 60, 0.6)', // Bordure néon
                         shadow: '0 4px 25px rgba(249, 115, 22, 0.25)',
                     },
-                    // --- ERROR (Dark) - Rouge Alerte ---
+                    // --- ERROR (Dark) ---
                     error: {
                         // Dégradé partant d'un rouge vif transparent
                         background:
@@ -198,6 +192,11 @@ export const CustomTheme = definePreset(Material, {
                         colorFour: '#fb923c',
                     },
                 },
+            },
+        },
+        datatable: {
+            root: {
+                borderColor: 'var(--primary-200)',
             },
         },
     },

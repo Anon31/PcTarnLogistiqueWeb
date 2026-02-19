@@ -1,0 +1,36 @@
+:host ::ng-deep .card-wrapper-override {
+    /* Pour le mode Light, on garde un fond clair mais vitré pour la lisibilité */
+    background: rgba(255, 255, 255, 0.8) !important;
+    color: var(--text-main);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--surface-border);
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    /* Transition conservée pour le chargement ou changement de thème fluide */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Padding du corps de la carte */
+:host ::ng-deep .card-wrapper-override .p-card-body {
+    padding: 2rem;
+}
+
+:host-context(.dark-mode) ::ng-deep .card-wrapper-override,
+:host-context([data-theme="dark"]) ::ng-deep .card-wrapper-override {
+    /* Fond : Blanc à 5% d'opacité (Exactement comme .user-card) */
+    background: rgba(255, 255, 255, 0.05) !important;
+    /* Bordure : Blanc à 10% (Subtile et fixe) */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--primary-50);
+    /* Blur léger */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    /* Ombre légère pour la profondeur sans effet flottant */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Ajustement du Divider en Dark Mode --- */
+:host-context(.dark-mode) ::ng-deep .p-divider.p-divider-horizontal:before {
+    border-top-color: rgba(255, 255, 255, 0.15);
+}

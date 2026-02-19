@@ -1,4 +1,3 @@
-import { IRoleDto } from './role';
 import { IAddressDto, IAddressPayload } from './address';
 
 /**
@@ -11,10 +10,10 @@ export interface IUserDto {
     email: string;
     phone: string;
     birthdate: string;
+    enabled: boolean;
+    role: string;
     createdAt: string;
     updatedAt: string;
-    enabled: boolean;
-    roles: IRoleDto[];
     address?: IAddressDto;
 }
 
@@ -29,6 +28,6 @@ export interface IUserPayload {
     password: string;
     phone?: string;
     birthdate?: string;
-    roles: string; // Envoi : Une simple string "MANAGER"
+    role: string;
     address?: IAddressPayload;
 }
