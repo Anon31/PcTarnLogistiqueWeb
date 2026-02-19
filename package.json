@@ -13,7 +13,6 @@
     "type": "commonjs",
     "devDependencies": {
         "@eslint/js": "^9.39.2",
-        "angular-eslint": "^21.1.0",
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.4",
@@ -22,10 +21,5 @@
         "husky": "^9.1.7",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.50.1"
-    },
-    "dependencies": {
-        "@nestjs/config": "^4.0.3",
-        "@nestjs/swagger": "^11.2.6",
-        "nestjs": "^0.0.1"
     }
 }
