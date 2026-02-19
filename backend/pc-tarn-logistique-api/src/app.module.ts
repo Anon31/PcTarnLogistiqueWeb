@@ -5,6 +5,10 @@ import { UsersModule } from './modules/users/users.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
+import { VehiculesController } from './vehicules/vehicules.controller';
+import { VehiculesModule } from './vehicules/vehicules.module';
+import { VehiculesService } from './vehicules/vehicules.service';
+import { LotsModule } from './lots/lots.module';
 
 @Module({
     imports: [
@@ -14,8 +18,10 @@ import { AuthModule } from './modules/auth/auth.module';
         }),
         UsersModule,
         AuthModule,
+        VehiculesModule,
+        LotsModule,
     ],
-    controllers: [AppController],
-    providers: [AppService, PrismaService],
+    controllers: [AppController, VehiculesController],
+    providers: [AppService, PrismaService,VehiculesService],
 })
 export class AppModule {}
