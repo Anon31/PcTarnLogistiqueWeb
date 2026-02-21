@@ -8,8 +8,8 @@
                         {{ this.authService.userConnected()?.firstname }}
                         {{ this.authService.userConnected()?.lastname }}
                     </span>
-            <span class="text-xs opacity-70 truncate" title="{{ this.authService.userConnected()?.roles?.[0]?.name! | roleLabel }}">
-                        {{ this.authService.userConnected()?.roles?.[0]?.name! | roleLabel }}
+            <span class="text-xs opacity-70 truncate" title="{{ this.authService.userConnected()?.role | roleLabel }}">
+                        {{ this.authService.userConnected()?.role | roleLabel }}
                     </span>
         </div>
         @if (this.authService.isAuthenticated()) {

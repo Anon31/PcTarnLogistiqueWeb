@@ -1,6 +1,6 @@
 import { PageCardWrapperComponent } from '../../../../shared/components/page-card-wrapper/page-card-wrapper.component';
-import { Component } from '@angular/core';
 import { TableUserComponent } from '../../../components/tables/table-user/table-user.component';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-user-list',

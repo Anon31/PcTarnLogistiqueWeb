@@ -1,19 +1,38 @@
 import { Injectable } from '@nestjs/common';
-// Import direct depuis le client Prisma pour garantir la synchro BDD <-> API
-import { Role, ItemCategory, Condition, VehicleStatus, LotStatus, CheckType, ReportStatus, ReportUrgency } from '@prisma/client';
+import {
+    Role,
+    ItemCategory,
+    Condition,
+    VehicleStatus,
+    BagStatus,
+    CheckType,
+    ReportStatus,
+    ReportUrgency,
+    TypeMovement,
+    VehicleType,
+    SiteType,
+    BatchStatus,
+} from '@prisma/client';
 
 @Injectable()
 export class EnumsService {
+    /**
+     * Retourne un objet contenant toutes les énumérations du système
+     */
     getEnums() {
         return {
             roles: Role,
             itemCategories: ItemCategory,
             conditions: Condition,
             vehicleStatuses: VehicleStatus,
-            lotStatuses: LotStatus,
+            bagStatuses: BagStatus,
             checkTypes: CheckType,
             reportStatuses: ReportStatus,
             reportUrgencies: ReportUrgency,
+            typeMovements: TypeMovement,
+            vehicleTypes: VehicleType,
+            siteTypes: SiteType,
+            batchStatuses: BatchStatus,
         };
     }
 }
