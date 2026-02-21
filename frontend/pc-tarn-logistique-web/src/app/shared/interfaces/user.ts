@@ -14,6 +14,7 @@ export interface IUserDto {
     role: string;
     createdAt: string;
     updatedAt: string;
+    siteId: number;
     address?: IAddressDto;
 }
 
@@ -29,5 +30,6 @@ export interface IUserPayload {
     phone?: string;
     birthdate?: string;
     role: string;
+    siteId: number;
     address?: IAddressPayload;
 }

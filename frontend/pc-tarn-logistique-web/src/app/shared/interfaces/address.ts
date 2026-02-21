@@ -6,6 +6,7 @@ export interface IAddressDto {
     zipcode: string;
     state: string;
     userId: number;
+    siteId: number;
 }
 
-export type IAddressPayload = Omit<IAddressDto, 'id' | 'userId'>;
+export type IAddressPayload = Omit<IAddressDto, 'id' | 'userId' | 'siteId'>;

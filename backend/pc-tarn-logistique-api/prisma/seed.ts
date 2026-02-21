@@ -146,7 +146,7 @@ async function main() {
         create: {
             name: 'Lot A (Tente) - VPSP 814',
             code: '814A',
-            type: SiteType.OUTDOOR, // <- La magie opère ici ! C'est un "Site" !
+            type: SiteType.OUTDOOR,
         },
     });
 
@@ -166,11 +166,11 @@ async function main() {
     console.log('📦 Création du catalogue de produits...');
 
     const products = [
-        { name: 'Compresses Stériles 10x10', category: ItemCategory.PLAIE, unit: 'Boîte', isPerishable: true, minThreshold: 20 },
-        { name: 'Sérum Physiologique', category: ItemCategory.PLAIE, unit: 'Unité', isPerishable: true, minThreshold: 50 },
-        { name: 'Collier Cervical Adulte', category: ItemCategory.TRAUMA, unit: 'Unité', isPerishable: false, minThreshold: 5 },
-        { name: 'Bouteille Oxygène 5L', category: ItemCategory.OXY, unit: 'Bouteille', isPerishable: false, minThreshold: 2 },
-        { name: 'Défibrillateur (DSA)', category: ItemCategory.BILAN, unit: 'Unité', isPerishable: false, minThreshold: 1 },
+        { name: 'Compresses Stériles 10x10', category: ItemCategory.PLAIE, isPerishable: true, minThreshold: 20 },
+        { name: 'Sérum Physiologique', category: ItemCategory.PLAIE, isPerishable: true, minThreshold: 50 },
+        { name: 'Collier Cervical Adulte', category: ItemCategory.TRAUMA, isPerishable: false, minThreshold: 5 },
+        { name: 'Bouteille Oxygène 5L', category: ItemCategory.OXY, isPerishable: false, minThreshold: 2 },
+        { name: 'Défibrillateur (DSA)', category: ItemCategory.BILAN, isPerishable: false, minThreshold: 1 },
     ];
 
     const catalog: Record<string, any> = {};
