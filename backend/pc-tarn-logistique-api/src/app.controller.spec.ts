@@ -15,10 +15,13 @@ describe('AppController', () => {
     });
 
     describe('root', () => {
-        it('should return "🌍 Welcome to the NestJS logistics API of the Tarn Civil Protection ! 🚀"', () => {
-            expect(appController.getHello()).toBe(
-                '🌍 Welcome to the NestJS logistics API of the Tarn Civil Protection ! 🚀',
-            );
+        // 1. On rend le test "async"
+        it('should return "Welcome to Protection civile API"', async () => {
+            // 2. On crée un faux objet Request (mock) pour satisfaire TypeScript
+            const mockRequest = {} as any;
+
+            // 3. On utilise "await" et on passe le mock en paramètre
+            expect(await appController.getHello(mockRequest)).toBe('Welcome to Protection civile API');
         });
     });
 });
