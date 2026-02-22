@@ -1,92 +1,121 @@
-:root {
-    /* --- 🔵 COULEUR PRIMAIRE (Bleu PC) --- */
-    --primary-50: #e6f0ff;
-    --primary-100: #b3d1ff;
-    --primary-200: #80b3ff;
-    --primary-300: #4d94ff;
-    --primary-400: #1a75ff;
-    --primary-500: #004080; /* 📍 BLEU OFFICIEL */
-    --primary-600: #00366d;
-    --primary-700: #002b59;
-    --primary-800: #002146;
-    --primary-900: #001633;
-    --primary-950: #000b1a;
+@layer theme, base, components, utilities;
 
-    /* --- 🟠 COULEUR SECONDAIRE (Orange PC) --- */
-    --secondary-50: #fff8f1;
-    --secondary-100: #ffebd4;
-    --secondary-200: #ffd29a;
-    --secondary-300: #ffb660;
-    --secondary-400: #ff9d2e;
-    --secondary-500: #F08700; /* 📍 ORANGE OFFICIEL */
-    --secondary-600: #d67000; /* Hover */
-    --secondary-700: #aa5300;
-    --secondary-800: #853e00;
-    --secondary-900: #622d00;
-    --secondary-950: #3d1a00; /* Très foncé (texte sur fond orange) */
+@layer theme {
+    :root {
+        /* --- 🔵 COULEUR PRIMAIRE (Bleu PC) --- */
+        --primary-50: #e6f0ff;
+        --primary-100: #b3d1ff;
+        --primary-200: #80b3ff;
+        --primary-300: #4d94ff;
+        --primary-400: #1a75ff;
+        --primary-500: #004080; /* 📍 BLEU OFFICIEL */
+        --primary-600: #00366d;
+        --primary-700: #002b59;
+        --primary-800: #002146;
+        --primary-900: #001633;
+        --primary-950: #000b1a;
 
-    /* --- 🌫️ SURFACES (Fonds) --- */
-    --surface-ground: #ffffff;
-    --surface-card: #ffffff;
-    --surface-border: #e2e8f0;
+        /* --- 🟠 COULEUR SECONDAIRE (Orange PC) --- */
+        --secondary-50: #fff8f1;
+        --secondary-100: #ffebd4;
+        --secondary-200: #ffd29a;
+        --secondary-300: #ffb660;
+        --secondary-400: #ff9d2e;
+        --secondary-500: #F08700; /* 📍 ORANGE OFFICIEL */
+        --secondary-600: #d67000; /* Hover */
+        --secondary-700: #aa5300;
+        --secondary-800: #853e00;
+        --secondary-900: #622d00;
+        --secondary-950: #3d1a00; /* Très foncé (texte sur fond orange) */
 
-    /* --- ✒️ TEXTE --- */
-    --text-main: #0f172a;
-    --text-muted: #64748b;
+        /* --- 🌫️ SURFACES (Fonds) --- */
+        --surface-ground: #ffffff;
+        --surface-card: #ffffff;
+        --surface-border: #e2e8f0;
 
-    /* --- 🔗 MAPPING PRIMENG --- */
-    --primary-color: var(--primary-500);
-    --primary-color-text: #ffffff;
+        /* --- ✒️ TEXTE --- */
+        --text-main: #0f172a;
+        --text-muted: #64748b;
 
-    /* 🎨 THEME HEADER */
-    --custom-header-bg: var(--primary-500);
-    --custom-header-text: #ffffff;
-    --custom-header-border: rgba(255, 255, 255);
+        /* --- 🔗 MAPPING PRIMENG --- */
+        --primary-color: var(--primary-500);
+        --primary-color-text: #ffffff;
 
-    /* =========================================
-       🔮 MENU WEB3 & SCROLLBAR (ADD-ON)
-       ========================================= */
+        /* 🎨 THEME HEADER */
+        --custom-header-bg: var(--primary-500);
+        --custom-header-text: #ffffff;
+        --custom-header-border: rgba(255, 255, 255);
 
-    /* Aliases pour compatibilité avec le code du Menu */
-    --pc-blue-900: var(--primary-900);
-    --pc-orange-500: var(--secondary-500);
-    --pc-orange-glow: rgba(240, 135, 0, 0.4);
+        /* =========================================
+           🔮 MENU WEB3 & SCROLLBAR (ADD-ON)
+           ========================================= */
+        --pc-blue-900: var(--primary-900);
+        --pc-orange-500: var(--secondary-500);
+        --pc-orange-glow: rgba(240, 135, 0, 0.4);
 
-    /* Light Mode Menu Tokens */
-    --menu-bg-hover: rgba(0, 64, 128, 0.05);
-    --menu-border-hover: var(--surface-border);
-    --menu-text: var(--text-muted);
-    --menu-text-hover: var(--primary-500);
-    --menu-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --menu-icon-color: var(--text-muted);
+        /* Light Mode Menu Tokens */
+        --menu-bg-hover: rgba(0, 64, 128, 0.05);
+        --menu-border-hover: var(--surface-border);
+        --menu-text: var(--text-muted);
+        --menu-text-hover: var(--primary-500);
+        --menu-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.05);
+        --menu-icon-color: var(--text-muted);
 
-    /* Scrollbar Light */
-    --scrollbar-track: transparent;
-    --scrollbar-thumb: #cbd5e1; /* Gris clair */
-    --scrollbar-border: #ffffff; /* Bordure pour effet détaché */
-}
+        /* Scrollbar Light */
+        --scrollbar-track: transparent;
+        --scrollbar-thumb: #cbd5e1; /* Gris clair */
+        --scrollbar-border: #ffffff; /* Bordure pour effet détaché */
 
-:root[data-theme="dark"],
-.dark-mode {
-    /* --- Dark Mode Theme Base --- */
-    --custom-header-bg: var(--primary-900);
-    --custom-header-text: var(--primary-50);
-    --custom-header-border: var(--secondary-500);
+        /* --- ✨ NOUVEAUX TOKENS : EFFETS WEB3 / STATUS --- */
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.3);
+        --glow-shadow: 0 4px 20px rgba(0, 64, 128, 0.08);
 
-    /* --- 🔮 MENU WEB3 DARK TOKENS (Cyberpunk Style) --- */
-    --menu-bg-hover: rgba(255, 255, 255, 0.03);
-    --menu-border-hover: rgba(240, 135, 0, 0.5);
-    --menu-text: rgba(255, 255, 255, 0.7);
-    --menu-text-hover: #ffffff;
+        --status-success-bg: #d1fae5; --status-success-text: #047857;
+        --status-info-bg: #dbeafe;    --status-info-text: #1d4ed8;
+        --status-warn-bg: #ffedd5;    --status-warn-text: #c2410c;
+        --status-error-bg: #fee2e2;   --status-error-text: #b91c1c;
+    }
 
-    /* Effet Neon */
-    --menu-shadow-hover: 0 0 15px var(--pc-orange-glow), inset 0 0 10px rgba(255, 255, 255, 0.02);
-    --menu-glass-blur: blur(12px);
-    --menu-icon-color: rgba(255, 255, 255, 0.5);
-    --menu-icon-active: var(--secondary-500);
+    :root[data-theme="dark"],
+    .dark-mode {
+        /* --- Dark Mode Theme Base --- */
+        --custom-header-bg: var(--primary-900);
+        --custom-header-text: var(--primary-50);
+        --custom-header-border: var(--secondary-500);
 
-    /* Scrollbar Dark (Neon) */
-    --scrollbar-track: rgba(0, 22, 51, 0.5); /* Fond sombre subtil */
-    --scrollbar-thumb: var(--secondary-500); /* Orange Neon */
-    --scrollbar-border: var(--primary-900); /* Couleur du fond pour détourage */
+        /* Restauration des surfaces adaptatives pour Tailwind */
+        --surface-ground: var(--primary-950);
+        --surface-card: var(--primary-900);
+        --surface-border: var(--primary-800);
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+
+        /* --- 🔮 MENU WEB3 DARK TOKENS (Cyberpunk Style) --- */
+        --menu-bg-hover: rgba(255, 255, 255, 0.03);
+        --menu-border-hover: rgba(240, 135, 0, 0.5);
+        --menu-text: rgba(255, 255, 255, 0.7);
+        --menu-text-hover: #ffffff;
+
+        /* Effet Neon */
+        --menu-shadow-hover: 0 0 15px var(--pc-orange-glow), inset 0 0 10px rgba(255, 255, 255, 0.02);
+        --menu-glass-blur: blur(12px);
+        --menu-icon-color: rgba(255, 255, 255, 0.5);
+        --menu-icon-active: var(--secondary-500);
+
+        /* Scrollbar Dark (Neon) */
+        --scrollbar-track: rgba(0, 22, 51, 0.5);
+        --scrollbar-thumb: var(--secondary-500);
+        --scrollbar-border: var(--primary-900);
+
+        /* --- ✨ NOUVEAUX TOKENS : EFFETS WEB3 / STATUS --- */
+        --glass-bg: rgba(0, 11, 26, 0.6);
+        --glass-border: rgba(240, 135, 0, 0.2);
+        --glow-shadow: 0 0 15px rgba(240, 135, 0, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.02);
+
+        --status-success-bg: rgba(16, 185, 129, 0.15); --status-success-text: #34d399;
+        --status-info-bg: rgba(59, 130, 246, 0.15);    --status-info-text: #60a5fa;
+        --status-warn-bg: rgba(249, 115, 22, 0.15);    --status-warn-text: #fb923c;
+        --status-error-bg: rgba(239, 68, 68, 0.15);    --status-error-text: #f87171;
+    }
 }
