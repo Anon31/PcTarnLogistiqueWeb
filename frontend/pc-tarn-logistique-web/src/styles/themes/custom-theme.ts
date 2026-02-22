@@ -55,29 +55,26 @@ export const CustomTheme = definePreset(Material, {
                 },
             },
             dark: {
-                // --- CONFIGURATION DARK MODE "BLEU NUIT" ---
                 surface: {
-                    0: 'var(--primary-950)', // Fond principal (Bleu très sombre)
-                    50: 'var(--primary-900)', // Cartes / Menus
-                    100: 'var(--primary-800)', // Survol
-                    200: 'var(--primary-700)', // Bordures
+                    0: 'var(--primary-950)',
+                    50: 'var(--primary-900)',
+                    100: 'var(--primary-800)',
+                    200: 'var(--primary-700)',
                     300: 'var(--primary-600)',
                     400: 'var(--primary-500)',
                     500: 'var(--primary-400)',
                     600: 'var(--primary-300)',
                     700: 'var(--primary-200)',
                     800: 'var(--primary-100)',
-                    900: 'var(--primary-50)', // Texte principal
-                    950: '#ffffff', // Texte accentué
+                    900: 'var(--primary-50)',
+                    950: '#ffffff',
                 },
-                // On adapte la couleur Primaire pour qu'elle ressorte sur le fond bleu
                 primary: {
                     color: 'var(--primary-400)',
-                    inverseColor: 'var(--primary-950)', // Texte foncé sur le bouton
+                    inverseColor: 'var(--primary-950)',
                     hoverColor: 'var(--primary-300)',
                     activeColor: 'var(--primary-200)',
                 },
-                // Highlight subtil
                 highlight: {
                     background: 'rgba(255,255,255,0.1)',
                     focusBackground: 'rgba(255,255,255,0.15)',
@@ -87,8 +84,125 @@ export const CustomTheme = definePreset(Material, {
             },
         },
     },
-    // Surcharger des composants spécifiques ici si besoin
     components: {
+        tag: {
+            root: {
+                borderRadius: '8px',
+            },
+            colorScheme: {
+                light: {
+                    success: { background: 'rgba(209, 250, 229, 0.85)', color: '#047857' },
+                    info: { background: 'rgba(219, 234, 254, 0.85)', color: '#1e40af' },
+                    warn: { background: 'rgba(255, 237, 213, 0.85)', color: '#9a3412' },
+                    danger: { background: 'rgba(254, 226, 226, 0.85)', color: '#991b1b' },
+                },
+                dark: {
+                    // Émeraude pur et intense
+                    success: {
+                        background:
+                            'linear-gradient(145deg, rgba(16, 185, 129, 0.2) 0%, rgba(2, 44, 34, 0.6) 100%)',
+                        color: '#a7f3d0',
+                    },
+                    info: {
+                        background:
+                            'linear-gradient(145deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 58, 138, 0.4) 100%)',
+                        color: '#dbeafe',
+                    },
+                    warn: {
+                        background:
+                            'linear-gradient(145deg, rgba(249, 115, 22, 0.15) 0%, rgba(124, 45, 18, 0.4) 100%)',
+                        color: '#ffedd5',
+                    },
+                    // Rubis profond et lumineux
+                    danger: {
+                        background:
+                            'linear-gradient(145deg, rgba(225, 29, 72, 0.2) 0%, rgba(76, 5, 25, 0.6) 100%)',
+                        color: '#ffe4e6',
+                    },
+                },
+            },
+        },
+        datatable: {
+            columnTitle: {
+                fontWeight: '500',
+            },
+            sortIcon: {
+                size: '0.5rem',
+            },
+            colorScheme: {
+                light: {
+                    header: {
+                        background: 'transparent',
+                        borderColor: '{surface.200}',
+                        color: '{text.muted}',
+                    },
+                    headerCell: {
+                        background: 'transparent',
+                        hoverBackground: '{surface.50}',
+                        borderColor: '{surface.200}',
+                    },
+                    bodyCell: {
+                        borderColor: '{surface.200}',
+                    },
+                    row: {
+                        // 🚨 Toujours transparent pour laisser transparaître le Glassmorphism de la carte
+                        background: 'transparent',
+                        color: '{text.main}',
+                        // 🚨 Utilisation d'une couleur pleine très claire (pastel) pour éviter les bugs de transparence sur blanc
+                        hoverBackground: 'var(--secondary-50)',
+                        hoverColor: 'var(--secondary-600)',
+                    },
+                },
+                dark: {
+                    header: {
+                        background: 'transparent',
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        color: '#ffffff',
+                    },
+                    headerCell: {
+                        background: 'transparent',
+                        color: '#ffffff',
+                        hoverBackground: 'rgba(255, 255, 255, 0.03)',
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                    },
+                    bodyCell: {
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        // selectedBorderColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    row: {
+                        background: 'transparent',
+                        color: '#ffffff', // Texte pur blanc Web3
+                        // 🚨 Code HEX avec opacité (26 = 15%) pour éviter que PrimeNG ne casse le rgba()
+                        hoverBackground: '#F0870026',
+                        hoverColor: 'var(--secondary-400)',
+                    },
+                },
+                // light: {
+                //     header: {
+                //         background: 'transparent',
+                //         color: '{text.muted}',
+                //     },
+                //     row: {
+                //         background: 'var(--primary-500)',
+                //         color: 'var(--primary-color-text)',
+                //         hoverBackground: 'rgba(240, 135, 0, 0.1)',
+                //         hoverColor: 'var(--secondary-400)',
+                //     },
+                // },
+                // dark: {
+                //     header: {
+                //         background: 'transparent',
+                //         color: '#ffffff',
+                //     },
+                //     row: {
+                //         color: '#fff',
+                //         background: 'transparent',
+                //         hoverBackground: 'rgba(240, 135, 0, 0.1)',
+                //         hoverColor: 'var(--secondary-400)',
+                //     },
+                // },
+            },
+        },
         toast: {
             root: {
                 width: '24rem',
@@ -135,13 +249,12 @@ export const CustomTheme = definePreset(Material, {
                     // --- SUCCESS (Dark) ---
                     success: {
                         background:
-                            'linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.4) 100%)',
-                        color: '#d1fae5',
-                        detailColor: '#a7f3d0',
-                        borderColor: 'rgba(52, 211, 153, 0.6)',
-                        shadow: '0 4px 25px rgba(16, 185, 129, 0.25)',
+                            'linear-gradient(145deg, rgba(16, 185, 129, 0.2) 0%, rgba(2, 44, 34, 0.6) 100%)',
+                        color: '#a7f3d0',
+                        detailColor: '#6ee7b7',
+                        borderColor: 'rgba(52, 211, 153, 0.8)',
+                        shadow: '0 4px 30px rgba(16, 185, 129, 0.35)',
                     },
-                    // --- INFO (Dark) - Bleu Cyber Lumineux ---
                     info: {
                         // Dégradé partant d'un bleu électrique transparent
                         background:
@@ -151,7 +264,6 @@ export const CustomTheme = definePreset(Material, {
                         borderColor: 'rgba(96, 165, 250, 0.6)', // Bordure néon
                         shadow: '0 4px 25px rgba(59, 130, 246, 0.25)',
                     },
-                    // --- WARN (Dark) - Orange Feu Doux ---
                     warn: {
                         // Dégradé partant d'un orange vif transparent
                         background:
@@ -161,15 +273,13 @@ export const CustomTheme = definePreset(Material, {
                         borderColor: 'rgba(251, 146, 60, 0.6)', // Bordure néon
                         shadow: '0 4px 25px rgba(249, 115, 22, 0.25)',
                     },
-                    // --- ERROR (Dark) ---
                     error: {
-                        // Dégradé partant d'un rouge vif transparent
                         background:
-                            'linear-gradient(145deg, rgba(239, 68, 68, 0.15) 0%, rgba(127, 29, 29, 0.4) 100%)',
-                        color: '#ffe4e6', // Rose très clair
-                        detailColor: '#fecdd3',
-                        borderColor: 'rgba(248, 113, 113, 0.6)', // Bordure néon
-                        shadow: '0 4px 25px rgba(239, 68, 68, 0.25)',
+                            'linear-gradient(145deg, rgba(225, 29, 72, 0.2) 0%, rgba(76, 5, 25, 0.6) 100%)',
+                        color: '#ffe4e6',
+                        detailColor: '#fda4af',
+                        borderColor: 'rgba(251, 113, 133, 0.8)',
+                        shadow: '0 4px 30px rgba(225, 29, 72, 0.35)',
                     },
                 },
             },
@@ -192,11 +302,6 @@ export const CustomTheme = definePreset(Material, {
                         colorFour: '#fb923c',
                     },
                 },
-            },
-        },
-        datatable: {
-            root: {
-                borderColor: 'var(--primary-200)',
             },
         },
     },
