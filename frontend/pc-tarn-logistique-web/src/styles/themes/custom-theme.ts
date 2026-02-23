@@ -85,6 +85,217 @@ export const CustomTheme = definePreset(Material, {
         },
     },
     components: {
+        select: {
+            colorScheme: {
+                light: {
+                    dropdown: {
+                        color: 'transparent', // Couleur de la flèche
+                    },
+                    overlay: {
+                        borderColor: 'var(--secondary-500)',
+                        borderRadius: '8px',
+                    },
+                    root: {
+                        focusRing: {
+                            color: 'var(--secondary-500)', // Bordure visible au focus
+                        },
+                        borderRadius: '8px',
+                        color: '{text.main}',
+                        borderColor: '{surface.300}', // Bordure visible en édition
+                        hoverBorderColor: 'var(--secondary-400)', // Bordure visible au hover
+                        invalidBorderColor: 'var(--status-error-text)',
+                    },
+                },
+                dark: {
+                    dropdown: {
+                        color: 'transparent',
+                    },
+                    option: {
+                        selectedBackground: 'var(--secondary-500)',
+                        color: 'var(--primary-50)', // Texte blanc pur pour les options sélectionnées
+                    },
+                    overlay: {
+                        background: 'var(--primary-800)', // Couleur de fond de la liste déroulante
+                        borderColor: 'var(--secondary-500)',
+                        borderRadius: '8px',
+                    },
+                    root: {
+                        focusRing: {
+                            color: 'var(--secondary-500)',
+                        },
+                        borderRadius: '8px',
+                        background: 'rgba(255, 255, 255, 0.03)', // Effet de verre subtil
+                        color: 'var(--primary-50)', // Texte pur blanc en dark
+                        borderColor: 'rgba(255, 255, 255, 0.1)', // Bordure translucide
+                        hoverBorderColor: 'var(--secondary-400)',
+                        invalidBorderColor: 'var(--status-error-text)',
+                    },
+                },
+            },
+        },
+        inputtext: {
+            colorScheme: {
+                light: {
+                    root: {
+                        focusRing: {
+                            color: 'var(--secondary-500)',
+                        },
+                        borderRadius: '8px',
+                        color: '{text.main}',
+                        borderColor: '{surface.300}', // Bordure visible en édition
+                        hoverBorderColor: 'var(--secondary-400)', // Bordure visible au hover
+                        invalidBorderColor: 'var(--status-error-text)',
+                    },
+                },
+                dark: {
+                    root: {
+                        focusRing: {
+                            color: 'var(--secondary-500)',
+                        },
+                        placeholderColor: 'rgba(255, 255, 255, 0.6)', // Placeholder plus visible en dark
+                        borderRadius: '8px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        color: 'var(--secondary-50)',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        hoverBorderColor: 'var(--secondary-400)',
+                        invalidBorderColor: 'var(--status-error-text)',
+                    },
+                },
+            },
+        },
+        datatable: {
+            columnTitle: {
+                fontWeight: '500',
+            },
+            sortIcon: {
+                size: '0.5rem',
+            },
+            colorScheme: {
+                light: {
+                    sortIcon: {
+                        color: 'var(--secondary-400)',
+                    },
+                    header: {
+                        background: 'transparent',
+                        borderColor: '{surface.200}',
+                        color: '{text.muted}',
+                    },
+                    headerCell: {
+                        background: 'transparent',
+                        hoverBackground: '{surface.50}',
+                        borderColor: '{surface.200}',
+                    },
+                    bodyCell: {
+                        borderColor: '{surface.200}',
+                    },
+                    row: {
+                        background: 'transparent',
+                        color: '{text.main}',
+                        hoverBackground: 'var(--secondary-50)',
+                        // hoverColor: 'var(--secondary-600)',
+                    },
+                },
+                dark: {
+                    sortIcon: {
+                        color: 'var(--secondary-400)',
+                    },
+                    header: {
+                        background: 'transparent',
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        color: '#ffffff',
+                    },
+                    headerCell: {
+                        background: 'transparent',
+                        color: '#ffffff',
+                        hoverBackground: 'rgba(255, 255, 255, 0.03)',
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                    },
+                    bodyCell: {
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                    },
+                    row: {
+                        background: 'transparent',
+                        color: '#ffffff',
+                        hoverBackground: '#F0870026',
+                        hoverColor: 'var(--primary-50)',
+                    },
+                },
+            },
+        },
+        toast: {
+            root: {
+                width: '24rem',
+                borderRadius: '12px',
+                borderWidth: '1px',
+                transitionDuration: '0.4s',
+            },
+            colorScheme: {
+                light: {
+                    success: {
+                        background: 'rgba(209, 250, 229, 0.95)',
+                        color: '#047857',
+                        detailColor: '#065f46',
+                        borderColor: 'rgba(16, 185, 129, 0.5)',
+                        shadow: '0 8px 30px rgba(16, 185, 129, 0.2)',
+                    },
+                    info: {
+                        background: 'rgba(219, 234, 254, 0.95)',
+                        color: '#1e40af', // Bleu roi foncé
+                        detailColor: '#1e3a8a',
+                        borderColor: 'rgba(59, 130, 246, 0.5)', // Bordure plus visible
+                        shadow: '0 8px 30px rgba(59, 130, 246, 0.2)',
+                    },
+                    warn: {
+                        background: 'rgba(255, 237, 213, 0.95)',
+                        color: '#9a3412', // Orange brûlé foncé
+                        detailColor: '#7c2d12',
+                        borderColor: 'rgba(249, 115, 22, 0.5)',
+                        shadow: '0 8px 30px rgba(249, 115, 22, 0.2)',
+                    },
+                    error: {
+                        background: 'rgba(254, 226, 226, 0.95)',
+                        color: '#991b1b', // Rouge sang
+                        detailColor: '#7f1d1d',
+                        borderColor: 'rgba(239, 68, 68, 0.5)',
+                        shadow: '0 8px 30px rgba(239, 68, 68, 0.2)',
+                    },
+                },
+                dark: {
+                    success: {
+                        background:
+                            'linear-gradient(145deg, rgba(16, 185, 129, 0.2) 0%, rgba(2, 44, 34, 0.6) 100%)',
+                        color: '#a7f3d0',
+                        detailColor: '#6ee7b7',
+                        borderColor: 'rgba(52, 211, 153, 0.8)',
+                        shadow: '0 4px 30px rgba(16, 185, 129, 0.35)',
+                    },
+                    info: {
+                        background:
+                            'linear-gradient(145deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 58, 138, 0.4) 100%)',
+                        color: '#dbeafe', // Bleu très clair
+                        detailColor: '#bfdbfe',
+                        borderColor: 'rgba(96, 165, 250, 0.6)', // Bordure néon
+                        shadow: '0 4px 25px rgba(59, 130, 246, 0.25)',
+                    },
+                    warn: {
+                        background:
+                            'linear-gradient(145deg, rgba(249, 115, 22, 0.15) 0%, rgba(124, 45, 18, 0.4) 100%)',
+                        color: '#ffedd5', // Orange très clair
+                        detailColor: '#fed7aa',
+                        borderColor: 'rgba(251, 146, 60, 0.6)', // Bordure néon
+                        shadow: '0 4px 25px rgba(249, 115, 22, 0.25)',
+                    },
+                    error: {
+                        background:
+                            'linear-gradient(145deg, rgba(225, 29, 72, 0.2) 0%, rgba(76, 5, 25, 0.6) 100%)',
+                        color: '#ffe4e6',
+                        detailColor: '#fda4af',
+                        borderColor: 'rgba(251, 113, 133, 0.8)',
+                        shadow: '0 4px 30px rgba(225, 29, 72, 0.35)',
+                    },
+                },
+            },
+        },
         tag: {
             root: {
                 borderRadius: '8px',
@@ -118,168 +329,6 @@ export const CustomTheme = definePreset(Material, {
                         background:
                             'linear-gradient(145deg, rgba(225, 29, 72, 0.2) 0%, rgba(76, 5, 25, 0.6) 100%)',
                         color: '#ffe4e6',
-                    },
-                },
-            },
-        },
-        datatable: {
-            columnTitle: {
-                fontWeight: '500',
-            },
-            sortIcon: {
-                size: '0.5rem',
-            },
-            colorScheme: {
-                light: {
-                    header: {
-                        background: 'transparent',
-                        borderColor: '{surface.200}',
-                        color: '{text.muted}',
-                    },
-                    headerCell: {
-                        background: 'transparent',
-                        hoverBackground: '{surface.50}',
-                        borderColor: '{surface.200}',
-                    },
-                    bodyCell: {
-                        borderColor: '{surface.200}',
-                    },
-                    row: {
-                        // 🚨 Toujours transparent pour laisser transparaître le Glassmorphism de la carte
-                        background: 'transparent',
-                        color: '{text.main}',
-                        // 🚨 Utilisation d'une couleur pleine très claire (pastel) pour éviter les bugs de transparence sur blanc
-                        hoverBackground: 'var(--secondary-50)',
-                        hoverColor: 'var(--secondary-600)',
-                    },
-                },
-                dark: {
-                    header: {
-                        background: 'transparent',
-                        borderColor: 'rgba(255, 255, 255, 0.05)',
-                        color: '#ffffff',
-                    },
-                    headerCell: {
-                        background: 'transparent',
-                        color: '#ffffff',
-                        hoverBackground: 'rgba(255, 255, 255, 0.03)',
-                        borderColor: 'rgba(255, 255, 255, 0.05)',
-                    },
-                    bodyCell: {
-                        borderColor: 'rgba(255, 255, 255, 0.05)',
-                        // selectedBorderColor: 'rgba(255, 255, 255, 0.1)',
-                    },
-                    row: {
-                        background: 'transparent',
-                        color: '#ffffff', // Texte pur blanc Web3
-                        // 🚨 Code HEX avec opacité (26 = 15%) pour éviter que PrimeNG ne casse le rgba()
-                        hoverBackground: '#F0870026',
-                        hoverColor: 'var(--secondary-400)',
-                    },
-                },
-                // light: {
-                //     header: {
-                //         background: 'transparent',
-                //         color: '{text.muted}',
-                //     },
-                //     row: {
-                //         background: 'var(--primary-500)',
-                //         color: 'var(--primary-color-text)',
-                //         hoverBackground: 'rgba(240, 135, 0, 0.1)',
-                //         hoverColor: 'var(--secondary-400)',
-                //     },
-                // },
-                // dark: {
-                //     header: {
-                //         background: 'transparent',
-                //         color: '#ffffff',
-                //     },
-                //     row: {
-                //         color: '#fff',
-                //         background: 'transparent',
-                //         hoverBackground: 'rgba(240, 135, 0, 0.1)',
-                //         hoverColor: 'var(--secondary-400)',
-                //     },
-                // },
-            },
-        },
-        toast: {
-            root: {
-                width: '24rem',
-                borderRadius: '12px',
-                borderWidth: '1px',
-                transitionDuration: '0.4s',
-            },
-            colorScheme: {
-                light: {
-                    // --- SUCCESS (Light) ---
-                    success: {
-                        background: 'rgba(209, 250, 229, 0.95)',
-                        color: '#047857',
-                        detailColor: '#065f46',
-                        borderColor: 'rgba(16, 185, 129, 0.5)',
-                        shadow: '0 8px 30px rgba(16, 185, 129, 0.2)',
-                    },
-                    // --- INFO (Light) - Bleu Ciel Frais ---
-                    info: {
-                        background: 'rgba(219, 234, 254, 0.95)',
-                        color: '#1e40af', // Bleu roi foncé
-                        detailColor: '#1e3a8a',
-                        borderColor: 'rgba(59, 130, 246, 0.5)', // Bordure plus visible
-                        shadow: '0 8px 30px rgba(59, 130, 246, 0.2)',
-                    },
-                    // --- WARN (Light) - Orange Crème ---
-                    warn: {
-                        background: 'rgba(255, 237, 213, 0.95)',
-                        color: '#9a3412', // Orange brûlé foncé
-                        detailColor: '#7c2d12',
-                        borderColor: 'rgba(249, 115, 22, 0.5)',
-                        shadow: '0 8px 30px rgba(249, 115, 22, 0.2)',
-                    },
-                    // --- ERROR (Light) - Rose Rouge ---
-                    error: {
-                        background: 'rgba(254, 226, 226, 0.95)',
-                        color: '#991b1b', // Rouge sang
-                        detailColor: '#7f1d1d',
-                        borderColor: 'rgba(239, 68, 68, 0.5)',
-                        shadow: '0 8px 30px rgba(239, 68, 68, 0.2)',
-                    },
-                },
-                dark: {
-                    // --- SUCCESS (Dark) ---
-                    success: {
-                        background:
-                            'linear-gradient(145deg, rgba(16, 185, 129, 0.2) 0%, rgba(2, 44, 34, 0.6) 100%)',
-                        color: '#a7f3d0',
-                        detailColor: '#6ee7b7',
-                        borderColor: 'rgba(52, 211, 153, 0.8)',
-                        shadow: '0 4px 30px rgba(16, 185, 129, 0.35)',
-                    },
-                    info: {
-                        // Dégradé partant d'un bleu électrique transparent
-                        background:
-                            'linear-gradient(145deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 58, 138, 0.4) 100%)',
-                        color: '#dbeafe', // Bleu très clair
-                        detailColor: '#bfdbfe',
-                        borderColor: 'rgba(96, 165, 250, 0.6)', // Bordure néon
-                        shadow: '0 4px 25px rgba(59, 130, 246, 0.25)',
-                    },
-                    warn: {
-                        // Dégradé partant d'un orange vif transparent
-                        background:
-                            'linear-gradient(145deg, rgba(249, 115, 22, 0.15) 0%, rgba(124, 45, 18, 0.4) 100%)',
-                        color: '#ffedd5', // Orange très clair
-                        detailColor: '#fed7aa',
-                        borderColor: 'rgba(251, 146, 60, 0.6)', // Bordure néon
-                        shadow: '0 4px 25px rgba(249, 115, 22, 0.25)',
-                    },
-                    error: {
-                        background:
-                            'linear-gradient(145deg, rgba(225, 29, 72, 0.2) 0%, rgba(76, 5, 25, 0.6) 100%)',
-                        color: '#ffe4e6',
-                        detailColor: '#fda4af',
-                        borderColor: 'rgba(251, 113, 133, 0.8)',
-                        shadow: '0 4px 30px rgba(225, 29, 72, 0.35)',
                     },
                 },
             },

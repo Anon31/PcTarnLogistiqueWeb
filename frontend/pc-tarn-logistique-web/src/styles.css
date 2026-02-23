@@ -2,35 +2,3 @@
 @import "tailwindcss-primeui";
 @import "primeicons/primeicons.css";
 @import "./styles/css/pctarnlogistiqueweb.css";
-
-/* 2. CONFIGURATION DU DARK MODE */
-/* S'assure que Tailwind écoute votre attribut data-theme pour le mode sombre */
-/*@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));*/
-
-/*!* 3. MAPPING DES VARIABLES TAILWIND *!*/
-/*@theme {*/
-/*    !* Couleurs Primaires (Liées aux tokens générés par PrimeNG) *!*/
-/*    --color-primary-50: var(--primary-50);*/
-/*    --color-primary-100: var(--primary-100);*/
-/*    --color-primary-200: var(--primary-200);*/
-/*    --color-primary-300: var(--primary-300);*/
-/*    --color-primary-400: var(--primary-400);*/
-/*    --color-primary-500: var(--primary-500);*/
-/*    --color-primary-600: var(--primary-600);*/
-/*    --color-primary-700: var(--primary-700);*/
-/*    --color-primary-800: var(--primary-800);*/
-/*    --color-primary-900: var(--primary-900);*/
-/*    --color-primary-950: var(--primary-950);*/
-
-/*    !* Couleur Secondaire (Liée à votre _tokens.css) *!*/
-/*    --color-secondary-500: var(--secondary-500);*/
-
-/*    !* Surfaces adaptatives (Liées à votre _tokens.css) *!*/
-/*    --color-surface-ground: var(--surface-ground);*/
-/*    --color-surface-card: var(--surface-card);*/
-/*    --color-surface-border: var(--surface-border);*/
-
-/*    !* Effets Web3 (Ombres et Glassmorphism) *!*/
-/*    --shadow-glow: var(--glow-shadow);*/
-/*    --background-image-glass: var(--glass-bg);*/
-/*}*/
