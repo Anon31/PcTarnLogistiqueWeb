@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 # Installation du CLI Angular pour utiliser 'ng serve' dans le conteneur
 RUN npm install -g @angular/cli
