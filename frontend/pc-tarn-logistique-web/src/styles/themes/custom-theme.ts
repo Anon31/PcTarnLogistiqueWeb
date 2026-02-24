@@ -88,11 +88,25 @@ export const CustomTheme = definePreset(Material, {
         select: {
             colorScheme: {
                 light: {
-                    dropdown: {
-                        color: 'transparent', // Couleur de la flèche
+                    // Options
+                    list: {
+                        padding: '0.25rem',
                     },
+                    // Flèche du dropdown
+                    dropdown: {
+                        color: 'transparent',
+                    },
+                    // Options sélectionnées et au focus
+                    option: {
+                        borderRadius: '8px',
+                        selectedBackground: 'var(--secondary-100)',
+                        selectedFocusBackground: 'var(--secondary-200)',
+                        focusBackground: 'var(--secondary-200)',
+                        color: '{text.main}',
+                    },
+                    // Liste déroulante
                     overlay: {
-                        borderColor: 'var(--secondary-500)',
+                        borderColor: 'var(--secondary-400)',
                         borderRadius: '8px',
                     },
                     root: {
@@ -103,22 +117,32 @@ export const CustomTheme = definePreset(Material, {
                         color: '{text.main}',
                         borderColor: '{surface.300}', // Bordure visible en édition
                         hoverBorderColor: 'var(--secondary-400)', // Bordure visible au hover
+                        focusBorderColor: 'transparent',
                         invalidBorderColor: 'var(--status-error-text)',
                     },
                 },
                 dark: {
+                    list: {
+                        padding: '0.25rem',
+                    },
                     dropdown: {
                         color: 'transparent',
                     },
+                    // Options sélectionnées et au focus
                     option: {
-                        selectedBackground: 'var(--secondary-500)',
-                        color: 'var(--primary-50)', // Texte blanc pur pour les options sélectionnées
+                        borderRadius: '8px',
+                        selectedBackground: 'var(--primary-800)',
+                        selectedFocusBackground: 'var(--primary-600)',
+                        focusBackground: 'var(--primary-600)',
+                        color: 'var(--primary-50)',
+                        focusColor: 'var(--primary-50)',
                     },
+                    // Liste déroulante
                     overlay: {
-                        background: 'var(--primary-800)', // Couleur de fond de la liste déroulante
-                        borderColor: 'var(--secondary-500)',
+                        background: 'var(--primary-800)',
                         borderRadius: '8px',
                     },
+                    // Select lui-même
                     root: {
                         focusRing: {
                             color: 'var(--secondary-500)',
@@ -127,6 +151,7 @@ export const CustomTheme = definePreset(Material, {
                         background: 'rgba(255, 255, 255, 0.03)', // Effet de verre subtil
                         color: 'var(--primary-50)', // Texte pur blanc en dark
                         borderColor: 'rgba(255, 255, 255, 0.1)', // Bordure translucide
+                        focusBorderColor: 'transparent',
                         hoverBorderColor: 'var(--secondary-400)',
                         invalidBorderColor: 'var(--status-error-text)',
                     },
@@ -143,6 +168,7 @@ export const CustomTheme = definePreset(Material, {
                         borderRadius: '8px',
                         color: '{text.main}',
                         borderColor: '{surface.300}', // Bordure visible en édition
+                        focusBorderColor: 'transparent',
                         hoverBorderColor: 'var(--secondary-400)', // Bordure visible au hover
                         invalidBorderColor: 'var(--status-error-text)',
                     },
@@ -157,6 +183,7 @@ export const CustomTheme = definePreset(Material, {
                         background: 'rgba(255, 255, 255, 0.03)',
                         color: 'var(--secondary-50)',
                         borderColor: 'rgba(255, 255, 255, 0.1)',
+                        focusBorderColor: 'transparent',
                         hoverBorderColor: 'var(--secondary-400)',
                         invalidBorderColor: 'var(--status-error-text)',
                     },
@@ -167,13 +194,12 @@ export const CustomTheme = definePreset(Material, {
             columnTitle: {
                 fontWeight: '500',
             },
-            sortIcon: {
-                size: '0.5rem',
-            },
             colorScheme: {
                 light: {
                     sortIcon: {
                         color: 'var(--secondary-400)',
+                        hoverColor: 'var(--secondary-400)',
+                        size: '0.5rem',
                     },
                     header: {
                         background: 'transparent',
@@ -182,7 +208,7 @@ export const CustomTheme = definePreset(Material, {
                     },
                     headerCell: {
                         background: 'transparent',
-                        hoverBackground: '{surface.50}',
+                        hoverBackground: 'var(--secondary-50)',
                         borderColor: '{surface.200}',
                     },
                     bodyCell: {
@@ -198,6 +224,8 @@ export const CustomTheme = definePreset(Material, {
                 dark: {
                     sortIcon: {
                         color: 'var(--secondary-400)',
+                        hoverColor: 'var(--secondary-400)',
+                        size: '0.5rem',
                     },
                     header: {
                         background: 'transparent',
@@ -206,7 +234,8 @@ export const CustomTheme = definePreset(Material, {
                     },
                     headerCell: {
                         background: 'transparent',
-                        color: '#ffffff',
+                        color: 'var(--primary-50)',
+                        hoverColor: 'var(--primary-50)',
                         hoverBackground: 'rgba(255, 255, 255, 0.03)',
                         borderColor: 'rgba(255, 255, 255, 0.05)',
                     },
@@ -216,7 +245,7 @@ export const CustomTheme = definePreset(Material, {
                     row: {
                         background: 'transparent',
                         color: '#ffffff',
-                        hoverBackground: '#F0870026',
+                        hoverBackground: 'rgba(255, 255, 255, 0.03)',
                         hoverColor: 'var(--primary-50)',
                     },
                 },
