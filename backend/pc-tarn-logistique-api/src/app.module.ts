@@ -1,10 +1,8 @@
 import { EnumsModule } from './modules/enums/enums.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { VehiclesController } from './vehicles/vehicles.controller';
-import { VehiclesModule } from './vehicles/vehicles.module';
-import { VehiclesService } from './vehicles/vehicles.service';
-import { LotsModule } from './lots/lots.module';
+import { VehiclesModule } from './modules/vehicles/vehicles.module';
+import { BagCompositionsModule } from './modules/bag-compositions/bag-compositions.module';
 import { PrismaService } from './prisma/prisma.service';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
@@ -21,10 +19,10 @@ import { Module } from '@nestjs/common';
         UsersModule,
         AuthModule,
         VehiclesModule,
-        LotsModule,
+        BagCompositionsModule,
         EnumsModule,
     ],
-    controllers: [AppController, VehiclesController],
-    providers: [AppService, PrismaService,VehiclesService],
+    controllers: [AppController],
+    providers: [AppService, PrismaService],
 })
 export class AppModule {}
