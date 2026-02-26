@@ -3,6 +3,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
 import { BagCompositionsModule } from './modules/bag-compositions/bag-compositions.module';
+import { ProductsModule } from './modules/products/products.module';
 import { PrismaService } from './prisma/prisma.service';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
@@ -20,6 +21,7 @@ import { Module } from '@nestjs/common';
         AuthModule,
         VehiclesModule,
         BagCompositionsModule,
+        ProductsModule,
         EnumsModule,
     ],
     controllers: [AppController],
