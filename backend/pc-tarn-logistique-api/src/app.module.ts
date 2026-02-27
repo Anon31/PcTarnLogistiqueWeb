@@ -1,4 +1,4 @@
-import { EnumsModule } from './modules/enums/enums.module';
+import { SystemModule } from './modules/system/system.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
@@ -9,7 +9,6 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
-
 
 @Module({
     imports: [
@@ -22,7 +21,7 @@ import { Module } from '@nestjs/common';
         VehiclesModule,
         BagCompositionsModule,
         ProductsModule,
-        EnumsModule,
+        SystemModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],

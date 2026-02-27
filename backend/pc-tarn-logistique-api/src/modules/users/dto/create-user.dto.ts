@@ -1,35 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, ValidateNested, IsInt, IsDateString, IsEnum } from 'class-validator';
+import { CreateAddressDto } from '../../../shared/dto/create-address.dto';
 import { Type } from 'class-transformer';
-
-// On redéfinit l'enum ici pour que Swagger et ClassValidator puissent l'utiliser
-// sans dépendre directement du fichier généré par Prisma (bonne pratique Clean Arch)
-export enum UserRole {
-    ADMIN = 'ADMIN',
-    MANAGER = 'MANAGER',
-    BENEVOLE = 'BENEVOLE',
-}
-
-export class CreateAddressDto {
-    @IsInt()
-    @IsNotEmpty()
-    number: number;
-
-    @IsString()
-    @IsNotEmpty()
-    street: string;
-
-    @IsString()
-    @IsNotEmpty()
-    city: string;
-
-    @IsString()
-    @IsNotEmpty()
-    zipcode: string;
-
-    @IsString()
-    @IsNotEmpty()
-    state: string;
-}
+import { Role } from '@prisma/client';
 
 export class CreateUserDto {
     @IsString()
@@ -70,12 +42,12 @@ export class CreateUserDto {
     birthdate?: string;
 
     /**
-     * Le rôle de l'utilisateur (Enum)
+     * Le rôle de l'utilisateur (Enum Prisma)
      * @example 'BENEVOLE'
      */
-    @IsEnum(UserRole, { message: 'Le rôle doit être ADMIN, MANAGER ou BENEVOLE' })
+    @IsEnum(Role, { message: 'Le rôle doit être ADMIN, MANAGER ou BENEVOLE' })
     @IsNotEmpty({ message: 'Le rôle est obligatoire' })
-    role: UserRole;
+    role: Role;
 
     /**
      * L'ID du site (Antenne) auquel l'utilisateur est rattaché

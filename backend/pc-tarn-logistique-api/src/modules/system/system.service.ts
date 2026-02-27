@@ -15,11 +15,12 @@ import {
 } from '@prisma/client';
 
 @Injectable()
-export class EnumsService {
+export class SystemService {
     /**
-     * Retourne un objet contenant toutes les énumérations du système
+     * Retourne un objet centralisé contenant toutes les énumérations métier.
+     * Cette méthode permet au frontend de mettre en cache ces données critiques dès le démarrage.
      */
-    getEnums() {
+    getReferenceData() {
         return {
             roles: Role,
             itemCategories: ItemCategory,
