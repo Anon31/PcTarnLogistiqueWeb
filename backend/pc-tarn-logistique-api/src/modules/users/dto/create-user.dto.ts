@@ -50,12 +50,13 @@ export class CreateUserDto {
     role: Role;
 
     /**
-     * L'ID du site (Antenne) auquel l'utilisateur est rattaché
+     * L'ID du site (Antenne) auquel l'utilisateur est rattaché.
+     * Donnée métier essentielle pour afficher les données de l'entrepôt par défaut.
      * @example 1
      */
     @IsInt({ message: "L'ID du site doit être un nombre entier" })
-    @IsOptional()
-    siteId?: number;
+    @IsNotEmpty({ message: 'Le site de rattachement est obligatoire' })
+    siteId: number;
 
     // Optionnel : Permet de créer l'adresse en même temps
     @IsOptional()
