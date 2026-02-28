@@ -64,11 +64,11 @@ export class ProductsController {
 
     /**
      * Supprimer un produit par son ID. Cette opération est très sensible,
-     * c'est pourquoi elle est strictement réservée aux Admins.
+     * c'est pourquoi elle est strictement réservée aux Manangers et Admins.
      * @param id
      */
     @Delete(':id')
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.MANAGER)
     @ApiOperation({ summary: 'Supprimer un produit par son ID' })
     @ApiResponse({ type: ProductEntity, status: 200 })
     remove(@Param('id', ParseIntPipe) id: number) {
