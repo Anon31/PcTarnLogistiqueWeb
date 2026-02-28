@@ -1,7 +1,8 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { PrismaClientExceptionFilter } from './core/filters/prisma-client-exception.filter';
+import { ValidationPipe, Logger, ClassSerializerInterceptor } from '@nestjs/common';
+import { NestFactory, Reflector, HttpAdapterHost } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -13,11 +14,18 @@ async function bootstrap() {
     // Activation de la validation automatique (DTOs)
     app.useGlobalPipes(
         new ValidationPipe({
-            whitelist: true, // Attention : Retire automatiquement les champs non déclarés dans le DTO
-            transform: true, // Transforme les types primitifs (ex: string '1' -> number 1)
+            whitelist: true, // Retire automatiquement les champs non déclarés dans le DTO
+            transform: true, // Cast les données entrantes selon les types du DTO (ex: un param URL '1' devient number, mais un @IsString() zipcode restera texte)
             forbidNonWhitelisted: true,
         }),
     );
+
+    // Activation de l'intercepteur de Sérialisation (pour les @Exclude() sur les entités)
+    app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+    // Activation du Filtre d'Exception Global Prisma
+    const { httpAdapter } = app.get(HttpAdapterHost);
+    app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
     // Activation de CORS (Indispensable pour qu'Angular puisse appeler l'API)
     app.enableCors();

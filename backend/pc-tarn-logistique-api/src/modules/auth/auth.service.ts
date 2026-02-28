@@ -29,6 +29,7 @@ export class AuthService {
             role: user.role,
             firstname: user.firstname,
             lastname: user.lastname,
+            siteId: user.siteId,
         };
 
         // 4. Réponse
@@ -41,6 +42,7 @@ export class AuthService {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 role: user.role,
+                siteId: user.siteId,
             },
         };
     }

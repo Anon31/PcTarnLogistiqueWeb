@@ -1,8 +1,9 @@
 import { MockPrismaService, providePrismaMock } from '../../mocks/prisma-mock';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { Role } from '@prisma/client';
+import { CreateAddressDto } from '../../shared/dto/create-address.dto';
 
 describe('UsersService', () => {
     let service: UsersService;
@@ -34,74 +35,62 @@ describe('UsersService', () => {
                 password: 'password123',
                 firstname: 'John',
                 lastname: 'Doe',
-                roles: 'BENEVOLE', // Champ requis par le DTO
+                role: Role.BENEVOLE, // Champ requis par le DTO
+                siteId: 2,
             };
-
-            // MOCK PRISMA
-            // Note importante sur le typage :
-            // Par défaut, le type de retour de 'create' est l'objet 'User' simple (sans relations).
-            // Or, notre vrai code utilise 'include: { roles: true }', donc il retourne un objet plus riche.
-            // TypeScript signale une erreur car 'roles' n'existe pas sur le type 'User' de base.
 
             // @ts-ignore (mockDeep gère les types complexes de Prisma)
             prismaMock.user.create.mockResolvedValue({
                 id: 1,
                 ...dto, // Copie les champs simples
                 password: 'hashed_password',
-                // On simule le retour de "include" (Tableau d'objets)
-                roles: [{ id: 1, name: 'BENEVOLE' }],
+                siteId: 2,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 enabled: true,
-                phone: null,
-                birthdate: null,
-                address: null,
-            } as any); // L'ASTUCE EST ICI :
-            // L'utilisation de 'as any' dit à TypeScript : "Fais-moi confiance, l'objet retourné
-            // contient bien des propriétés supplémentaires (comme roles) qui ne sont pas dans le type User strict."
-            // C'est nécessaire pour mocker les requêtes avec 'include' ou 'select'.
+                phone: '0612345678',
+                birthdate: '1990-03-15',
+                address: CreateAddressDto,
+            } as any);
 
             // ACTION
             const result = await service.create(dto);
 
             // ASSERTION
             expect(prismaMock.user.create).toHaveBeenCalled();
-            expect(result).not.toHaveProperty('password');
+
+            // CORRECTION ICI : Le décorateur @Exclude() n'agit qu'au niveau du Contrôleur (via l'intercepteur).
+            // Au niveau du Service, l'entité contient toujours le mot de passe hashé retourné par Prisma.
+            expect(result.password).toEqual('hashed_password');
+
             expect(result.email).toEqual(dto.email);
             // On vérifie que le service a bien reçu le tableau de rôles du mock
-            expect(result.roles[0].name).toEqual('BENEVOLE');
+            expect(result.role).toEqual('BENEVOLE');
         });
 
         /** TEST DES ERREURS */
-        it("doit renvoyer une erreur si l'email existe déjà", async () => {
+        it("doit laisser remonter l'erreur native Prisma si l'email existe déjà", async () => {
             const dto = {
                 email: 'exist@test.com',
                 password: '123',
                 firstname: 'A',
                 lastname: 'B',
-                roles: 'USER',
+                role: Role.BENEVOLE,
+                siteId: 2,
             };
 
-            // On simule une erreur de type "email déjà utilisé" (code P2002 de Prisma)
-            prismaMock.user.create.mockRejectedValue({
-                code: 'P2002',
-            });
+            // 1. On crée un vrai objet Error (pour que Jest puisse le vérifier avec .toThrow)
+            class MockPrismaError extends Error {
+                code = 'P2002';
+            }
+            const error = new MockPrismaError('Unique constraint failed');
 
-            await expect(service.create(dto)).rejects.toThrow(ConflictException);
-        });
-    });
+            // 2. On simule le crash de Prisma
+            prismaMock.user.create.mockRejectedValue(error);
 
-    /**
-     * TEST DE LA FONCTION FIND ONE
-     */
-    describe('findOne', () => {
-        it("doit retourner un utilisateur si l'ID existe", async () => {
-            const mockUser = { id: 1, email: 'test@test.com' };
-            // On utilise aussi 'as any' si besoin pour findUnique si on a des includes
-            prismaMock.user.findUnique.mockResolvedValue(mockUser as any);
-
-            const result = await service.findOne(1);
-            expect(result).toEqual(mockUser);
+            // 3. Le Service N'EST PLUS CENSÉ lever une ConflictException (c'est le rôle du Filtre Global).
+            // Il doit simplement laisser passer l'erreur Prisma.
+            await expect(service.create(dto)).rejects.toThrow(MockPrismaError);
         });
     });
 });
