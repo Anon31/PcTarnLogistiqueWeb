@@ -1,24 +1,30 @@
 import { Controller, Get, Post, Body, Request, Param, ParseIntPipe, Delete, Patch, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from '../../core/decorators/roles.decorator';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../core/guards/roles.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { Role } from '@prisma/client';
 
 @ApiTags('Utilisateurs') // Regroupe-les endpoints sous la section "Utilisateurs"
 @ApiBearerAuth() // Indique à Swagger que l'utilisateur doit fournir un token JWT. Fait apparaître un cadenas dans l'UI.
-@UseGuards(JwtAuthGuard) // Protège toutes les routes du controller (Sinon il faudrait le mettre sur chaque route)
+@UseGuards(JwtAuthGuard, RolesGuard) // 👈 Protection globale (Authentification + Autorisation)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     /**
-     * Endpoint pour créer un nouvel utilisateur. Seuls les utilisateurs avec le rôle ADMIN peuvent effectuer cette action.
+     * Endpoint pour créer un nouvel utilisateur.
      * @param createUserDto
      */
     @Post()
-    @ApiOperation({ summary: `Création d'un utilisateur` })
+    @Roles(Role.ADMIN) // 👈 Règle métier : Seul un Administrateur peut créer des comptes
+    @ApiOperation({ summary: 'Créer un nouvel utilisateur' })
+    @ApiResponse({ type: UserEntity, status: 201 })
     create(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto);
     }
@@ -27,17 +33,21 @@ export class UsersController {
      * Endpoint pour récupérer la liste de tous les utilisateurs. Seuls les utilisateurs avec le rôle ADMIN peuvent effectuer cette action.
      */
     @Get()
+    @Roles(Role.ADMIN, Role.MANAGER) // Les Managers peuvent voir la liste des équipes
     @ApiOperation({ summary: 'Récupérer la liste de tous les utilisateurs' })
+    @ApiResponse({ type: [UserEntity], status: 200 })
     findAll() {
         return this.usersService.findAll();
     }
 
     /**
-     * Endpoint pour récupérer un utilisateur par son ID. Seuls les utilisateurs avec le rôle ADMIN peuvent effectuer cette action.
+     * Endpoint pour récupérer un utilisateur par son ID.
      * @param id
      */
     @Get(':id')
-    @ApiOperation({ summary: 'Récupérer un utilisateur par son ID' })
+    @Roles(Role.ADMIN, Role.MANAGER)
+    @ApiOperation({ summary: "Récupérer le profil d'un utilisateur par son ID" })
+    @ApiResponse({ type: UserEntity, status: 200 })
     findOne(@Param('id', ParseIntPipe) id: number) {
         return this.usersService.findOne(id);
     }
@@ -48,7 +58,9 @@ export class UsersController {
      * @param updateUserDto
      */
     @Patch(':id')
-    @ApiOperation({ summary: 'Mettre à jour un utilisateur par son ID' })
+    @Roles(Role.ADMIN) // 👈 Seul un Admin peut modifier le compte de quelqu'un d'autre (ex: changer son rôle)
+    @ApiOperation({ summary: "Mettre à jour le profil d'un utilisateur" })
+    @ApiResponse({ type: UserEntity, status: 200 })
     update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
         return this.usersService.update(id, updateUserDto);
     }
@@ -58,7 +70,9 @@ export class UsersController {
      * @param id
      */
     @Delete(':id')
-    @ApiOperation({ summary: 'Supprimer un utilisateur par son ID' })
+    @Roles(Role.ADMIN) // 👈 Sécurité maximale
+    @ApiOperation({ summary: 'Supprimer définitivement un compte utilisateur' })
+    @ApiResponse({ type: UserEntity, status: 200 })
     remove(@Param('id', ParseIntPipe) id: number) {
         return this.usersService.remove(id);
     }

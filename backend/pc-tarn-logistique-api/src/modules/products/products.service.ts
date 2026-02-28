@@ -1,87 +1,76 @@
-import {
-    ConflictException,
-    Injectable,
-    InternalServerErrorException,
-    NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductEntity } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
     constructor(private readonly prisma: PrismaService) {}
 
+    /**
+     * Crée un nouveau produit dans la base de données.
+     * Les données du produit sont fournies via le DTO `CreateProductDto`.
+     * @param dto
+     */
     async create(dto: CreateProductDto) {
-        try {
-            return await this.prisma.product.create({
-                data: dto,
-            });
-        } catch (error) {
-            this.handlePrismaError(error);
-        }
+        const product = await this.prisma.product.create({
+            data: dto,
+        });
+        return new ProductEntity(product);
     }
 
-    findAll() {
-        return this.prisma.product.findMany({
+    /**
+     * Récupère tous les produits de la base de données. Les produits sont triés par ID croissant pour une lecture plus intuitive.
+     */
+    async findAll() {
+        const products = await this.prisma.product.findMany({
             orderBy: { id: 'asc' },
         });
+        return products.map((product) => new ProductEntity(product));
     }
 
+    /**
+     * Trouve un produit par son ID. Si le produit n'existe pas, une exception NotFoundException est levée.
+     * @param id
+     */
     async findOne(id: number) {
         const product = await this.prisma.product.findUnique({
             where: { id },
         });
+        if (!product) throw new NotFoundException(`Produit #${id} introuvable`);
 
-        if (!product) {
-            throw new NotFoundException(`Produit #${id} introuvable`);
-        }
-
-        return product;
+        return new ProductEntity(product);
     }
 
+    /**
+     * Met à jour un produit existant dans la base de données.
+     * @param id
+     * @param dto
+     */
     async update(id: number, dto: UpdateProductDto) {
-        await this.findOne(id);
+        await this.findOne(id); // Vérifie que le produit existe avant de tenter la mise à jour
 
-        try {
-            return await this.prisma.product.update({
-                where: { id },
-                data: dto,
-            });
-        } catch (error) {
-            this.handlePrismaError(error);
-        }
+        const updatedProduct = await this.prisma.product.update({
+            where: { id },
+            data: dto,
+        });
+        return new ProductEntity(updatedProduct);
     }
 
+    /**
+     * Supprime un produit de la base de données. Avant de tenter la suppression,
+     * la méthode vérifie que le produit existe en appelant `findOne`.
+     * Si le produit n'existe pas, une exception NotFoundException est levée,
+     * empêchant ainsi une tentative de suppression infructueuse.
+     * @param id
+     */
     async remove(id: number) {
-        await this.findOne(id);
+        await this.findOne(id); // Vérifie que le produit existe avant la suppression
 
-        try {
-            return await this.prisma.product.delete({
-                where: { id },
-            });
-        } catch (error) {
-            this.handlePrismaError(error);
-        }
-    }
-
-    private handlePrismaError(error: unknown): never {
-        if (typeof error === 'object' && error !== null && 'code' in error) {
-            const code = (error as { code?: string }).code;
-
-            if (code === 'P2002') {
-                throw new ConflictException('Un produit avec ce nom existe deja');
-            }
-
-            if (code === 'P2025') {
-                throw new NotFoundException('Produit introuvable');
-            }
-
-            if (code === 'P2003') {
-                throw new ConflictException('Produit utilise dans des relations existantes');
-            }
-        }
-
-        throw new InternalServerErrorException('Erreur sur Produit');
+        const deletedProduct = await this.prisma.product.delete({
+            where: { id },
+        });
+        return new ProductEntity(deletedProduct);
     }
 }
