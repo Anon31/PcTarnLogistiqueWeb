@@ -1,4 +1,5 @@
 import { EnumsDataService } from '../../../../core/enums/services/enums-data.service';
+import { PermissionService } from '../../../../core/services/permission.service';
 import { Component, DestroyRef, inject, OnInit, computed } from '@angular/core';
 import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
 import { IUserDto, IUserPayload } from '../../../../shared/interfaces/user';
@@ -34,6 +35,7 @@ export class TableUserComponent implements OnInit {
     userService = inject(UserService);
     toasterService = inject(ToasterService);
     confirmationService = inject(ConfirmationService);
+    permissionService = inject(PermissionService);
     enumsData = inject(EnumsDataService);
     enumsPipe = inject(EnumsDynamicPipe);
     destroyRef = inject(DestroyRef);
@@ -112,7 +114,7 @@ export class TableUserComponent implements OnInit {
      */
     onDelete(event: Event, id: number) {
         event.stopPropagation(); // IMPORTANT : Empêche le clic de se propager et d'interférer avec le tableau
-
+        // @todo Faire la customisation
         this.confirmationService.confirm({
             target: event.target as EventTarget, // Ancre l'événement pour PrimeNG
             message:

@@ -115,12 +115,14 @@
                 <td>
                     <div class="flex items-center justify-center space-x-1">
                         @if (!editing) {
-                            <p-button size="small" pInitEditableRow icon="pi pi-user-edit" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onRowEditInit(user)" />
-                        }
-                        @if (!editing) {
                             <p-button size="small" icon="pi pi-eye" [rounded]="true" [text]="true" [raised]="true" severity="warn" />
                         }
-                        @if (!editing) {
+                        <!-- 🔒 PROTECTION : Seul un membre autorisé (Admin) peut voir le bouton "Éditer" -->
+                        @if (!editing && permissionService.canManageUsers()) {
+                            <p-button size="small" pInitEditableRow icon="pi pi-user-edit" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onRowEditInit(user)" />
+                        }
+                        <!-- 🔒 PROTECTION : Seul un membre autorisé (Admin) peut voir le bouton "Supprimer" -->
+                        @if (!editing && permissionService.canManageUsers()) {
                             <p-button size="small" icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onDelete($event, user.id)" />
                         }
                         @if (editing) {
