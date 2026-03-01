@@ -32,7 +32,7 @@ export class SidebarMenuComponent {
         },
         {
             label: 'Gestion des stocks',
-            visible: this.permissionService.canManageInventory(), // Exemple si tu veux cacher les stocks aux bénévoles
+            // visible: this.permissionService.canManageInventory(), // Exemple si tu veux cacher les stocks aux bénévoles
             icon: 'pi pi-box',
             routerLink: '/stocks',
             command: () => this.closeSidebar(),

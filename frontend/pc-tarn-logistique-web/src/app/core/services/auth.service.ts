@@ -15,19 +15,26 @@ export class AuthService {
     private router = inject(Router);
 
     // --- STATE (SIGNALS) ---
+    // Le signal privé contient l'état brut (token et user)
     private tokenSignal = signal<string | null>(null);
+    // Le signal public en lecture seule pour les composants
     private userConnectedSignal = signal<IAuthUser | null>(null);
+    // --- COMPUTED (DÉDUCTIONS) ---
     readonly isAuthenticated = computed(() => {
         const token = this.tokenSignal();
         return !!token && !this.jwtHelperService.isTokenExpired(token);
     });
-
+    // On expose les données de l'utilisateur connecté pour les composants
     readonly userConnected = computed(() => this.userConnectedSignal());
 
     constructor() {
         this.loadToken();
     }
 
+    /**
+     * Effectue la requête de login et gère la réponse pour stocker le token et les infos utilisateur.
+     * @param payload
+     */
     login(payload: ILoginPayload): Observable<HttpResponse<ILoginDto>> {
         return this.httpClient
             .post<ILoginDto>(`${environment.API_URL}/auth/login`, payload, {
@@ -48,21 +55,34 @@ export class AuthService {
             );
     }
 
+    /**
+     * Déconnecte l'utilisateur en nettoyant le token, les infos utilisateur et en redirigeant vers la page de connexion.
+     */
     logout() {
         this.clearState();
         localStorage.removeItem('THEME');
         this.router.navigate(['/connexion']).then();
     }
 
+    /**
+     * Stocke le token dans le localStorage et met à jour le signal.
+     * @param jwt
+     */
     saveToken(jwt: string) {
         localStorage.setItem('JWT_TOKEN', jwt);
         this.tokenSignal.set(jwt);
     }
 
+    /**
+     * Récupère le token actuel depuis le signal (ou null s'il n'y en a pas).
+     */
     getToken(): string | null {
         return this.tokenSignal();
     }
 
+    /**
+     * Charge le token et les infos utilisateur depuis le localStorage au démarrage de l'application.
+     */
     loadToken(): void {
         const token = localStorage.getItem('JWT_TOKEN');
         const userStr = localStorage.getItem('USER_DATA');
@@ -81,11 +101,18 @@ export class AuthService {
         }
     }
 
+    /**
+     * Vérifie si le token est expiré ou non. Retourne true si le token est absent ou expiré, sinon false.
+     */
     isTokenExpired(): boolean {
         const token = this.tokenSignal();
         return !token || this.jwtHelperService.isTokenExpired(token);
     }
 
+    /**
+     * Nettoie le token et les données utilisateur du localStorage et réinitialise les signaux.
+     * @private
+     */
     private clearState(): void {
         localStorage.removeItem('JWT_TOKEN');
         localStorage.removeItem('USER_DATA');

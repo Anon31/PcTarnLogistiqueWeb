@@ -66,13 +66,18 @@ export class TableUserComponent implements OnInit {
         this.clonedUsers[user.id] = { ...user };
     }
 
+    /**
+     * Lors de la sauvegarde de l'édition, on compare l'utilisateur modifié avec le clone original
+     * pour construire un payload de mise à jour partielle.
+     * @param user
+     */
     onRowEditSave(user: IUserDto) {
         const original = this.clonedUsers[user.id];
 
         // Payload partiel typé
         const payload: Partial<IUserPayload> = {};
 
-        // 1. Comparaison champ par champ
+        // Comparaison champ par champ
         if (user.firstname !== original.firstname) payload.firstname = user.firstname;
         if (user.lastname !== original.lastname) payload.lastname = user.lastname;
         if (user.email !== original.email) payload.email = user.email;
@@ -81,7 +86,7 @@ export class TableUserComponent implements OnInit {
 
         console.log('Payload Patch envoyé :', payload);
 
-        // 4. Appel au service avec gestion de la souscription
+        // Appel au service avec gestion de la souscription
         this.userService
             .patchUser(user.id, payload)
             .pipe(
@@ -97,11 +102,17 @@ export class TableUserComponent implements OnInit {
                     delete this.clonedUsers[user.id];
                 },
                 error: (err) => {
+                    console.log('Erreur lors de la mise à jour :', err);
                     this.onRowEditCancel(user, -1);
                 },
             });
     }
 
+    /**
+     * En cas d'annulation de l'édition, on restaure les données originales à partir du clone et on supprime le clone.
+     * @param user
+     * @param index
+     */
     onRowEditCancel(user: IUserDto, index: number) {
         this.userService.rollbackUserUpdate(index, this.clonedUsers[user.id]);
         delete this.clonedUsers[user.id];

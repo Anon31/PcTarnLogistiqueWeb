@@ -7,6 +7,12 @@ import { SystemService } from './system.service';
 export class SystemController {
     constructor(private readonly systemService: SystemService) {}
 
+    /**
+     * Récupérer tous les dictionnaires de référence (enums) pour le frontend
+     * Ce point de terminaison fournit une structure complète de tous les enums utilisés dans l'application,
+     * permettant au frontend de les consommer facilement pour les formulaires, les filtres, etc.
+     * @returns Un objet contenant tous les enums de référence
+     */
     @Get('reference-data')
     @ApiOperation({ summary: 'Récupérer tous les dictionnaires de référence (enums) pour le frontend' })
     @HttpCode(HttpStatus.OK)

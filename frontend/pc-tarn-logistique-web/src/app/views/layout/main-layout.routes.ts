@@ -18,7 +18,7 @@ export const mainLayoutRoutes: Routes = [
             {
                 path: 'utilisateurs',
                 title: 'Utilisateurs',
-                canActivate: [usersGuard],
+                canActivate: [usersGuard], // 🔒 Protection de la route avec le guard RBAC
                 loadComponent: () =>
                     import('./../pages/user/user.component').then((m) => m.UserComponent),
                 children: [

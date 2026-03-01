@@ -1,7 +1,6 @@
 import { IUserDto, IUserPayload } from '../../shared/interfaces/user';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { ToasterService } from './toaster.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
@@ -10,8 +9,6 @@ import { Observable, tap } from 'rxjs';
 })
 export class UserService {
     private http = inject(HttpClient);
-    private toaster = inject(ToasterService);
-
     // Le signal privé contient l'état brut
     private usersSignal = signal<IUserDto[]>([]);
     // Le signal public en lecture seule pour les composants
