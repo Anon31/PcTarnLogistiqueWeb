@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { usersGuard } from '../../core/guards/users-guard';
 
 export const mainLayoutRoutes: Routes = [
     {
@@ -17,6 +18,7 @@ export const mainLayoutRoutes: Routes = [
             {
                 path: 'utilisateurs',
                 title: 'Utilisateurs',
+                canActivate: [usersGuard], // 🔒 Protection de la route avec le guard RBAC
                 loadComponent: () =>
                     import('./../pages/user/user.component').then((m) => m.UserComponent),
                 children: [

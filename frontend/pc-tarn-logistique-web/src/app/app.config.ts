@@ -1,17 +1,26 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+    ApplicationConfig,
+    provideBrowserGlobalErrorListeners,
+    inject,
+    provideAppInitializer,
+} from '@angular/core';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
+import { EnumsDataService } from './core/enums/services/enums-data.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './core/interceptors/token-interceptor';
+import { errorInterceptor } from './core/interceptors/error-interceptor';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CustomTheme } from '../styles/themes/custom-theme';
+import { DialogService } from 'primeng/dynamicdialog';
 import { providePrimeNG } from 'primeng/config';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideHttpClient(withInterceptors([loadingInterceptor, tokenInterceptor])),
+        provideHttpClient(
+            withInterceptors([loadingInterceptor, tokenInterceptor, errorInterceptor]),
+        ),
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),
         providePrimeNG({
@@ -25,5 +34,7 @@ export const appConfig: ApplicationConfig = {
         }),
         MessageService,
         DialogService,
+        ConfirmationService,
+        provideAppInitializer(() => inject(EnumsDataService).loadReferenceData()),
     ],
 };

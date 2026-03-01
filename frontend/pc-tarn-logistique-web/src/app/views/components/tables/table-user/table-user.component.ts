@@ -1,8 +1,13 @@
+import { EnumsDataService } from '../../../../core/enums/services/enums-data.service';
+import { PermissionService } from '../../../../core/services/permission.service';
+import { Component, DestroyRef, inject, OnInit, computed } from '@angular/core';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
 import { IUserDto, IUserPayload } from '../../../../shared/interfaces/user';
-import { RoleLabelPipe } from '../../../../shared/pipes/role-label.pipe';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ToasterService } from '../../../../core/services/toaster.service';
 import { UserService } from '../../../../core/services/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { InputText } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -12,22 +17,42 @@ import { Tag } from 'primeng/tag';
 
 @Component({
     selector: 'app-table-user',
-    imports: [Tag, TableModule, InputText, FormsModule, Select, Button, RoleLabelPipe],
+    imports: [
+        Tag,
+        TableModule,
+        InputText,
+        FormsModule,
+        Select,
+        Button,
+        EnumsDynamicPipe,
+        ConfirmDialog,
+    ],
+    providers: [EnumsDynamicPipe],
     templateUrl: './table-user.component.html',
     styleUrl: './table-user.component.css',
 })
 export class TableUserComponent implements OnInit {
     userService = inject(UserService);
+    toasterService = inject(ToasterService);
+    confirmationService = inject(ConfirmationService);
+    permissionService = inject(PermissionService);
+    enumsData = inject(EnumsDataService);
+    enumsPipe = inject(EnumsDynamicPipe);
     destroyRef = inject(DestroyRef);
+
     // Pour gérer l'annulation de l'édition (rollback)
     clonedUsers: { [s: string]: IUserDto } = {};
 
-    // todo : idéalement, ces options devraient venir d'une API ou d'un enum partagé pour éviter les hardcodes
-    rolesOptions = [
-        { label: 'Administrateur', value: 'ADMIN' },
-        { label: 'Bénévole', value: 'BENEVOLE' },
-        { label: 'Manager', value: 'MANAGER' },
-    ];
+    rolesOptions = computed(() => {
+        // 1. On récupère l'objet envoyé par le backend (ex: { ADMIN: "ADMIN", BENEVOLE: "BENEVOLE" })
+        const backendRoles = this.enumsData.enumsData()?.roles || {};
+        console.log('Rôles bruts du backend :', backendRoles);
+        // 2. On transforme cet objet en tableau pour PrimeNG : [{label: '...', value: '...'}]
+        return Object.values(backendRoles).map((roleValue) => ({
+            label: this.enumsPipe.transform(roleValue as string),
+            value: roleValue,
+        }));
+    });
 
     ngOnInit() {
         this.userService.getAllUsers();
@@ -41,13 +66,18 @@ export class TableUserComponent implements OnInit {
         this.clonedUsers[user.id] = { ...user };
     }
 
+    /**
+     * Lors de la sauvegarde de l'édition, on compare l'utilisateur modifié avec le clone original
+     * pour construire un payload de mise à jour partielle.
+     * @param user
+     */
     onRowEditSave(user: IUserDto) {
         const original = this.clonedUsers[user.id];
 
         // Payload partiel typé
         const payload: Partial<IUserPayload> = {};
 
-        // 1. Comparaison champ par champ
+        // Comparaison champ par champ
         if (user.firstname !== original.firstname) payload.firstname = user.firstname;
         if (user.lastname !== original.lastname) payload.lastname = user.lastname;
         if (user.email !== original.email) payload.email = user.email;
@@ -56,7 +86,7 @@ export class TableUserComponent implements OnInit {
 
         console.log('Payload Patch envoyé :', payload);
 
-        // 4. Appel au service avec gestion de la souscription
+        // Appel au service avec gestion de la souscription
         this.userService
             .patchUser(user.id, payload)
             .pipe(
@@ -65,26 +95,60 @@ export class TableUserComponent implements OnInit {
             )
             .subscribe({
                 next: (updatedUser) => {
-                    // Ajouter toaster de succès
-                    console.log('Succès update');
+                    this.toasterService.success(
+                        '✅ Mise à jour réussie',
+                        `Le profil de ${user.firstname} a été modifié.`,
+                    );
                     delete this.clonedUsers[user.id];
                 },
                 error: (err) => {
-                    console.error('Erreur Update:', err);
-                    // Ajouter toaster d'erreur
+                    console.log('Erreur lors de la mise à jour :', err);
                     this.onRowEditCancel(user, -1);
                 },
             });
     }
 
+    /**
+     * En cas d'annulation de l'édition, on restaure les données originales à partir du clone et on supprime le clone.
+     * @param user
+     * @param index
+     */
     onRowEditCancel(user: IUserDto, index: number) {
-        this.userService.users()[index] = this.clonedUsers[user.id];
+        this.userService.rollbackUserUpdate(index, this.clonedUsers[user.id]);
         delete this.clonedUsers[user.id];
     }
 
-    onDelete(id: number) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-            this.userService.deleteUser(id).subscribe();
-        }
+    /**
+     * Affiche une confirmation avant de supprimer un utilisateur. Si confirmé, envoie la requête de suppression.
+     * @param event
+     * @param id
+     */
+    onDelete(event: Event, id: number) {
+        event.stopPropagation(); // IMPORTANT : Empêche le clic de se propager et d'interférer avec le tableau
+        // @todo Faire la customisation
+        this.confirmationService.confirm({
+            target: event.target as EventTarget, // Ancre l'événement pour PrimeNG
+            message:
+                'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
+            header: 'Confirmation de suppression',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Supprimer',
+            rejectLabel: 'Annuler',
+            rejectButtonStyleClass: 'p-button-text text-gray-500 hover:bg-gray-100',
+            acceptButtonStyleClass: 'p-button-danger bg-red-600 hover:bg-red-700 border-none',
+            accept: () => {
+                this.userService.deleteUser(id).subscribe({
+                    next: () => {
+                        this.toasterService.success(
+                            'Suppression réussie',
+                            "L'utilisateur a bien été retiré de la base.",
+                        );
+                    },
+                    error: (err) => {
+                        console.error('Erreur Delete:', err);
+                    },
+                });
+            },
+        });
     }
 }

@@ -3,11 +3,15 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { UsersService } from '../users/users.service';
 
 @ApiTags('Authentification') // Regroupe pour Sagger les endpoints sous la section "Authentification"
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(
+        private readonly authService: AuthService,
+        private readonly usersService: UsersService,
+    ) {}
 
     @Post('login')
     @ApiOperation({ summary: "Connexion de l'utilisateur" })
@@ -32,6 +36,6 @@ export class AuthController {
     @ApiOperation({ summary: "Récupérer le profil de l'utilisateur connecté" })
     @ApiBearerAuth()
     getProfile(@Request() req: any) {
-        return req.user;
+        return this.usersService.findOne(req.user.userId);
     }
 }
