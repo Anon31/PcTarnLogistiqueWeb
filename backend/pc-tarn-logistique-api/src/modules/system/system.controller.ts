@@ -1,12 +1,9 @@
-import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SystemService } from './system.service';
 
 @ApiTags('Système & Métadonnées')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
-@Controller('system') //
+@Controller('system')
 export class SystemController {
     constructor(private readonly systemService: SystemService) {}
 

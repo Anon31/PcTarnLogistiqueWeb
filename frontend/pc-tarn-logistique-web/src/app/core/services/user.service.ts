@@ -1,9 +1,9 @@
 import { IUserDto, IUserPayload } from '../../shared/interfaces/user';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { catchError, Observable, tap, throwError } from 'rxjs';
 import { ToasterService } from './toaster.service';
 import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -24,17 +24,7 @@ export class UserService {
     getAllUsers(): void {
         this.http
             .get<IUserDto[]>(`${environment.API_URL}/users`)
-            .pipe(
-                tap((users) => this.usersSignal.set(users)),
-                catchError((err) => {
-                    console.error('Erreur chargement users', err);
-                    this.toaster.error(
-                        'Tous nos utilisateurs',
-                        'Une erreur est survenue lors de la récupération des utilisateurs',
-                    );
-                    return throwError(() => err);
-                }),
-            )
+            .pipe(tap((users) => this.usersSignal.set(users)))
             .subscribe();
     }
 
@@ -52,10 +42,18 @@ export class UserService {
         // );
     }
 
+    /**
+     * Récupère un utilisateur par son ID
+     * @param userId
+     */
     getUserById(userId: number) {
         return this.http.get<IUserDto>(`${environment.API_URL}/users/${userId}`);
     }
 
+    /**
+     * Récupère un utilisateur par son email
+     * @param email
+     */
     getUserByEmail(email: string) {
         return this.http.get<IUserDto>(`${environment.API_URL}/users/email/${email}`);
     }
@@ -86,5 +84,19 @@ export class UserService {
                 console.log('🚀 Utilisateur supprimé avec succès');
             }),
         );
+    }
+
+    /**
+     * En cas d'erreur lors de la mise à jour, on peut faire un rollback local pour restaurer l'état précédent.
+     * Cela peut être appelé depuis le composant en cas d'erreur de l'API.
+     * @param index
+     * @param originalUser
+     */
+    rollbackUserUpdate(index: number, originalUser: IUserDto) {
+        this.usersSignal.update((users) => {
+            const newUsers = [...users]; // Création d'une nouvelle référence (Immutabilité)
+            newUsers[index] = originalUser;
+            return newUsers;
+        });
     }
 }
