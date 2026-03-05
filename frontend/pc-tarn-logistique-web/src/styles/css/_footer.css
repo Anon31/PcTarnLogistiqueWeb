@@ -1,0 +1,51 @@
+footer {
+    background-color: transparent;
+    border-top: 1px solid var(--surface-border);
+    color: var(--text-muted);
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+footer a {
+    color: var(--text-muted);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--secondary-500);
+    text-shadow: 0 0 8px rgba(240, 135, 0, 0.4);
+}
+
+.status-success-bg {
+    background-color: rgba(16, 185, 129, 0.8);
+}
+
+.status-success-glow {
+    background-color: #047857;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode .status-success-glow {
+    background-color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+.status-error-text {
+    color: #991b1b;
+    transition: color 0.3s ease;
+}
+
+.dark-mode .status-error-text {
+    color: #ef4444;
+}
+
+.status-error-glow {
+    background-color: #991b1b;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode .status-error-glow {
+    background-color: #ef4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}

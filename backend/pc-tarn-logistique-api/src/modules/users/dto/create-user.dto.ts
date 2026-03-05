@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, ValidateNested, IsInt, IsDateString, IsEnum } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, ValidateNested, IsInt, IsDateString, IsEnum } from 'class-validator';
 import { CreateAddressDto } from '../../../shared/dto/create-address.dto';
 import { Type } from 'class-transformer';
 import { Role } from '@prisma/client';
@@ -30,7 +30,7 @@ export class CreateUserDto {
     password: string;
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty({ message: 'Le numéro de téléphone est obligatoire' })
     phone?: string;
 
     /**
@@ -38,7 +38,7 @@ export class CreateUserDto {
      * @example '1990-05-15'
      */
     @IsDateString()
-    @IsOptional()
+    @IsNotEmpty({ message: 'La date de naissance est obligatoire' })
     birthdate?: string;
 
     /**
@@ -59,8 +59,8 @@ export class CreateUserDto {
     siteId: number;
 
     // Optionnel : Permet de créer l'adresse en même temps
-    @IsOptional()
     @ValidateNested()
     @Type(() => CreateAddressDto)
+    @IsNotEmpty({ message: "L'adresse ne peut pas être vide" })
     address?: CreateAddressDto;
 }

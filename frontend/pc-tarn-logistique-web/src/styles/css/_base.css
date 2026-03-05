@@ -16,38 +16,3 @@ html, body {
     font-family: 'custom-font';
     src: url('../../assets/fonts/Poppins-Light.ttf') format('truetype');
 }
-
-/*body::-webkit-scrollbar {*/
-/*    background-color: rgb(49, 46, 51);*/
-/*    width: 0.75rem;*/
-/*}*/
-
-/*body::-webkit-scrollbar-thumb {*/
-/*    background-color: var(--secondary-500);*/
-/*    border-radius: 9999px;*/
-/*    border: 2px solid rgb(49, 46, 51);*/
-/*}*/
-
-/*body::-webkit-scrollbar {*/
-/*    width: 0.5rem; !* Largeur fine (8px) *!*/
-/*    background-color: var(--scrollbar-track);*/
-/*}*/
-
-/*body::-webkit-scrollbar-track {*/
-/*    background-color: var(--scrollbar-track);*/
-/*}*/
-
-/*body::-webkit-scrollbar-thumb {*/
-/*    background-color: var(--scrollbar-thumb);*/
-/*    border-radius: 9999px; !* Pill shape *!*/
-
-/*    !* Astuce : Crée une marge transparente autour du thumb *!*/
-/*    border: 1px solid var(--scrollbar-border);*/
-/*}*/
-
-/*!* Support Firefox (Optionnel) *!*/
-/*body {*/
-/*    scrollbar-width: thin;*/
-/*    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
-/*}*/
-

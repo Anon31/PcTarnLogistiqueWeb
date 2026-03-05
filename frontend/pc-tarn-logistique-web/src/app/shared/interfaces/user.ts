@@ -27,9 +27,9 @@ export interface IUserPayload {
     lastname: string;
     email: string;
     password: string;
-    phone?: string;
-    birthdate?: string;
+    phone: string;
+    birthdate: string;
     role: string;
     siteId: number;
-    address?: IAddressPayload;
+    address: IAddressPayload;
 }

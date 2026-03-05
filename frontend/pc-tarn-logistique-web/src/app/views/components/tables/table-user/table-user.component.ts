@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
 import { Tag } from 'primeng/tag';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-table-user',
@@ -26,6 +27,7 @@ import { Tag } from 'primeng/tag';
         Button,
         EnumsDynamicPipe,
         ConfirmDialog,
+        RouterLink,
     ],
     providers: [EnumsDynamicPipe],
     templateUrl: './table-user.component.html',

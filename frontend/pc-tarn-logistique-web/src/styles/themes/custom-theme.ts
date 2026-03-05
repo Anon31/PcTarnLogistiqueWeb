@@ -88,72 +88,77 @@ export const CustomTheme = definePreset(Material, {
         select: {
             colorScheme: {
                 light: {
-                    // Options
                     list: {
-                        padding: '0.25rem',
+                        padding: '0.5rem', // Un peu plus aéré
                     },
-                    // Flèche du dropdown
                     dropdown: {
-                        color: 'transparent',
+                        color: 'transparent', // Remis pour afficher subtilement la flèche (au lieu de transparent)
                     },
-                    // Options sélectionnées et au focus
                     option: {
                         borderRadius: '8px',
-                        selectedBackground: 'var(--secondary-100)',
-                        selectedFocusBackground: 'var(--secondary-200)',
-                        focusBackground: 'var(--secondary-200)',
+                        // Gris très léger au survol (plus moderne que du bleu intense)
+                        focusBackground: '{surface.100}',
+                        // Le bleu léger n'apparaît que quand l'élément est réellement sélectionné
+                        selectedBackground: 'var(--primary-50)',
+                        selectedFocusBackground: 'var(--primary-100)',
                         color: '{text.main}',
                     },
-                    // Liste déroulante
                     overlay: {
-                        borderColor: 'var(--secondary-400)',
-                        borderRadius: '8px',
+                        // 🚀 CORRECTION : Opacité montée à 95% pour cacher les textes en dessous
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        // Bordure très douce
+                        borderColor: 'rgba(0, 0, 0, 0.05)',
+                        borderRadius: '12px', // Plus arrondi
+                        // Ombre beaucoup plus diffuse et ample pour un effet "flottant" prononcé
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.1), 0 8px 16px -4px rgba(0, 0, 0, 0.05)',
                     },
                     root: {
-                        focusRing: {
-                            color: 'var(--secondary-500)', // Bordure visible au focus
-                        },
-                        borderRadius: '8px',
+                        borderRadius: '10px',
                         color: '{text.main}',
-                        borderColor: '{surface.300}', // Bordure visible en édition
-                        hoverBorderColor: 'var(--secondary-400)', // Bordure visible au hover
-                        focusBorderColor: 'transparent',
+                        borderColor: '{surface.300}',
+                        hoverBorderColor: '{surface.400}',
+                        focusBorderColor: 'var(--primary-500)',
                         invalidBorderColor: 'var(--status-error-text)',
+                        focusRing: {
+                            color: 'var(--primary-500)', // Cohérent avec tes inputs textuels
+                        },
                     },
                 },
                 dark: {
                     list: {
-                        padding: '0.25rem',
+                        padding: '0.5rem',
                     },
                     dropdown: {
-                        color: 'transparent',
+                        color: 'transparent', // Remis pour afficher subtilement la flèche
                     },
-                    // Options sélectionnées et au focus
                     option: {
                         borderRadius: '8px',
-                        selectedBackground: 'var(--primary-800)',
-                        selectedFocusBackground: 'var(--primary-600)',
-                        focusBackground: 'var(--primary-600)',
+                        // Effet de verre au survol : fond blanc ultra-transparent (5%)
+                        focusBackground: 'rgba(255, 255, 255, 0.05)',
+                        selectedBackground: 'rgba(255, 255, 255, 0.1)',
+                        selectedFocusBackground: 'rgba(255, 255, 255, 0.15)',
                         color: 'var(--primary-50)',
-                        focusColor: 'var(--primary-50)',
+                        focusColor: '#ffffff',
                     },
-                    // Liste déroulante
                     overlay: {
-                        background: 'var(--primary-800)',
-                        borderRadius: '8px',
+                        // 🚀 CORRECTION : Opacité montée à 90% pour garantir la lisibilité du texte du menu
+                        background: 'color-mix(in srgb, var(--primary-800) 95%, transparent)',
+                        borderColor: 'rgba(255, 255, 255, 0.1)', // Bordure effet "reflet de verre"
+                        borderRadius: '12px',
+                        // Ombre noire très forte pour bien détacher le menu du fond sombre
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.6)',
                     },
-                    // Select lui-même
                     root: {
-                        focusRing: {
-                            color: 'var(--secondary-500)',
-                        },
-                        borderRadius: '8px',
-                        background: 'rgba(255, 255, 255, 0.03)', // Effet de verre subtil
-                        color: 'var(--primary-50)', // Texte pur blanc en dark
-                        borderColor: 'rgba(255, 255, 255, 0.1)', // Bordure translucide
-                        focusBorderColor: 'transparent',
+                        borderRadius: '10px',
+                        background: 'rgba(255, 255, 255, 0.03)', // Base effet verre
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
                         hoverBorderColor: 'var(--secondary-400)',
+                        focusBorderColor: 'var(--secondary-400)', // Ton orange/accent
                         invalidBorderColor: 'var(--status-error-text)',
+                        color: 'var(--primary-50)',
+                        focusRing: {
+                            color: 'var(--secondary-400)', // Cohérent avec tes inputs textuels
+                        },
                     },
                 },
             },
@@ -163,13 +168,13 @@ export const CustomTheme = definePreset(Material, {
                 light: {
                     root: {
                         focusRing: {
-                            color: 'var(--secondary-500)',
+                            color: 'var(--primary-500)',
                         },
                         borderRadius: '8px',
                         color: '{text.main}',
                         borderColor: '{surface.300}', // Bordure visible en édition
                         focusBorderColor: 'transparent',
-                        hoverBorderColor: 'var(--secondary-400)', // Bordure visible au hover
+                        hoverBorderColor: 'var(--primary-500)', // Bordure visible au hover
                         invalidBorderColor: 'var(--status-error-text)',
                     },
                 },
@@ -190,6 +195,81 @@ export const CustomTheme = definePreset(Material, {
                 },
             },
         },
+        button: {
+            colorScheme: {
+                light: {
+                    root: {
+                        primary: {
+                            background: 'var(--primary-600)',
+                            hoverBackground: 'var(--primary-700)',
+                            activeBackground: 'var(--primary-800)',
+                            borderColor: 'transparent',
+                            hoverBorderColor: 'transparent',
+                            color: '#ffffff',
+                        },
+                    },
+                    outlined: {
+                        primary: {
+                            color: 'var(--primary-600)',
+                            // Bordure translucide (mixée à 30%)
+                            borderColor: 'color-mix(in srgb, var(--primary-500) 30%, transparent)',
+                            // Hover très léger teinté de la couleur primaire
+                            hoverBackground:
+                                'color-mix(in srgb, var(--primary-500) 5%, transparent)',
+                            activeBackground:
+                                'color-mix(in srgb, var(--primary-500) 10%, transparent)',
+                        },
+                    },
+                    text: {
+                        // Appliqué aux icônes (Œil, Éditer, Corbeille)
+                        primary: {
+                            color: 'var(--primary-600)',
+                            hoverBackground:
+                                'color-mix(in srgb, var(--primary-500) 5%, transparent)',
+                            activeBackground:
+                                'color-mix(in srgb, var(--primary-500) 10%, transparent)',
+                        },
+                    },
+                },
+                dark: {
+                    root: {
+                        primary: {
+                            // Fond teinté à 90% pour laisser subtilement deviner le fond (Effet Verre)
+                            background: 'color-mix(in srgb, var(--secondary-500) 90%, transparent)',
+                            hoverBackground: 'var(--secondary-500)',
+                            activeBackground: 'var(--secondary-600)',
+                            // Bordure "reflet" blanche ultra-translucide au repos
+                            borderColor: 'rgba(255, 255, 255, 0.15)',
+                            // 🚀 CORRECTION : La bordure devient 100% orange au survol pour supprimer l'effet gris
+                            hoverBorderColor: 'var(--secondary-500)',
+                            color: '#ffffff', // Texte blanc pur pour le contraste
+                        },
+                    },
+                    outlined: {
+                        primary: {
+                            color: 'var(--secondary-400)', // L'orange clair ressort mieux sur fond sombre
+                            borderColor:
+                                'color-mix(in srgb, var(--secondary-500) 30%, transparent)',
+                            // Hover avec effet néon très léger
+                            hoverBackground:
+                                'color-mix(in srgb, var(--secondary-500) 10%, transparent)',
+                            activeBackground:
+                                'color-mix(in srgb, var(--secondary-500) 20%, transparent)',
+                        },
+                    },
+                    text: {
+                        // Appliqué aux icônes
+                        primary: {
+                            color: 'var(--secondary-400)',
+                            hoverBackground:
+                                'color-mix(in srgb, var(--secondary-500) 10%, transparent)',
+                            activeBackground:
+                                'color-mix(in srgb, var(--secondary-500) 20%, transparent)',
+                        },
+                    },
+                },
+            },
+        },
         datatable: {
             columnTitle: {
                 fontWeight: '500',
@@ -197,8 +277,8 @@ export const CustomTheme = definePreset(Material, {
             colorScheme: {
                 light: {
                     sortIcon: {
-                        color: 'var(--secondary-400)',
-                        hoverColor: 'var(--secondary-400)',
+                        color: '{text.muted}',
+                        hoverColor: '{text.muted}',
                         size: '0.5rem',
                     },
                     header: {

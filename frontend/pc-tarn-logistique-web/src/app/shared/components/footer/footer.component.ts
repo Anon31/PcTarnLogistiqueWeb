@@ -1,9 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-footer',
-    imports: [],
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: './footer.component.html',
-    styleUrl: './footer.component.css',
 })
-export class FooterComponent {}
+export class FooterComponent {
+    // Gestion du statut réseau (Signal réactif)
+    isOnline = signal<boolean>(navigator.onLine);
+
+    /**
+     * Écouteurs d'événements natifs pour détecter la perte ou le retour du réseau (Wi-Fi/4G)
+     */
+    @HostListener('window:online')
+    onNetworkOnline() {
+        this.isOnline.set(true);
+    }
+
+    @HostListener('window:offline')
+    onNetworkOffline() {
+        this.isOnline.set(false);
+    }
+}

@@ -1,5 +1,42 @@
 <div class="rounded-2xl overflow-hidden shadow-glow text-sm font-light">
-    <p-table [value]="userService.users()" [rowHover]="true" dataKey="id" editMode="row" [size]="'small'" [resizableColumns]="true">
+    <p-table #usersTable
+        [value]="userService.users()"
+        [globalFilterFields]="['firstname', 'lastname', 'email', 'city', 'role']"
+        [rowHover]="true"
+        [size]="'small'"
+        [resizableColumns]="true"
+        dataKey="id"
+        editMode="row">
+        <!-- BARRE DE RECHERCHE DU TABLEAU -->
+        <ng-template pTemplate="caption">
+            <!-- Utilisation de -mx-2 pour annuler le padding natif de PrimeNG (8px) -->
+            <div class="flex justify-between items-center -mx-2 pt-2 pb-6">
+                <!-- GAUCHE : Outil de filtrage global -->
+                <span class="w-full sm:w-auto">
+                    <input
+                        pInputText
+                        type="text"
+                        (input)="usersTable.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Rechercher un utilisateur..."
+                        class="w-full sm:w-64 p-inputtext-sm" />
+                </span>
+
+                <!-- DROITE : Actions de gestion -->
+                <div class="flex items-center">
+                    <!-- 🔒 PROTECTION RBAC : Rapatrié ici, ce bouton route vers le formulaire -->
+                    @if (permissionService.canManageUsers()) {
+                        <p-button
+                            label="Créer un utilisateur"
+                            icon="pi pi-user-plus"
+                            [rounded]="true"
+                            [raised]="true"
+                            size="small"
+                            routerLink="/utilisateurs/creer" />
+                    }
+                </div>
+            </div>
+        </ng-template>
+        <!-- BARRE DE RECHERCHE DU TABLEAU -->
         <ng-template pTemplate="header">
             <tr>
                 <th pSortableColumn="firstname" style="width:15%">
@@ -115,21 +152,21 @@
                 <td>
                     <div class="flex items-center justify-center space-x-1">
                         @if (!editing) {
-                            <p-button size="small" icon="pi pi-eye" [rounded]="true" [text]="true" [raised]="true" severity="warn" />
+                            <p-button size="small" icon="pi pi-eye" [rounded]="true" [text]="true" [raised]="true" [routerLink]="['/utilisateurs/compte', user.id]" />
                         }
                         <!-- 🔒 PROTECTION : Seul un membre autorisé (Admin) peut voir le bouton "Éditer" -->
                         @if (!editing && permissionService.canManageUsers()) {
-                            <p-button size="small" pInitEditableRow icon="pi pi-user-edit" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onRowEditInit(user)" />
+                            <p-button size="small" pInitEditableRow icon="pi pi-user-edit" [rounded]="true" [text]="true" [raised]="true" (click)="onRowEditInit(user)" />
                         }
                         <!-- 🔒 PROTECTION : Seul un membre autorisé (Admin) peut voir le bouton "Supprimer" -->
                         @if (!editing && permissionService.canManageUsers()) {
-                            <p-button size="small" icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onDelete($event, user.id)" />
+                            <p-button size="small" icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" (click)="onDelete($event, user.id)" />
                         }
                         @if (editing) {
-                            <p-button size="small" pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onRowEditSave(user)" />
+                            <p-button size="small" pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" (click)="onRowEditSave(user)" />
                         }
                         @if (editing) {
-                            <p-button size="small" pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="warn" (click)="onRowEditCancel(user, ri)" />
+                            <p-button size="small" pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" (click)="onRowEditCancel(user, ri)" />
                         }
                     </div>
                 </td>
