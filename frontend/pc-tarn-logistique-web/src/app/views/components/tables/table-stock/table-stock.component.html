@@ -1,6 +1,7 @@
 <div>
+    <p><b>Inventaire</b></p>
     <span class="text-sm">
-        Au total, il y a {{ stockService.stocks() ? stockService.stocks().length : 0 }} entrées en stock.
+        {{ stockService.stocks() ? stockService.stocks().length : 0 }} stock(s).
     </span>
 </div>
 
