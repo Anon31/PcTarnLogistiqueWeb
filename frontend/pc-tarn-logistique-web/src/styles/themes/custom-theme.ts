@@ -150,6 +150,7 @@ export const CustomTheme = definePreset(Material, {
                     },
                     root: {
                         borderRadius: '10px',
+                        placeholderColor: 'rgba(255, 255, 255, 0.6)',
                         background: 'rgba(255, 255, 255, 0.03)', // Base effet verre
                         borderColor: 'rgba(255, 255, 255, 0.1)',
                         hoverBorderColor: 'var(--secondary-400)',
@@ -183,7 +184,7 @@ export const CustomTheme = definePreset(Material, {
                         focusRing: {
                             color: 'var(--secondary-500)',
                         },
-                        placeholderColor: 'rgba(255, 255, 255, 0.6)', // Placeholder plus visible en dark
+                        placeholderColor: 'rgba(255, 255, 255, 0.6)',
                         borderRadius: '8px',
                         background: 'rgba(255, 255, 255, 0.03)',
                         color: 'var(--secondary-50)',
@@ -266,6 +267,30 @@ export const CustomTheme = definePreset(Material, {
                             activeBackground:
                                 'color-mix(in srgb, var(--secondary-500) 20%, transparent)',
                         },
+                    },
+                },
+            },
+        },
+        confirmpopup: {
+            colorScheme: {
+                light: {
+                    root: {
+                        // Opacité à 95%
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '16px',
+                        borderColor: 'rgba(0, 0, 0, 0.05)',
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.1), 0 8px 16px -4px rgba(0, 0, 0, 0.05)',
+                    },
+                },
+                dark: {
+                    root: {
+                        color: 'var(--primary-50)', // Texte blanc pur pour le contraste
+                        // Opacité à 90% basée sur ta couleur primary-800
+                        background: 'color-mix(in srgb, var(--primary-800) 90%, transparent)',
+                        borderRadius: '16px',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        // Ombre forte pour détacher le popup du fond sombre
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.6)',
                     },
                 },
             },
