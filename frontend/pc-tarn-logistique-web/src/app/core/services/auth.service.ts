@@ -60,7 +60,7 @@ export class AuthService {
      */
     logout() {
         this.clearState();
-        localStorage.removeItem('THEME');
+        // localStorage.removeItem('THEME');
         this.router.navigate(['/connexion']).then();
     }
 

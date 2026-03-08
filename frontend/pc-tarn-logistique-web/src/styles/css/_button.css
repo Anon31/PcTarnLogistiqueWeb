@@ -1,13 +1,53 @@
+/* =========================================================
+   🪄 BOUTONS : EFFETS WEB3 / GLASSMORPHISM (SUBTILS)
+   ========================================================= */
+
+/* Animation fluide pour tous les boutons (inclut la transition de la bordure) */
+.p-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Boutons pleins (Primary Light Mode) : Glow bleu très léger au repos */
+html:not(.dark-mode) .p-button:not(.p-button-outlined):not(.p-button-text) {
+    box-shadow: 0 2px 6px 0 color-mix(in srgb, var(--primary-500) 20%, transparent);
+}
+
+/* Boutons pleins (Primary Dark Mode) : Glow orange très léger au repos */
+html.dark-mode .p-button:not(.p-button-outlined):not(.p-button-text) {
+    box-shadow: 0 2px 6px 0 color-mix(in srgb, var(--secondary-500) 20%, transparent);
+}
+
+/* Effet au survol (Glow légèrement accentué et correction des bordures) */
+html:not(.dark-mode) .p-button:not(.p-button-outlined):not(.p-button-text):hover {
+    box-shadow: 0 4px 12px 0 color-mix(in srgb, var(--primary-500) 35%, transparent);
+    border-color: transparent !important;
+}
+html.dark-mode .p-button:not(.p-button-outlined):not(.p-button-text):hover {
+    box-shadow: 0 4px 12px 0 color-mix(in srgb, var(--secondary-500) 35%, transparent);
+    border-color: var(--secondary-500) !important;
+}
+
+/* Boutons Outlined/Text (Les icônes du tableau) : Effet verre au survol */
+.p-button-outlined:hover,
+.p-button-text:hover {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* =========================================================
+   🚨 EXCEPTIONS & CLASSES UTILITAIRES
+   ========================================================= */
+
 .btn-custom {
-    color: var(--primary-50) !important; /* Blanc cassé par défaut */
+    color: var(--primary-50) !important;
     padding: 0.5rem !important;
     width: auto !important;
-    background: transparent !important; /* Force la transparence de base */
+    background: transparent !important;
     transition: all 0.2s ease-in-out;
 }
 
 .btn-custom:hover {
-    background: transparent !important; /* Empêche le fond blanc par défaut de PrimeNG */
+    background: transparent !important;
     color: var(--secondary-500) !important;
     transform: scale(1.1);
 }

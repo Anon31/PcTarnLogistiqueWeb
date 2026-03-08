@@ -1,22 +1,39 @@
-<header class="container-fluid p-0 shadow-2">
-    <p-toolbar>
-        <ng-template #start> </ng-template>
-        <ng-template #center>
-            <p-iconfield iconPosition="right">
-                <p-inputicon class="pi pi-search" />
-                <input type="text" class="w-lg" pInputText placeholder="Rechercher" />
-            </p-iconfield>
-        </ng-template>
+<header>
+    <p-toolbar class="bg-transparent border-none px-4 md:px-6 py-3">
+        <!-- GAUCHE : Fil d'Ariane -->
+        <ng-template #start></ng-template>
+        <ng-template #center></ng-template>
+        <!-- DROITE : Actions globales -->
         <ng-template #end>
-            <div class="lg:hidden">
+            <div class="flex items-center gap-1 mr-6 space-x-3">
                 <p-button
-                    ariaLabel="Menu"
-                    icon="pi pi-bars"
+                    icon="pi pi-bell"
                     [text]="true"
-                    styleClass="btn-custom shrink-0"
-                    (onClick)="sidebarService.setOpen(true)"
-                >
+                    [rounded]="true"
+                    styleClass="btn-custom shrink-0 transition duration-300 hover:scale-110"
+                    [style]="{ color: 'var(--custom-header-text)' }">
                 </p-button>
+                <p-button
+                    ariaLabel="Activer ou désactiver le dark mode"
+                    [icon]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"
+                    [text]="true"
+                    [rounded]="true"
+                    styleClass="btn-custom shrink-0 transition duration-300 hover:scale-110"
+                    [style]="{ color: 'var(--custom-header-text)' }"
+                    (onClick)="toggleDarkMode()">
+                </p-button>
+                <!-- Menu Burger (Mobile/Tablette) -->
+                <div class="lg:hidden">
+                    <p-button
+                        ariaLabel="Menu"
+                        icon="pi pi-bars"
+                        [text]="true"
+                        [rounded]="true"
+                        styleClass="btn-custom shrink-0 transition duration-300 hover:scale-110"
+                        [style]="{ color: 'var(--custom-header-text)' }"
+                        (onClick)="sidebarService.setOpen(true)">
+                    </p-button>
+                </div>
             </div>
         </ng-template>
     </p-toolbar>

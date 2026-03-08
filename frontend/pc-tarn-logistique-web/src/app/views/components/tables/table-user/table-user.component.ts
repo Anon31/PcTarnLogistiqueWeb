@@ -6,10 +6,11 @@ import { IUserDto, IUserPayload } from '../../../../shared/interfaces/user';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { UserService } from '../../../../core/services/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmPopup } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
 import { InputText } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
@@ -25,7 +26,8 @@ import { Tag } from 'primeng/tag';
         Select,
         Button,
         EnumsDynamicPipe,
-        ConfirmDialog,
+        ConfirmPopup,
+        RouterLink,
     ],
     providers: [EnumsDynamicPipe],
     templateUrl: './table-user.component.html',
@@ -124,18 +126,30 @@ export class TableUserComponent implements OnInit {
      * @param id
      */
     onDelete(event: Event, id: number) {
-        event.stopPropagation(); // IMPORTANT : Empêche le clic de se propager et d'interférer avec le tableau
-        // @todo Faire la customisation
+        event.stopPropagation(); // IMPORTANT : Empêche l'interférence avec la ligne du tableau
+
         this.confirmationService.confirm({
-            target: event.target as EventTarget, // Ancre l'événement pour PrimeNG
+            target: event.target as EventTarget,
             message:
                 'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
-            header: 'Confirmation de suppression',
-            icon: 'pi pi-exclamation-triangle',
+            icon: 'pi pi-info-circle', // Icône rouge pour appuyer le danger
             acceptLabel: 'Supprimer',
             rejectLabel: 'Annuler',
-            rejectButtonStyleClass: 'p-button-text text-gray-500 hover:bg-gray-100',
-            acceptButtonStyleClass: 'p-button-danger bg-red-600 hover:bg-red-700 border-none',
+
+            // 🚀 API Moderne : Hérite de ton thème de boutons
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true,
+                size: 'small',
+                rounded: true,
+            },
+            acceptButtonProps: {
+                severity: 'danger', // Applique le rouge natif
+                size: 'small',
+                rounded: true,
+                raised: true,
+            },
+
             accept: () => {
                 this.userService.deleteUser(id).subscribe({
                     next: () => {

@@ -1,1 +1,26 @@
-<p>footer works!</p>
+<footer>
+    <div class="h-10 flex items-center justify-between px-4 md:px-6 text-xs">
+        <div class="flex items-center gap-4 md:flex">
+            <span class="font-extralight">© 2026 Protection Civile</span>
+            <a href="#">Charte informatique</a>
+            <a href="#">Politique RGPD</a>
+        </div>
+        <!-- Statut Réseau -->
+        <div class="flex items-center gap-2 font-medium">
+            @if (isOnline()) {
+                <!-- Voyant Vert "Connecté" -->
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 status-success-bg"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 status-success-glow"></span>
+                </span>
+                <span class="hidden sm:inline">Connecté au serveur</span>
+            } @else {
+                <!-- Voyant Rouge "Hors Ligne" -->
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 status-error-glow"></span>
+                </span>
+                <span class="hidden sm:inline status-error-text">Mode Hors-ligne (En attente)</span>
+            }
+        </div>
+    </div>
+</footer>

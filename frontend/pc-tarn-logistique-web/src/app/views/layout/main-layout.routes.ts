@@ -43,6 +43,14 @@ export const mainLayoutRoutes: Routes = [
                                 (m) => m.UserCreateComponent,
                             ),
                     },
+                    {
+                        path: 'compte/:id',
+                        title: 'Détails du compte utilisateur',
+                        loadComponent: () =>
+                            import('./../pages/user/user-account/user-account.component').then(
+                                (m) => m.UserAccountComponent,
+                            ),
+                    },
                 ],
             },
             {

@@ -1,17 +1,43 @@
-import { SidebarService } from '../../../core/services/sidebar.service';
-import { Component, inject } from '@angular/core';
-import { IconField } from 'primeng/iconfield';
-import { InputIcon } from 'primeng/inputicon';
-import { InputText } from 'primeng/inputtext';
-import { Toolbar } from 'primeng/toolbar';
-import { Button } from 'primeng/button';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
+import { SidebarService } from '../../../core/services/sidebar.service'; // Ajuste le chemin si besoin
 
 @Component({
     selector: 'app-header',
-    imports: [Toolbar, Button, IconField, InputIcon, InputText],
+    standalone: true,
+    imports: [CommonModule, ToolbarModule, ButtonModule],
     templateUrl: './header.component.html',
-    styleUrl: './header.component.css',
 })
-export class HeaderComponent {
-    protected sidebarService = inject(SidebarService);
+export class HeaderComponent implements OnInit {
+    sidebarService = inject(SidebarService);
+
+    // État local du bouton pour savoir quelle icône afficher
+    isDarkMode = false;
+
+    /**
+     * Au montage du Header, on regarde quel est le thème actuel
+     * pour afficher la bonne icône (soleil ou lune)
+     */
+    ngOnInit() {
+        const storedTheme = localStorage.getItem('THEME');
+        this.isDarkMode = storedTheme === 'dark';
+    }
+
+    /**
+     * Action du bouton : Bascule entre le mode Clair et Sombre avec sauvegarde
+     */
+    toggleDarkMode() {
+        this.isDarkMode = !this.isDarkMode;
+
+        const html = document.documentElement;
+        if (this.isDarkMode) {
+            html.classList.add('dark-mode');
+        } else {
+            html.classList.remove('dark-mode');
+        }
+
+        localStorage.setItem('THEME', this.isDarkMode ? 'dark' : 'light');
+    }
 }

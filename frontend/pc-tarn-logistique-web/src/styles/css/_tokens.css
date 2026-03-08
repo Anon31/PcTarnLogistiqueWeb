@@ -2,7 +2,6 @@
 
 @layer theme {
     :root {
-        /* --- 🔵 COULEUR PRIMAIRE (Bleu PC) --- */
         --primary-50: #e6f0ff;
         --primary-100: #b3d1ff;
         --primary-200: #80b3ff;
@@ -15,7 +14,6 @@
         --primary-900: #001633;
         --primary-950: #000b1a;
 
-        /* --- 🟠 COULEUR SECONDAIRE (Orange PC) --- */
         --secondary-50: #fff8f1;
         --secondary-100: #ffebd4;
         --secondary-200: #ffd29a;
@@ -66,11 +64,6 @@
         --scrollbar-thumb: #cbd5e1; /* Gris clair */
         --scrollbar-border: #ffffff; /* Bordure pour effet détaché */
 
-        /* --- ✨ NOUVEAUX TOKENS : EFFETS WEB3 / STATUS --- */
-        --glass-bg: rgba(255, 255, 255, 0.7);
-        --glass-border: rgba(255, 255, 255, 0.3);
-        --glow-shadow: 0 4px 20px rgba(0, 64, 128, 0.08);
-
         --status-success-bg: #d1fae5; --status-success-text: #047857;
         --status-info-bg: #dbeafe;    --status-info-text: #1d4ed8;
         --status-warn-bg: #ffedd5;    --status-warn-text: #c2410c;
@@ -90,12 +83,6 @@
         --surface-border: var(--primary-800);
         --text-main: #f8fafc;
         --text-muted: #94a3b8;
-
-        /* --- 🔮 MENU WEB3 DARK TOKENS (Cyberpunk Style) --- */
-        --menu-bg-hover: rgba(255, 255, 255, 0.03);
-        --menu-border-hover: rgba(240, 135, 0, 0.5);
-        --menu-text: rgba(255, 255, 255, 0.7);
-        --menu-text-hover: #ffffff;
 
         /* Effet Neon */
         --menu-shadow-hover: 0 0 15px var(--pc-orange-glow), inset 0 0 10px rgba(255, 255, 255, 0.02);

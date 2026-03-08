@@ -1,0 +1,133 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="w-full animate-fadein">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-5">
+        <!-- Prénom -->
+        <div class="flex flex-col gap-2">
+            <label for="firstname" class="text-sm truncate">Prénom <span class="text-(--secondary-400)">*</span></label>
+            <input id="firstname" pInputText formControlName="firstname" placeholder="Ex: Jean" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': userForm.controls.firstname.touched && userForm.controls.firstname.invalid}" />
+            @if (userForm.controls.firstname.touched && userForm.controls.firstname.errors?.['required']) {
+                <small class="text-(--status-error-text)">Le prénom est requis.</small>
+            }
+        </div>
+        <!-- Nom -->
+        <div class="flex flex-col gap-2">
+            <label for="lastname" class="text-sm truncate">Nom <span class="text-(--secondary-400)">*</span></label>
+            <input id="lastname" pInputText formControlName="lastname" placeholder="Ex: Dupont" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': userForm.controls.lastname.touched && userForm.controls.lastname.invalid}" />
+            @if (userForm.controls.lastname.touched && userForm.controls.lastname.errors?.['required']) {
+                <small class="text-(--status-error-text)">Le nom est requis.</small>
+            }
+        </div>
+        <!-- Email -->
+        <div class="flex flex-col gap-2">
+            <label for="email" class="text-sm truncate">Email <span class="text-(--secondary-400)">*</span></label>
+            <input id="email" type="email" pInputText formControlName="email" placeholder="jean.dupont@test.com" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': userForm.controls.email.touched && userForm.controls.email.invalid}" />
+            @if (userForm.controls.email.touched && userForm.controls.email.errors?.['email']) {
+                <small class="text-(--status-error-text)">Format d'email invalide.</small>
+            }
+        </div>
+        <!-- Mot de passe -->
+        <div class="flex flex-col gap-2">
+            <label for="password" class="text-sm truncate">Mot de passe provisoire <span class="text-(--secondary-400)">*</span></label>
+            <p-password id="password" formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" [feedback]="true" promptLabel="Saisissez un mot de passe" weakLabel="Faible" mediumLabel="Moyen" strongLabel="Fort"
+            [ngClass]="{'ng-invalid ng-dirty': userForm.controls.password.touched && userForm.controls.password.invalid}"></p-password>
+        </div>
+        <!-- Rôle -->
+        <div class="flex flex-col gap-2">
+            <label for="role" class="text-sm truncate">Rôle <span class="text-(--secondary-400)">*</span></label>
+            <p-select id="role" formControlName="role" [options]="rolesOptions()" optionLabel="label" optionValue="value" placeholder="Sélectionner un rôle" class="w-full" appendTo="body"
+                [ngClass]="{'ng-invalid ng-dirty': userForm.controls.role.touched && userForm.controls.role.invalid}"></p-select>
+        </div>
+        <!-- Antenne -->
+        <div class="flex flex-col gap-2">
+            <label for="site" class="text-sm truncate">Antenne de rattachement <span class="text-(--secondary-400)">*</span></label>
+            <p-select id="site" formControlName="siteId" [options]="sitesOptions" optionLabel="label" optionValue="value" placeholder="Sélectionner une antenne" class="w-full" appendTo="body"
+                [ngClass]="{'ng-invalid ng-dirty': userForm.controls.siteId.touched && userForm.controls.siteId.invalid}"></p-select>
+        </div>
+        <!-- Date de naissance -->
+        <div class="flex flex-col gap-2">
+            <label for="birthdate" class="text-sm truncate">Date de naissance <span class="text-(--secondary-400)">*</span></label>
+            <input id="birthdate" type="date" pInputText formControlName="birthdate" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': userForm.controls.birthdate.touched && userForm.controls.birthdate.invalid}" />
+            @if (userForm.controls.birthdate.touched && userForm.controls.birthdate.errors?.['required']) {
+                <small class="text-(--status-error-text)">La date de naissance est requise.</small>
+            }
+            @if (userForm.controls.birthdate.touched && userForm.controls.birthdate.errors?.['minimumAge']) {
+                <small class="text-(--status-error-text)">L'utilisateur doit avoir au moins 16 ans.</small>
+            }
+        </div>
+        <!-- Téléphone -->
+        <div class="flex flex-col gap-2">
+            <label for="phone" class="text-sm truncate">Téléphone</label>
+            <input id="phone" type="tel" pInputText formControlName="phone" placeholder="0612345678" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': userForm.controls.phone.touched && userForm.controls.phone.invalid}" />
+            <!-- 🚀 Message ajusté pour n'apparaître que si le format (pattern) est mauvais -->
+            @if (userForm.controls.phone.touched && userForm.controls.phone.errors?.['pattern']) {
+                <small class="text-(--status-error-text)">Le numéro de téléphone doit contenir 10 chiffres.</small>
+            }
+        </div>
+        <!-- SECTION ADRESSE -->
+        <div formGroupName="address" class="lg:col-span-2 grid grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-5">
+            <!-- Numéro -->
+            <div class="flex flex-col gap-2 lg:col-span-3">
+                <label for="number" class="text-sm truncate">N°</label>
+                <input id="number" type="number" pInputText formControlName="number" placeholder="Ex: 12" class="w-full"
+                    [ngClass]="{'ng-invalid ng-dirty': userForm.get('address.number')?.touched && userForm.get('address.number')?.invalid}" />
+                @if (userForm.get('address.number')?.touched && userForm.get('address.number')?.errors?.['min']) {
+                    <small class="text-(--status-error-text)">Doit être supérieur à 0.</small>
+                }
+            </div>
+            <!-- Rue -->
+            <div class="flex flex-col gap-2 lg:col-span-9">
+                <label for="street" class="text-sm truncate">Voie (Rue, Avenue...)</label>
+                <input id="street" pInputText formControlName="street" placeholder="Ex: Rue de la Logistique" class="w-full"
+                    [ngClass]="{'ng-invalid ng-dirty': userForm.get('address.street')?.touched && userForm.get('address.street')?.invalid}" />
+            </div>
+            <!-- Code Postal -->
+            <div class="flex flex-col gap-2 lg:col-span-4">
+                <label for="zipcode" class="text-sm truncate">Code postal</label>
+                <input id="zipcode" pInputText formControlName="zipcode" placeholder="Ex: 81000" class="w-full"
+                    [ngClass]="{'ng-invalid ng-dirty': userForm.get('address.zipcode')?.touched && userForm.get('address.zipcode')?.invalid}" />
+            </div>
+            <!-- Ville -->
+            <div class="flex flex-col gap-2 lg:col-span-4">
+                <label for="city" class="text-sm truncate">Ville</label>
+                <input id="city" pInputText formControlName="city" placeholder="Ex: Albi" class="w-full"
+                    [ngClass]="{'ng-invalid ng-dirty': userForm.get('address.city')?.touched && userForm.get('address.city')?.invalid}" />
+            </div>
+            <!-- Pays -->
+            <div class="flex flex-col gap-2 lg:col-span-4">
+                <label for="state" class="text-sm truncate">Pays</label>
+                <input id="state" pInputText formControlName="state" class="w-full"
+                    [ngClass]="{'ng-invalid ng-dirty': userForm.get('address.state')?.touched && userForm.get('address.state')?.invalid}" />
+            </div>
+        </div>
+        <!-- BOUTONS D'ACTION -->
+        <div class="lg:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-4 mt-6 pt-6">
+            <div class="w-full">
+                <p-button
+                    label="Annuler"
+                    icon="pi pi-times-circle"
+                    variant="outlined"
+                    [rounded]="true"
+                    [raised]="true"
+                    size="small"
+                    styleClass="w-full"
+                    (click)="onCancel()">
+                </p-button>
+            </div>
+            <div class="w-full">
+                <p-button
+                    label="Créer l'utilisateur"
+                    icon="pi pi-check"
+                    [rounded]="true"
+                    [raised]="true"
+                    size="small"
+                    styleClass="w-full"
+                    type="submit">
+                </p-button>
+            </div>
+        </div>
+    </div>
+</form>
