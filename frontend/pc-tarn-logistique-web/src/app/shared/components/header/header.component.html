@@ -22,6 +22,16 @@
                     [style]="{ color: 'var(--custom-header-text)' }"
                     (onClick)="toggleDarkMode()">
                 </p-button>
+                @if (this.authService.isAuthenticated()) {
+                    <p-button
+                        ariaLabel="logout"
+                        icon="pi pi-sign-out"
+                        [text]="true"
+                        [rounded]="true"
+                        styleClass="btn-custom shrink-0 transition duration-300 hover:scale-110"
+                        (click)="this.authService.logout()">
+                    </p-button>
+                }
                 <!-- Menu Burger (Mobile/Tablette) -->
                 <div class="lg:hidden">
                     <p-button

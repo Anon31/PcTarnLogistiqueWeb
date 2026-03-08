@@ -1,5 +1,6 @@
 <div class="p-4 mt-auto border-t border-white/20 shrink-0 mb-4">
-    <div class="user-card flex items-center gap-3 p-3 rounded-xl transition-all cursor-pointer group">
+    @if (this.authService.isAuthenticated()) {
+    <div routerLink="mon-compte" class="user-card flex items-center gap-3 p-3 rounded-xl transition-all cursor-pointer group">
         <div class="w-10 h-10 rounded-full text-white flex items-center justify-center font-bold text-sm shadow-sm border-2 border-white/10 logo-bg shrink-0">
             {{ authService.userConnected()?.firstname?.charAt(0)?.toUpperCase() }}{{ authService.userConnected()?.lastname?.charAt(0)?.toUpperCase() }}
         </div>
@@ -12,8 +13,13 @@
                         {{ this.authService.userConnected()?.role | roleLabel }}
                     </span>
         </div>
-        @if (this.authService.isAuthenticated()) {
-            <p-button ariaLabel="logout" icon="pi pi-sign-out" text styleClass="btn-custom shrink-0" (click)="this.authService.logout()"/>
-        }
+        <p-button
+            ariaLabel="Mon compte"
+            icon="pi pi-cog"
+            [text]="true"
+            [rounded]="true"
+            styleClass="btn-custom shrink-0 transition duration-300 hover:scale-110">
+        </p-button>
     </div>
+    }
 </div>
