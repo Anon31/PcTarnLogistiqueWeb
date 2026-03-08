@@ -13,6 +13,7 @@ import { DividerModule } from 'primeng/divider';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-form-create-user',
@@ -24,6 +25,7 @@ import { Router } from '@angular/router';
         SelectModule,
         ButtonModule,
         DividerModule,
+        NgClass,
     ],
     providers: [EnumsDynamicPipe],
     templateUrl: './form-create-user.component.html',
@@ -64,11 +66,11 @@ export class FormCreateUserComponent {
         role: ['', [Validators.required]],
         siteId: [1, [Validators.required]],
         address: this.fb.group({
-            number: [null as number | null, [Validators.required, Validators.min(1)]],
-            street: ['', [Validators.required]],
-            zipcode: ['', [Validators.required]],
-            city: ['', [Validators.required]],
-            state: ['France', [Validators.required]],
+            number: [null as number | null, [Validators.min(1)]],
+            street: [''],
+            zipcode: [''],
+            city: [''],
+            state: ['France'],
         }),
     });
 
@@ -91,16 +93,16 @@ export class FormCreateUserComponent {
             lastname: formValue.lastname,
             password: formValue.password,
             email: formValue.email,
-            phone: formValue.phone,
+            phone: formValue.phone || '',
             birthdate: formValue.birthdate,
             role: formValue.role,
             siteId: formValue.siteId,
             address: {
-                number: Number(formValue.address.number),
-                street: formValue.address.street,
-                zipcode: formValue.address.zipcode,
-                city: formValue.address.city,
-                state: formValue.address.state,
+                number: formValue.address.number ? Number(formValue.address.number) : 0,
+                street: formValue.address.street || '',
+                zipcode: formValue.address.zipcode || '',
+                city: formValue.address.city || '',
+                state: formValue.address.state || 'France',
             },
         };
 
