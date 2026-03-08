@@ -16,6 +16,14 @@ export const mainLayoutRoutes: Routes = [
                     ),
             },
             {
+                path: 'mon-compte',
+                title: 'Mes paramètres utilisateur',
+                loadComponent: () =>
+                    import('./../pages/user/user-account/user-account.component').then(
+                        (m) => m.UserAccountComponent,
+                    ),
+            },
+            {
                 path: 'utilisateurs',
                 title: 'Utilisateurs',
                 canActivate: [usersGuard], // 🔒 Protection de la route avec le guard RBAC
@@ -47,8 +55,8 @@ export const mainLayoutRoutes: Routes = [
                         path: 'compte/:id',
                         title: 'Détails du compte utilisateur',
                         loadComponent: () =>
-                            import('./../pages/user/user-account/user-account.component').then(
-                                (m) => m.UserAccountComponent,
+                            import('./../pages/user/user-editing/user-editing.component').then(
+                                (m) => m.UserEditingComponent,
                             ),
                     },
                 ],
@@ -171,6 +179,22 @@ export const mainLayoutRoutes: Routes = [
                             ),
                     },
                 ],
+            },
+            {
+                path: 'charte-informatique',
+                title: 'Charte informatique',
+                loadComponent: () =>
+                    import('./../pages/it-charter/it-charter.component').then(
+                        (m) => m.ItCharterComponent,
+                    ),
+            },
+            {
+                path: 'politique-rgpd',
+                title: 'Politique RGPD',
+                loadComponent: () =>
+                    import('./../pages/rgpd-policy/rgpd-policy.component').then(
+                        (m) => m.RgpdPolicyComponent,
+                    ),
             },
         ],
     },
