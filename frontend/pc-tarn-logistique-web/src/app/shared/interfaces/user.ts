@@ -8,7 +8,7 @@ export interface IUserDto {
     firstname: string;
     lastname: string;
     email: string;
-    phone: string;
+    phone?: string;
     birthdate: string;
     enabled: boolean;
     role: string;
@@ -28,7 +28,7 @@ export interface IUserPayload {
     email: string;
     password: string;
     phone?: string;
-    birthdate?: string;
+    birthdate: string;
     role: string;
     siteId: number;
     address?: IAddressPayload;

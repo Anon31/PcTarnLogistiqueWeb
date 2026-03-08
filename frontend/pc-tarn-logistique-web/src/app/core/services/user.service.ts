@@ -27,16 +27,16 @@ export class UserService {
 
     /**
      * Création d'un nouvel utilisateur
-     * @param user
+     * @param user Le payload contenant les infos du formulaire
      */
-    createUser(user: IUserPayload) {
-        console.log('Creating user:', user);
-        // return this.http.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
-        //     tap((createdUser: IUserDto) => {
-        //         // Logique optionnelle post-inscription (ex: auto-login)
-        //         console.log('🚀 Utilisateur créé avec succès:', createdUser);
-        //     }),
-        // );
+    createUser(user: IUserPayload): Observable<IUserDto> {
+        return this.http.post<IUserDto>(`${environment.API_URL}/users`, user).pipe(
+            tap((createdUser: IUserDto) => {
+                // Mise à jour locale (optimiste) : j'ajoute le nouvel utilisateur en haut de ma liste
+                this.usersSignal.update((users) => [createdUser, ...users]);
+                console.log('🚀 Utilisateur créé avec succès:', createdUser);
+            }),
+        );
     }
 
     /**

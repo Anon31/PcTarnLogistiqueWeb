@@ -1,38 +1,46 @@
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { FormBase } from '../../../../shared/class/form-base';
-import { Component, inject, OnInit } from '@angular/core';
-import { FloatLabel } from 'primeng/floatlabel';
+import { Component, inject } from '@angular/core';
 import { StyleClass } from 'primeng/styleclass';
+import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 
 @Component({
     selector: 'app-form-login',
-    imports: [Button, FloatLabel, InputText, ReactiveFormsModule, StyleClass],
+    standalone: true,
+    imports: [ReactiveFormsModule, Button, FloatLabel, InputText, StyleClass],
     templateUrl: './form-login.component.html',
     styleUrl: './form-login.component.css',
 })
-export class FormLoginComponent extends FormBase implements OnInit {
-    private fb = inject(FormBuilder);
+export class FormLoginComponent {
+    private fb = inject(NonNullableFormBuilder);
     private authService = inject(AuthService);
     private toastService = inject(ToasterService);
     private router = inject(Router);
 
-    constructor() {
-        super();
-    }
+    // Initialisation directe du formulaire (Typage strict garanti)
+    loginForm = this.fb.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required]],
+    });
 
-    ngOnInit() {
-        this.buildForm();
-    }
-
+    /**
+     * Soumission du formulaire de connexion
+     */
     submitForm() {
-        if (this.form.invalid) return;
+        // Vérification avec markAllAsTouched pour forcer l'affichage des erreurs UI
+        if (this.loginForm.invalid) {
+            this.loginForm.markAllAsTouched();
+            return;
+        }
 
-        this.authService.login(this.form.value).subscribe({
+        // Extraction propre des données fortement typées ({email: string, password: string})
+        const payload = this.loginForm.getRawValue();
+
+        this.authService.login(payload).subscribe({
             next: (response) => {
                 this.router.navigate(['/', 'tableau-de-bord']).then(() => {
                     this.toastService.success(
@@ -44,13 +52,6 @@ export class FormLoginComponent extends FormBase implements OnInit {
             error: (error) => {
                 this.toastService.error('💥 Accès refusé', '🐞 Vérifiez vos informations.');
             },
-        });
-    }
-
-    buildForm() {
-        this.form = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
         });
     }
 }
