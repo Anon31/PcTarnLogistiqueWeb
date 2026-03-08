@@ -2,7 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { SidebarService } from '../../../core/services/sidebar.service'; // Ajuste le chemin si besoin
+import { SidebarService } from '../../../core/services/sidebar.service';
+import { AuthService } from '../../../core/services/auth.service'; // Ajuste le chemin si besoin
 
 @Component({
     selector: 'app-header',
@@ -12,6 +13,7 @@ import { SidebarService } from '../../../core/services/sidebar.service'; // Ajus
 })
 export class HeaderComponent implements OnInit {
     sidebarService = inject(SidebarService);
+    public authService = inject(AuthService);
 
     // État local du bouton pour savoir quelle icône afficher
     isDarkMode = false;
