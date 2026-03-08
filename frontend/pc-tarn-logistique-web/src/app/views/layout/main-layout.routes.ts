@@ -172,6 +172,22 @@ export const mainLayoutRoutes: Routes = [
                     },
                 ],
             },
+            {
+                path: 'charte-informatique',
+                title: 'Charte informatique',
+                loadComponent: () =>
+                    import('./../pages/it-charter/it-charter.component').then(
+                        (m) => m.ItCharterComponent,
+                    ),
+            },
+            {
+                path: 'politique-rgpd',
+                title: 'Politique RGPD',
+                loadComponent: () =>
+                    import('./../pages/rgpd-policy/rgpd-policy.component').then(
+                        (m) => m.RgpdPolicyComponent,
+                    ),
+            },
         ],
     },
 ];

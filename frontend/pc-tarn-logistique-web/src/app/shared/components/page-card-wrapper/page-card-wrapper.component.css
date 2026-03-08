@@ -13,7 +13,7 @@
 
 /* Padding du corps de la carte */
 :host ::ng-deep .card-wrapper-override .p-card-body {
-    padding: 2rem;
+    padding: 3rem;
 }
 
 :host-context(.dark-mode) ::ng-deep .card-wrapper-override,
