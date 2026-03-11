@@ -3,7 +3,14 @@
         title="Compte utilisateur"
         icon="pi pi-user-edit"
         subtitle="Mettez à jour les informations de votre utilisateur."
-        [hideDivider]=false>
-        <!-- CONTENU DE LA PAGE -->
+        [hideDivider]="false">
+        @if (loadedUser()) {
+            <app-form-user
+                mode="edit-admin"
+                [userData]="loadedUser()"
+                (save)="onUpdate($event)"
+                (cancel)="onCancel()">
+            </app-form-user>
+        }
     </app-page-card-wrapper>
 </section>

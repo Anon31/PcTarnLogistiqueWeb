@@ -22,6 +22,7 @@ export class AuthService {
     // --- COMPUTED (DÉDUCTIONS) ---
     readonly isAuthenticated = computed(() => {
         const token = this.tokenSignal();
+        // Un utilisateur est considéré comme authentifié si un token existe et n'est pas expiré
         return !!token && !this.jwtHelperService.isTokenExpired(token);
     });
     // On expose les données de l'utilisateur connecté pour les composants

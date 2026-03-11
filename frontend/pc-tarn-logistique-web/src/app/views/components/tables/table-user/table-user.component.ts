@@ -98,7 +98,7 @@ export class TableUserComponent implements OnInit {
             .subscribe({
                 next: (updatedUser) => {
                     this.toasterService.success(
-                        '✅ Mise à jour réussie',
+                        'Mise à jour réussie',
                         `Le profil de ${user.firstname} a été modifié.`,
                     );
                     delete this.clonedUsers[user.id];

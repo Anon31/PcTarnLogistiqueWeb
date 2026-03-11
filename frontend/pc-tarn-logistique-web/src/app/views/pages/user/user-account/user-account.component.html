@@ -1,9 +1,13 @@
 <section>
-    <app-page-card-wrapper
-        title="Mon compte"
-        icon="pi pi-id-card"
-        subtitle="Gérez vos informations personnelles et vos accès de sécurité."
-        [hideDivider]=false>
-        <!-- CONTENU DE LA PAGE -->
+    <app-page-card-wrapper title="Mon compte" subtitle="Gérez vos informations." [hideDivider]="false">
+        @if (fullUserProfile()) {
+            <app-form-user
+                mode="edit-self"
+                [userData]="fullUserProfile()"
+                (save)="onUpdateProfile($event)"
+                (cancel)="onCancel()"
+                (requestPasswordChange)="openPasswordDialog()">
+            </app-form-user>
+        }
     </app-page-card-wrapper>
 </section>

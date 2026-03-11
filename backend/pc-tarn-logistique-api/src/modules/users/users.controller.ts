@@ -45,7 +45,7 @@ export class UsersController {
      * @param id
      */
     @Get(':id')
-    @Roles(Role.ADMIN, Role.MANAGER)
+    @Roles(Role.ADMIN, Role.MANAGER, Role.BENEVOLE)
     @ApiOperation({ summary: "Récupérer le profil d'un utilisateur par son ID" })
     @ApiResponse({ type: UserEntity, status: 200 })
     findOne(@Param('id', ParseIntPipe) id: number) {
