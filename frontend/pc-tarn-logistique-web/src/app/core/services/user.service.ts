@@ -1,4 +1,4 @@
-import { IUserDto, IUserPayload } from '../../shared/interfaces/user';
+import { IUserDto, IUserPayload, IUserUpdatePasswordPayload } from '../../shared/interfaces/user';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -95,5 +95,17 @@ export class UserService {
             newUsers[index] = originalUser;
             return newUsers;
         });
+    }
+
+    /**
+     * Mise à jour du mot de passe de l'utilisateur connecté (route sécurisée)
+     * @param payload
+     */
+    updateMyPassword(payload: IUserUpdatePasswordPayload): Observable<{ message: string }> {
+        // Appelle la route PATCH /users/me/password
+        return this.http.patch<{ message: string }>(
+            `${environment.API_URL}/users/me/password`,
+            payload,
+        );
     }
 }

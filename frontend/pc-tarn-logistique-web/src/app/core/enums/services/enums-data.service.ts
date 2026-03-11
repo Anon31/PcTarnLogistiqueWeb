@@ -10,14 +10,12 @@ import { HttpClient } from '@angular/common/http';
 export class EnumsDataService {
     private http = inject(HttpClient);
 
-    // Signal privé contenant l'état brut
     private enumsDataSignal = signal<EnumReferenceData | null>(null);
-    // Signal public en lecture seule
     readonly enumsData = this.enumsDataSignal.asReadonly();
 
     /**
      * Appelé uniquement au démarrage de l'application.
-     * Récupère tous les dictionnaires métier du backend.
+     * Récupère toutes les énumérations métier du backend.
      */
     loadReferenceData(): Observable<void> {
         return this.http

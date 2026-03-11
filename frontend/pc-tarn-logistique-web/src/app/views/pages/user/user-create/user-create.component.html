@@ -3,8 +3,11 @@
         title="Créer un utilisateur"
         icon="pi pi-user-plus"
         subtitle="Créer vos utilisateurs"
-        [hideDivider]=false>
-        <!-- CONTENU DE LA PAGE -->
-        <app-form-create-user></app-form-create-user>
+        [hideDivider]="false">
+        <app-form-user
+            mode="create"
+            (save)="onCreate($event)"
+            (cancel)="onCancel()">
+        </app-form-user>
     </app-page-card-wrapper>
 </section>

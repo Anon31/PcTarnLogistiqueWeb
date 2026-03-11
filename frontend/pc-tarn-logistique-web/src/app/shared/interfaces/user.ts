@@ -19,7 +19,6 @@ export interface IUserDto {
 }
 
 /**
- * PAYLOAD DE CRÉATION (Admin -> Create User)
  * Ce qui est envoyé via le formulaire.
  */
 export interface IUserPayload {
@@ -32,4 +31,9 @@ export interface IUserPayload {
     role: string;
     siteId: number;
     address?: IAddressPayload;
+}
+
+export interface IUserUpdatePasswordPayload {
+    currentPassword: string;
+    newPassword: string;
 }
