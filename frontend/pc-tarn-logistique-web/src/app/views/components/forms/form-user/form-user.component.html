@@ -1,0 +1,134 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="w-full animate-fadein">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-5 mt-8">
+        <div class="flex flex-col gap-2">
+            <label for="firstname" class="text-sm truncate">
+                Prénom
+                @if (mode() === 'edit-self') { <i class="pi pi-lock text-xs ml-1 opacity-50" title="Verrouillé"></i> } @else { <span class="text-(--secondary-400)">*</span> }
+            </label>
+            <input id="firstname" pInputText formControlName="firstname" class="w-full" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.firstname.touched && userForm.controls.firstname.invalid}" />
+            @if (userForm.controls.firstname.touched && userForm.controls.firstname.errors?.['required']) { <small class="text-(--status-error-text)">Requis.</small> }
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="lastname" class="text-sm truncate">
+                Nom
+                @if (mode() === 'edit-self') { <i class="pi pi-lock text-xs ml-1 opacity-50" title="Verrouillé"></i> } @else { <span class="text-(--secondary-400)">*</span> }
+            </label>
+            <input id="lastname" pInputText formControlName="lastname" class="w-full" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.lastname.touched && userForm.controls.lastname.invalid}" />
+            @if (userForm.controls.lastname.touched && userForm.controls.lastname.errors?.['required']) { <small class="text-(--status-error-text)">Requis.</small> }
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="email" class="text-sm truncate">
+                Email
+                @if (mode() === 'edit-self') { <i class="pi pi-lock text-xs ml-1 opacity-50" title="Verrouillé"></i> } @else { <span class="text-(--secondary-400)">*</span> }
+            </label>
+            <input id="email" type="email" pInputText formControlName="email" class="w-full" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.email.touched && userForm.controls.email.invalid}" />
+            @if (userForm.controls.email.touched && userForm.controls.email.errors?.['email']) { <small class="text-(--status-error-text)">Format invalide.</small> }
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="birthdate" class="text-sm truncate">
+                Date de naissance
+                @if (mode() === 'edit-self') { <i class="pi pi-lock text-xs ml-1 opacity-50" title="Verrouillé"></i> } @else { <span class="text-(--secondary-400)">*</span> }
+            </label>
+            <input id="birthdate" type="date" pInputText formControlName="birthdate" class="w-full" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.birthdate.touched && userForm.controls.birthdate.invalid}" />
+            @if (userForm.controls.birthdate.touched && userForm.controls.birthdate.errors?.['minimumAge']) { <small class="text-(--status-error-text)">Doit avoir 16 ans minimum.</small> }
+        </div>
+
+        @if (mode() !== 'edit-admin') {
+            <div class="col-span-1 lg:col-span-2 mt-6">
+                <h3 class="text-md m-0 flex items-center gap-2"><i class="pi pi-shield"></i> Sécurité</h3>
+                <p-divider class="mt-2"></p-divider>
+            </div>
+            <div class="lg:col-span-2">
+                @if (mode() === 'create') {
+                    <div class="flex flex-col gap-2 lg:w-1/2">
+                        <label for="password" class="text-sm truncate">Mot de passe provisoire <span class="text-(--secondary-400)">*</span></label>
+                        <p-password id="password" autocomplete="off" formControlName="password" [toggleMask]="true" inputStyleClass="w-full" [feedback]="true"></p-password>
+                    </div>
+                } @else if (mode() === 'edit-self') {
+                    <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <div class="w-full">
+                            <div class="flex-1">
+                                <p class="text-sm opacity-70">Vous pouvez modifier votre mot de passe à tout moment pour sécuriser votre compte.</p>
+                            </div>
+                        </div>
+                        <div class="w-full">
+                            <p-button label="Modifier mon mot de passe" icon="pi pi-lock" [rounded]="true" [raised]="true" size="small" variant="outlined" styleClass="w-full" (onClick)="requestPasswordChange.emit()"></p-button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        <div class="col-span-1 lg:col-span-2 mt-6">
+            <h3 class="text-md m-0 flex items-center gap-2"><i class="pi pi-info-circle"></i> Informations complémentaires</h3>
+            <p-divider class="mt-2"></p-divider>
+        </div>
+        <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
+            @if (mode() !== 'edit-self') {
+                <div class="flex flex-col gap-2">
+                    <label for="role" class="text-sm truncate">Rôle <span class="text-(--secondary-400)">*</span></label>
+                    <p-select id="role" formControlName="role" [options]="rolesOptions()" optionLabel="label" optionValue="value" class="w-full" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.role.touched && userForm.controls.role.invalid}"></p-select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="site" class="text-sm truncate">Antenne de rattachement <span class="text-(--secondary-400)">*</span></label>
+                    <p-select id="site" formControlName="siteId" [options]="sitesOptions" optionLabel="label" optionValue="value" class="w-full" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.siteId.touched && userForm.controls.siteId.invalid}"></p-select>
+                </div>
+            }
+            <!-- Téléphone (Prend toute la largeur si Rôle/Antenne sont masqués) -->
+            <div class="flex flex-col gap-2" [class.lg:col-span-3]="mode() === 'edit-self'" [class.md:col-span-2]="mode() === 'edit-self'">
+                <label for="phone" class="text-sm truncate">Téléphone</label>
+                <input id="phone" type="tel" pInputText formControlName="phone" placeholder="0612345678" class="w-full" [ngClass]="{'ng-invalid ng-dirty': userForm.controls.phone.touched && userForm.controls.phone.invalid}" />
+                @if (userForm.controls.phone.touched && userForm.controls.phone.errors?.['pattern']) { <small class="text-(--status-error-text)">10 chiffres requis.</small> }
+            </div>
+        </div>
+        <div class="col-span-1 lg:col-span-2 mt-6">
+            <h3 class="text-md m-0 flex items-center gap-2"><i class="pi pi-map-marker"></i> Adresse</h3>
+            <p-divider class="mt-2"></p-divider>
+        </div>
+        <div formGroupName="address" class="lg:col-span-2 grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-5">
+            <div class="flex flex-col gap-2 md:col-span-3">
+                <label for="number" class="text-sm truncate">N°</label>
+                <input id="number" type="number" pInputText formControlName="number" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2 md:col-span-9">
+                <label for="street" class="text-sm truncate">Voie</label>
+                <input id="street" pInputText formControlName="street" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2 md:col-span-4">
+                <label for="zipcode" class="text-sm truncate">Code postal</label>
+                <input id="zipcode" pInputText formControlName="zipcode" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2 md:col-span-4">
+                <label for="city" class="text-sm truncate">Ville</label>
+                <input id="city" pInputText formControlName="city" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2 md:col-span-4">
+                <label for="state" class="text-sm truncate">Pays</label>
+                <input id="state" pInputText formControlName="state" class="w-full" />
+            </div>
+        </div>
+        <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-6 pt-6">
+            <div class="w-full">
+                <p-button
+                    label="Annuler"
+                    icon="pi pi-times-circle"
+                    variant="outlined"
+                    [rounded]="true"
+                    size="small"
+                    styleClass="w-full"
+                    (click)="cancel.emit()">
+                </p-button>
+            </div>
+            <div class="w-full">
+                <p-button
+                    [label]="mode() === 'create' ? 'Créer l\'utilisateur' : 'Enregistrer les modifications'"
+                    icon="pi pi-check"
+                    [rounded]="true"
+                    [raised]="true"
+                    size="small"
+                    styleClass="w-full"
+                    type="submit">
+                </p-button>
+            </div>
+        </div>
+    </div>
+</form>

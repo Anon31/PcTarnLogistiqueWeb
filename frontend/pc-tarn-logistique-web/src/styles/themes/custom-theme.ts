@@ -164,6 +164,19 @@ export const CustomTheme = definePreset(Material, {
                 },
             },
         },
+        password: {
+            colorScheme: {
+                light: {},
+                dark: {
+                    icon: {
+                        color: 'var(--text-main)',
+                    },
+                    meter: {
+                        // background: 'var(--secondary-400)',
+                    },
+                },
+            },
+        },
         inputtext: {
             colorScheme: {
                 light: {
@@ -181,6 +194,8 @@ export const CustomTheme = definePreset(Material, {
                 },
                 dark: {
                     root: {
+                        disabledColor: 'var(--secondary-950)',
+                        disabledBackground: 'var(--pc-orange-glow)',
                         focusRing: {
                             color: 'var(--secondary-500)',
                         },
@@ -271,11 +286,10 @@ export const CustomTheme = definePreset(Material, {
                 },
             },
         },
-        confirmpopup: {
+        dialog: {
             colorScheme: {
                 light: {
                     root: {
-                        // Opacité à 95%
                         background: 'rgba(255, 255, 255, 0.95)',
                         borderRadius: '16px',
                         borderColor: 'rgba(0, 0, 0, 0.05)',
@@ -284,9 +298,29 @@ export const CustomTheme = definePreset(Material, {
                 },
                 dark: {
                     root: {
-                        color: 'var(--primary-50)', // Texte blanc pur pour le contraste
-                        // Opacité à 90% basée sur ta couleur primary-800
-                        background: 'color-mix(in srgb, var(--primary-800) 90%, transparent)',
+                        color: 'var(--primary-50)',
+                        background: 'color-mix(in srgb, var(--primary-800) 95%, transparent)',
+                        borderRadius: '16px',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.6)',
+                    },
+                },
+            },
+        },
+        confirmpopup: {
+            colorScheme: {
+                light: {
+                    root: {
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '16px',
+                        borderColor: 'rgba(0, 0, 0, 0.05)',
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.1), 0 8px 16px -4px rgba(0, 0, 0, 0.05)',
+                    },
+                },
+                dark: {
+                    root: {
+                        color: 'var(--primary-50)',
+                        background: 'color-mix(in srgb, var(--primary-800) 95%, transparent)',
                         borderRadius: '16px',
                         borderColor: 'rgba(255, 255, 255, 0.1)',
                         // Ombre forte pour détacher le popup du fond sombre

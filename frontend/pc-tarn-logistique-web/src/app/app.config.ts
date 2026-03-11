@@ -7,13 +7,13 @@ import {
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
 import { EnumsDataService } from './core/enums/services/enums-data.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { tokenInterceptor } from './core/interceptors/token-interceptor';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CustomTheme } from '../styles/themes/custom-theme';
 import { DialogService } from 'primeng/dynamicdialog';
 import { providePrimeNG } from 'primeng/config';
-import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
             withInterceptors([loadingInterceptor, tokenInterceptor, errorInterceptor]),
         ),
         provideBrowserGlobalErrorListeners(),
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding()),
         providePrimeNG({
             theme: {
                 preset: CustomTheme,

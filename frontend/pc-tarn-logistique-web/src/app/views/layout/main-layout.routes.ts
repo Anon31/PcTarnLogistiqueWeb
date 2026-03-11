@@ -1,5 +1,5 @@
-import { Routes } from '@angular/router';
 import { usersGuard } from '../../core/guards/users-guard';
+import { Routes } from '@angular/router';
 
 export const mainLayoutRoutes: Routes = [
     {
