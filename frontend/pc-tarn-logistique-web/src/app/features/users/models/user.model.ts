@@ -1,0 +1,39 @@
+import { IAddressDto, IAddressPayload } from '../../../shared/models/address.model';
+
+/**
+ * Ce que l'API nous renvoie après un get user réussi.
+ */
+export interface IUserDto {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+    phone?: string;
+    birthdate: string;
+    enabled: boolean;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    siteId: number;
+    address?: IAddressDto;
+}
+
+/**
+ * Ce qui est envoyé via le formulaire.
+ */
+export interface IUserPayload {
+    firstname: string;
+    lastname: string;
+    email: string;
+    password: string;
+    phone?: string;
+    birthdate: string;
+    role: string;
+    siteId: number;
+    address?: IAddressPayload;
+}
+
+export interface IUserUpdatePasswordPayload {
+    currentPassword: string;
+    newPassword: string;
+}

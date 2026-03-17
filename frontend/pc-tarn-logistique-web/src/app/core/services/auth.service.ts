@@ -1,4 +1,4 @@
-import { IAuthUser, ILoginDto, ILoginPayload } from '../../shared/interfaces/login';
+import { IAuthUser, ILoginDto, ILoginPayload } from '../../features/auth/models/login.model';
 import { computed, Injectable, signal, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpResponse } from '@angular/common/http';
