@@ -194,7 +194,7 @@ export const CustomTheme = definePreset(Material, {
                 },
                 dark: {
                     root: {
-                        disabledColor: 'var(--secondary-950)',
+                        disabledColor: 'var(--secondary-200)',
                         disabledBackground: 'var(--pc-orange-glow)',
                         focusRing: {
                             color: 'var(--secondary-500)',

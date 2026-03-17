@@ -11,19 +11,18 @@ export const routes: Routes = [
         path: 'connexion',
         title: 'Connexion',
         loadComponent: () =>
-            import('./views/pages/login/login.component').then((m) => m.LoginComponent),
+            import('./features/auth/pages/login/login.component').then((m) => m.LoginComponent),
     },
     {
         path: '',
         canActivate: [authGuard],
-        loadChildren: () =>
-            import('./views/layout/main-layout.routes').then((m) => m.mainLayoutRoutes),
+        loadChildren: () => import('./layout/main-layout.routes').then((m) => m.mainLayoutRoutes),
     },
     {
         path: '**',
         title: 'Page non trouvée',
         loadComponent: () =>
-            import('./views/pages/page-not-found/page-not-found.component').then(
+            import('./core/pages/page-not-found/page-not-found.component').then(
                 (m) => m.PageNotFoundComponent,
             ),
     },
