@@ -1,9 +1,8 @@
 .panel-menu-custom {
-    /* Structure globale */
     .p-panelmenu-panel {
         background: transparent !important;
         border: none !important;
-        margin-bottom: 0.5rem; /* Espacement entre les "îlots" */
+        margin-bottom: 0.5rem;
         box-shadow: none !important;
     }
     /* HEADER */
