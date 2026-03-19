@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { BagTemplateEntity } from '../../bag-template/entities/bag-template.entity';
 import { Site, SiteType } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SiteEntity implements Site {
     @ApiProperty({ description: 'Identifiant unique du site', example: 1 })
@@ -17,8 +18,23 @@ export class SiteEntity implements Site {
 
     @ApiProperty({ description: 'Code unique du site', example: 'ALB' })
     code: string;
-    @ApiProperty()
-    bagTemplateId: number;
+
+    // 1ère CORRECTION : On autorise le "null" car un site INDOOR n'a pas de sac
+    @ApiProperty({
+        required: false,
+        nullable: true,
+        description: 'ID du modèle de sac si le site est de type OUTDOOR',
+    })
+    bagTemplateId: number | null;
+
+    // 2ème CORRECTION : On ajoute l'objet complet bagTemplate pour le service
+    @ApiProperty({
+        required: false,
+        type: () => BagTemplateEntity,
+        description: 'Le modèle théorique du sac lié à ce site',
+    })
+    bagTemplate?: BagTemplateEntity;
+
     @ApiProperty({
         required: false,
         type: Object,

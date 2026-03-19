@@ -100,13 +100,17 @@ export class SiteService {
         return {
             ...siteData,
             ...(bagTemplateId ? { bagTemplate: { connect: { id: bagTemplateId } } } : {}),
-            address: address
-                ? { upsert: { create: address, update: address } }
-                : undefined,
+            address: address ? { upsert: { create: address, update: address } } : undefined,
         };
     }
 
     private toEntity(site: SiteWithRelations) {
-        return new SiteEntity(site);
+        return new SiteEntity({
+            ...site,
+            // On convertit les 'null' de Prisma en 'undefined' pour TypeScript
+            bagTemplateId: site.bagTemplateId ?? undefined,
+            bagTemplate: site.bagTemplate ?? undefined,
+            address: site.address ?? undefined,
+        });
     }
 }
