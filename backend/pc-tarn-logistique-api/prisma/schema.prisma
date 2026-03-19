@@ -9,6 +9,7 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 // --------------------------------------------------------
 // 1. ÉNUMÉRATIONS
 // --------------------------------------------------------
@@ -103,17 +104,18 @@ model User {
   birthdate DateTime?
   enabled   Boolean
   role      Role
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now()) // Pourquoi : Nécessaire pour initialiser la date
+  updatedAt DateTime  @updatedAt // Pourquoi : Nécessaire pour la mise à jour auto
   siteId    Int?
 
-  // Relations Prisma
-  site            Site?            @relation("SiteUsers", fields: [siteId], references: [id])
-  address         Address?
-  vehicleChecks   VehicleCheck[]
-  reports         Report[]
-  stockMovements  StockMovement[]
-  bagChecks       BagCheck[]
+  // --- Relations Prisma (Virtuelles, ne créent pas de colonnes en DB) ---
+  // Pourquoi : Prisma exige ces champs pour naviguer entre les tables via les clés étrangères.
+  site           Site?           @relation("SiteUsers", fields: [siteId], references: [id])
+  address        Address?
+  vehicleChecks  VehicleCheck[]
+  reports        Report[]
+  stockMovements StockMovement[]
+  bagChecks      BagCheck[]
 }
 
 model Address {
@@ -124,12 +126,15 @@ model Address {
   zipcode String
   state   String
 
-  userId  Int?   @unique
-  siteId  Int?   @unique
+  // Pourquoi : Transformés en Int? (Optionnels) au lieu de Int.
+  // Raison : Une adresse est soit pour un User, soit pour un Site.
+  // Si les deux étaient obligatoires, nous ne pourrions pas sauvegarder.
+  userId Int? @unique
+  siteId Int? @unique
 
   // Relations Prisma
-  user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  site    Site?  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site Site? @relation(fields: [siteId], references: [id], onDelete: Cascade)
 }
 
 // --------------------------------------------------------
@@ -141,15 +146,19 @@ model Site {
   name String
   type SiteType @default(INDOOR)
   code String   @unique
-  bagTemplateId Int
+
+  // 🚀 NOUVEAU : Lien vers le modèle théorique si ce site est un sac (OUTDOOR)
+  // Optionnel (Int?) car une Antenne (INDOOR) n'a pas de modèle de sac.
+  bagTemplateId Int?
+  bagTemplate   BagTemplate? @relation(fields: [bagTemplateId], references: [id])
+
   // Relations Prisma
-  vehicles         Vehicle[]
-  address          Address?
-  stocks           Stock[]
-  stockMovements   StockMovement[]
-  bagChecks        BagCheck[]
-  users            User[]           @relation("SiteUsers")
-  bagTemplate     BagTemplate     @relation(fields: [bagTemplateId], references: [id])
+  users          User[]          @relation("SiteUsers")
+  vehicles       Vehicle[]
+  address        Address?
+  stocks         Stock[]
+  stockMovements StockMovement[]
+  bagChecks      BagCheck[]
 }
 
 model Product {
@@ -190,10 +199,10 @@ model Vehicle {
   siteId       Int
 
   // Relations Prisma
-  site           Site           @relation(fields: [siteId], references: [id])
-  vehicleChecks  VehicleCheck[]
-  reports        Report[]
-  bagChecks      BagCheck[]
+  site          Site           @relation(fields: [siteId], references: [id])
+  vehicleChecks VehicleCheck[]
+  reports       Report[]
+  bagChecks     BagCheck[]
 }
 
 model ProductBatchNumber {
@@ -227,49 +236,50 @@ model VehicleCheck {
 
 // LE RÉFÉRENTIEL DES SACS (La Théorie)
 model BagTemplate {
-  id          Int                 @id @default(autoincrement())
-  name        String              @unique // ex: "LOT A", "LOT B"
+  id   Int    @id @default(autoincrement())
+  name String @unique // ex: "LOT A", "LOT B"
 
   // Relations Prisma
-  sites       Site[]
-  items       BagTemplateItem[]
-  checks      BagCheck[]
+  items  BagTemplateItem[]
+  checks BagCheck[]
+  sites  Site[] // Les sacs physiques basés sur ce modèle
 }
 
 // LE CONTENU THÉORIQUE D'UN SAC
 model BagTemplateItem {
-  id               Int         @id @default(autoincrement())
+  id               Int @id @default(autoincrement())
   expectedQuantity Int
 
-  bagTemplateId    Int
-  productId        Int
+  bagTemplateId Int
+  productId     Int
 
   // Relations Prisma
-  bagTemplate      BagTemplate @relation(fields: [bagTemplateId], references: [id])
-  product          Product     @relation(fields: [productId], references: [id])
+  bagTemplate BagTemplate @relation(fields: [bagTemplateId], references: [id])
+  product     Product     @relation(fields: [productId], references: [id])
+
   @@unique([bagTemplateId, productId])
 }
 
 // LE CONTRÔLE RÉALISÉ (La Pratique)
 model BagCheck {
-  id            Int         @id @default(autoincrement())
-  date          DateTime    @default(now())
-  checkType     CheckType
-  status        BagStatus
+  id        Int       @id @default(autoincrement())
+  date      DateTime  @default(now())
+  checkType CheckType
+  status    BagStatus
 
-  userId        Int
-  vehicleId     Int?
+  userId    Int
+  vehicleId Int?
 
   bagTemplateId Int
   siteId        Int
 
-  itemsData     Json
+  itemsData Json
 
   // Relations Prisma
-  user          User        @relation(fields: [userId], references: [id])
-  vehicle       Vehicle?    @relation(fields: [vehicleId], references: [id])
-  bagTemplate   BagTemplate @relation(fields: [bagTemplateId], references: [id])
-  site          Site        @relation(fields: [siteId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+  vehicle     Vehicle?    @relation(fields: [vehicleId], references: [id])
+  bagTemplate BagTemplate @relation(fields: [bagTemplateId], references: [id])
+  site        Site        @relation(fields: [siteId], references: [id])
 }
 
 // --------------------------------------------------------
@@ -283,8 +293,10 @@ model Report {
   status      ReportStatus
   userId      Int
 
-  vehicleId   Int?
-  productId   Int?
+  // Pourquoi : Passés en Int? (Optionnels).
+  // Raison : L'UML les rend obligatoires, mais un signalement porte SOIT sur un véhicule, SOIT sur un produit.
+  vehicleId Int?
+  productId Int?
 
   // Relations Prisma
   user    User     @relation(fields: [userId], references: [id])
@@ -293,16 +305,18 @@ model Report {
 }
 
 model StockMovement {
-  id                   Int          @id @default(autoincrement())
-  type                 TypeMovement
-  createdAt            DateTime     @default(now())
-  quantity             Int
-  userId               Int
+  id        Int          @id @default(autoincrement())
+  type      TypeMovement // INPUT ou OUTPUT
+  createdAt DateTime     @default(now())
+  quantity  Int
+  userId    Int
 
+  // Pourquoi : Passé en Int? (Optionnel).
+  // Raison : L'UML le rend obligatoire, mais un produit non-périssable n'a pas forcément de lot de fabrication.
   productBatchNumberId Int?
 
-  siteId               Int
-  productId            Int
+  siteId    Int
+  productId Int
 
   // Relations Prisma
   user               User                @relation(fields: [userId], references: [id])
