@@ -247,6 +247,7 @@ model BagTemplateItem {
   // Relations Prisma
   bagTemplate      BagTemplate @relation(fields: [bagTemplateId], references: [id])
   product          Product     @relation(fields: [productId], references: [id])
+  @@unique([bagTemplateId, productId])
 }
 
 // LE CONTRÔLE RÉALISÉ (La Pratique)
