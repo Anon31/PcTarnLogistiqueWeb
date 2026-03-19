@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import {
   PrismaClient,
   Role,
@@ -9,8 +10,13 @@ import {
   TypeMovement,
 } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({adapter})
 
 async function main() {
   console.log('🌱 Seeding started...')
@@ -41,7 +47,7 @@ async function main() {
         name: "Antenne d'Albi",
         code: 'ALB',
         type: SiteType.INDOOR,
-        bagTemplate: { connect: { id: lotA.id } },
+        bagTemplateId:  lotA.id,
         address: {
           create: {
             number: 8,
@@ -61,7 +67,7 @@ async function main() {
         name: 'Lot B - VPSP 814',
         code: '814B',
         type: SiteType.OUTDOOR,
-        bagTemplate: { connect: { id: lotB.id } },
+        bagTemplateId: lotB.id  ,
       },
     })
 
