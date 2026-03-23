@@ -5,21 +5,40 @@
             <a routerLink="/charte-informatique">Charte informatique</a>
             <a routerLink="/politique-rgpd">Politique RGPD</a>
         </div>
-        <!-- Statut Réseau -->
-        <div class="flex items-center gap-2 font-medium">
-            @if (isOnline()) {
-                <!-- Voyant Vert "Connecté" -->
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 status-success-bg"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 status-success-glow"></span>
-                </span>
-                <span class="hidden sm:inline">Connecté au serveur</span>
-            } @else {
-                <!-- Voyant Rouge "Hors Ligne" -->
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 status-error-glow"></span>
-                </span>
-                <span class="hidden sm:inline status-error-text">Mode Hors-ligne (En attente)</span>
+
+        <!-- Statut Réseau et Sécurité -->
+        <div class="flex items-center gap-3 font-medium">
+            @if (!isOnline()) {
+                <div class="flex items-center gap-2">
+                    <!-- Voyant Rouge "Hors Ligne" (Prioritaire) -->
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 status-error-glow"></span>
+                    </span>
+                    <span class="hidden sm:inline status-error-text">Mode Hors-ligne (En attente)</span>
+                </div>
+            } @else if (status(); as sysStatus) {
+                <!-- Affichage simultané : Connexion Réseau + Statut Serveur -->
+                <div class="flex items-center gap-2">
+                    <!-- Voyant Vert "Connecté" d'origine -->
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 status-success-bg"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 status-success-glow"></span>
+                    </span>
+                    <span class="hidden sm:inline">Connecté au serveur</span>
+                </div>
+
+                <!-- Séparateur visuel -->
+                <span class="hidden sm:inline text-gray-300 dark:text-gray-600">|</span>
+
+                <!-- Badge de sécurité Vault -->
+                <div class="hidden sm:flex sm:items-center sm:gap-1">
+                    @if (sysStatus.vaultSecured) {
+                        <span title="Sécurisé par Vault (Zéro-Trust)">🔒 Sécurisé</span>
+                    } @else {
+                        <span class="text-gray-500 font-normal" title="Mode Développement Local">🔓 Mode Local</span>
+                    }
+                    <span class="text-[10px] opacity-50 uppercase">({{ sysStatus.environment }})</span>
+                </div>
             }
         </div>
     </div>
