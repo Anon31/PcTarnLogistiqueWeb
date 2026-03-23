@@ -23,6 +23,17 @@ services:
     ports:
       - "5050:80"
 
+  # --- Serveur Vault ---
+  vault:
+    image: hashicorp/vault:latest
+    container_name: dev-vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "mon-token-root"
+    cap_add:
+      - IPC_LOCK
+
   # --- API NestJS ---
   api:
     build:
@@ -37,11 +48,20 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # Injection de la variable d'environnement pour que NestJS se connecte à 'db'
+      VAULT_ADDR: "http://vault:8200"
+
+      # --- AJOUT DES IDENTIFIANTS VAULT ---
+      # NODE_ENV: "staging"
+      # ROLE_ID: "3da83e8f-1000-575e-33fa-5790830ba306"
+      # SECRET_ID: "a5dd16e0-7e28-1a7c-63b3-085b1e8c2761"
+
+      # ⚠️ ON COMMENTE CES VARIABLES POUR PROUVER QUE C'EST VAULT QUI S'EN CHARGE
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
+
     depends_on:
       - db
+      - vault
       # Cette commande force NestJS à surveiller les fichiers (polling)
       # Nécessaire pour que les changements (Hot reload) soient détectés dans Docker
     command: npm run start:dev -- --watch --poll

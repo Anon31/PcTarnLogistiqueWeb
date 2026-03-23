@@ -36,4 +36,17 @@ export class SystemService {
             batchStatuses: BatchStatus,
         };
     }
+
+    /**
+     * Retourne le statut du système et la sécurité (ex: intégration Vault).
+     * Permet au frontend d'afficher un indicateur de sécurité sans exposer de secrets.
+     */
+    getSystemStatus() {
+        return {
+            environment: process.env.NODE_ENV || 'development',
+            vaultSecured: process.env.VAULT_SECURED === 'true',
+            version: process.env.npm_package_version || '1.0.0',
+            timestamp: new Date().toISOString(),
+        };
+    }
 }
