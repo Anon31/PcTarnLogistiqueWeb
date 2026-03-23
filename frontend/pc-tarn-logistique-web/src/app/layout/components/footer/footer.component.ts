@@ -1,4 +1,6 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
+import { SystemService } from '../../../core/services/system.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -9,12 +11,15 @@ import { RouterLink } from '@angular/router';
     templateUrl: './footer.component.html',
 })
 export class FooterComponent {
-    // Gestion du statut réseau (Signal réactif)
+    // Injection du service pour interroger le backend
+    private systemService = inject(SystemService);
+
+    // Signal réactif (Angular gère la souscription)
+    status = toSignal(this.systemService.getSystemStatus());
+
+    // Gestion du statut réseau natif du navigateur (Signal réactif)
     isOnline = signal<boolean>(navigator.onLine);
 
-    /**
-     * Écouteurs d'événements natifs pour détecter la perte ou le retour du réseau (Wi-Fi/4G)
-     */
     @HostListener('window:online')
     onNetworkOnline() {
         this.isOnline.set(true);

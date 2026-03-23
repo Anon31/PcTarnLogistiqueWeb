@@ -49,9 +49,16 @@ services:
       - "3000:3000"
     environment:
       VAULT_ADDR: "http://vault:8200"
-      # Injection de la variable d'environnement pour que NestJS se connecte à 'db'
+
+      # --- AJOUT DES IDENTIFIANTS VAULT ---
+      # NODE_ENV: "staging"
+      # ROLE_ID: "3da83e8f-1000-575e-33fa-5790830ba306"
+      # SECRET_ID: "a5dd16e0-7e28-1a7c-63b3-085b1e8c2761"
+
+      # ⚠️ ON COMMENTE CES VARIABLES POUR PROUVER QUE C'EST VAULT QUI S'EN CHARGE
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
+
     depends_on:
       - db
       - vault
