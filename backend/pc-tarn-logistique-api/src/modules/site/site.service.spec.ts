@@ -18,12 +18,12 @@ describe('SiteService', () => {
         prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
     });
 
-    it('should be defined', () => {
+    it('doit être défini', () => {
         expect(service).toBeDefined();
     });
 
     describe('create', () => {
-        it('creates a site with its address', async () => {
+        it('doit créer un site avec son adresse', async () => {
             const dto = {
                 name: "Antenne d'Albi",
                 code: 'ALB',
@@ -38,15 +38,16 @@ describe('SiteService', () => {
             };
 
             prismaMock.site.create.mockResolvedValue({
-                id: 1,
-                ...dto,
-                address: {
                     id: 1,
-                    ...dto.address,
-                    userId: null,
-                    siteId: 1,
-                },
-            } as any);
+                    ...dto,
+                    address: {
+                        id: 1,
+                        ...dto.address,
+                        userId: null,
+                        siteId: 1,
+                    },
+                    bagChecks: [],
+                } as any);
 
             const result = await service.create(dto);
 
@@ -59,7 +60,7 @@ describe('SiteService', () => {
                         create: dto.address,
                     },
                 },
-                include: { address: true },
+                include: { address: true, bagChecks: true },
             });
             expect(result.id).toEqual(1);
             expect(result.address?.city).toEqual('Albi');
@@ -67,7 +68,7 @@ describe('SiteService', () => {
     });
 
     describe('findAll', () => {
-        it('returns all sites ordered by ID', async () => {
+        it('doit retourner tous les sites triés par ID', async () => {
             prismaMock.site.findMany.mockResolvedValue([
                 {
                     id: 1,
@@ -75,6 +76,7 @@ describe('SiteService', () => {
                     code: 'ALB',
                     type: SiteType.INDOOR,
                     address: null,
+                    bagChecks: [],
                 },
                 {
                     id: 2,
@@ -82,40 +84,77 @@ describe('SiteService', () => {
                     code: '814A',
                     type: SiteType.OUTDOOR,
                     address: null,
+                    bagChecks: [],
                 },
             ] as any);
 
             const result = await service.findAll();
 
             expect(prismaMock.site.findMany).toHaveBeenCalledWith({
-                include: { address: true },
+                include: { address: true, bagChecks: true },
                 orderBy: { id: 'asc' },
             });
             expect(result).toHaveLength(2);
             expect(result[1].type).toEqual(SiteType.OUTDOOR);
+            expect(result[0].address).toBeUndefined();
+        });
+    });
+
+    describe('findAllOutDoors', () => {
+        it('doit retourner uniquement les sites OUTDOOR avec les contrôles triés par date décroissante', async () => {
+            prismaMock.site.findMany.mockResolvedValue([
+                {
+                    id: 2,
+                    name: 'Sac 814A',
+                    code: '814A',
+                    type: SiteType.OUTDOOR,
+                    address: null,
+                    bagChecks: [
+                        { id: 2, date: new Date('2026-03-22T09:00:00.000Z') },
+                        { id: 1, date: new Date('2026-03-21T09:00:00.000Z') },
+                    ],
+                },
+            ] as any);
+
+            const result = await service.findAllOutDoors();
+
+            expect(prismaMock.site.findMany).toHaveBeenCalledWith({
+                where: { type: SiteType.OUTDOOR },
+                include: {
+                    address: true,
+                    bagChecks: {
+                        orderBy: { date: 'desc' },
+                    },
+                },
+                orderBy: { id: 'asc' },
+            });
+            expect(result).toHaveLength(1);
+            expect(result[0].code).toEqual('814A');
         });
     });
 
     describe('findOne', () => {
-        it('returns a site when it exists', async () => {
+        it("doit retourner un site si l'ID existe", async () => {
             prismaMock.site.findUnique.mockResolvedValue({
                 id: 1,
                 name: "Antenne d'Albi",
                 code: 'ALB',
                 type: SiteType.INDOOR,
                 address: null,
+                bagChecks: [],
             } as any);
 
             const result = await service.findOne(1);
 
             expect(prismaMock.site.findUnique).toHaveBeenCalledWith({
                 where: { id: 1 },
-                include: { address: true },
+                include: { address: true, bagChecks: true },
             });
             expect(result.code).toEqual('ALB');
+            expect(result.address).toBeUndefined();
         });
 
-        it('throws NotFoundException when the site does not exist', async () => {
+        it("doit lever une NotFoundException si le site n'existe pas", async () => {
             prismaMock.site.findUnique.mockResolvedValue(null as any);
 
             await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
@@ -123,13 +162,14 @@ describe('SiteService', () => {
     });
 
     describe('update', () => {
-        it('updates a site and upserts its address', async () => {
+        it('doit mettre à jour un site et faire un upsert de son adresse', async () => {
             prismaMock.site.findUnique.mockResolvedValue({
                 id: 1,
                 name: "Antenne d'Albi",
                 code: 'ALB',
                 type: SiteType.INDOOR,
                 address: null,
+                bagChecks: [],
             } as any);
             prismaMock.site.update.mockResolvedValue({
                 id: 1,
@@ -146,6 +186,7 @@ describe('SiteService', () => {
                     userId: null,
                     siteId: 1,
                 },
+                bagChecks: [],
             } as any);
 
             const dto = {
@@ -172,7 +213,7 @@ describe('SiteService', () => {
                         },
                     },
                 },
-                include: { address: true },
+                include: { address: true, bagChecks: true },
             });
             expect(result.name).toEqual('Antenne Albi Centre');
             expect(result.address?.number).toEqual(10);
@@ -180,13 +221,14 @@ describe('SiteService', () => {
     });
 
     describe('remove', () => {
-        it('deletes a site when the ID exists', async () => {
+        it("doit supprimer un site si l'ID existe", async () => {
             const mockSite = {
                 id: 1,
                 name: "Antenne d'Albi",
                 code: 'ALB',
                 type: SiteType.INDOOR,
                 address: null,
+                bagChecks: [],
             };
 
             prismaMock.site.findUnique.mockResolvedValue(mockSite as any);
@@ -196,9 +238,10 @@ describe('SiteService', () => {
 
             expect(prismaMock.site.delete).toHaveBeenCalledWith({
                 where: { id: 1 },
-                include: { address: true },
+                include: { address: true, bagChecks: true },
             });
             expect(result.id).toEqual(1);
+            expect(result.address).toBeUndefined();
         });
     });
 });

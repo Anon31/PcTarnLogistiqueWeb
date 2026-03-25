@@ -14,9 +14,9 @@ describe('AppController', () => {
         appController = app.get<AppController>(AppController);
     });
 
-    describe('root', () => {
+    describe('racine', () => {
         // 1. On rend le test "async"
-        it('should return "Welcome to Protection civile API"', async () => {
+        it('doit retourner "Welcome to Protection civile API"', async () => {
             // 2. On crée un faux objet Request (mock) pour satisfaire TypeScript
             const mockRequest = {} as any;
 

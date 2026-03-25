@@ -19,7 +19,7 @@ describe('SiteController', () => {
         controller = module.get<SiteController>(SiteController);
     });
 
-    it('should be defined', () => {
+    it('doit être défini', () => {
         expect(controller).toBeDefined();
     });
 });

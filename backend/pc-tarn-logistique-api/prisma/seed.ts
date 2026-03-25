@@ -1,4 +1,4 @@
-import { PrismaClient, Role, SiteType, VehicleType, VehicleStatus, ItemCategory, Condition, TypeMovement, User } from '@prisma/client';
+import { PrismaClient, Role, SiteType, VehicleType, VehicleStatus, ItemCategory, Condition, TypeMovement } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
@@ -12,7 +12,6 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     console.log('🌱 Début du seeding ADPC 81...');
 
-    // Utilisation de la transaction apportée par ton collègue pour sécuriser l'insertion
     await prisma.$transaction(async (tx) => {
         // ----------------------------------------------------
         // 1. CRÉATION DES MODÈLES DE SACS (BagTemplate)
@@ -99,7 +98,9 @@ async function main() {
             },
         ];
 
-        let adminUser: User | null = null;
+        // FIX: Removed unused `User` type import. Use the return type of upsert directly.
+        let adminUserId: number | null = null;
+
         for (const u of users) {
             const createdUser = await tx.user.upsert({
                 where: { email: u.email },
@@ -117,7 +118,7 @@ async function main() {
                     address: { create: u.address },
                 },
             });
-            if (createdUser.role === Role.ADMIN) adminUser = createdUser;
+            if (createdUser.role === Role.ADMIN) adminUserId = createdUser.id;
             console.log(`  - 👤 Utilisateur traité : ${u.email} (${u.role})`);
         }
 
@@ -139,29 +140,46 @@ async function main() {
         });
 
         // ----------------------------------------------------
-        // 5. CRÉATION DES SACS (Sites OUTDOOR rattachés au véhicule)
+        // 5. CRÉATION DES SACS (Sites OUTDOOR) + BagTemplateSite
         // ----------------------------------------------------
+        // FIX: `Site` has no `bagTemplateId` field and no `bagTemplate` relation.
+        // The link between a Site and a BagTemplate is through the `BagTemplateSite`
+        // join model, which must be created separately.
         console.log("🎒 Création des sacs d'intervention (Sites OUTDOOR)...");
+
         const sac814A = await tx.site.upsert({
             where: { code: '814A' },
-            update: { bagTemplateId: lotA.id }, // Sécurité en cas de rejeu
+            update: {},
             create: {
                 name: 'Lot A (Tente) - VPSP 814',
                 code: '814A',
                 type: SiteType.OUTDOOR,
-                bagTemplate: { connect: { id: lotA.id } }, // Liaison dynamique
             },
+        });
+
+        // FIX: Create the BagTemplateSite join record to link sac814A → lotA.
+        // `siteId` is @unique on BagTemplateSite, so upsert is safe on re-runs.
+        await tx.bagTemplateSite.upsert({
+            where: { siteId: sac814A.id },
+            update: { bagTemplateId: lotA.id },
+            create: { siteId: sac814A.id, bagTemplateId: lotA.id },
         });
 
         const sac814B = await tx.site.upsert({
             where: { code: '814B' },
-            update: { bagTemplateId: lotB.id }, // Sécurité en cas de rejeu
+            update: {},
             create: {
                 name: 'Lot B (Secours) - VPSP 814',
                 code: '814B',
                 type: SiteType.OUTDOOR,
-                bagTemplate: { connect: { id: lotB.id } }, // Liaison dynamique
             },
+        });
+
+        // FIX: Same join record for sac814B → lotB.
+        await tx.bagTemplateSite.upsert({
+            where: { siteId: sac814B.id },
+            update: { bagTemplateId: lotB.id },
+            create: { siteId: sac814B.id, bagTemplateId: lotB.id },
         });
 
         // ----------------------------------------------------
@@ -176,7 +194,7 @@ async function main() {
             { name: 'Défibrillateur (DSA)', category: ItemCategory.BILAN, isPerishable: false, minThreshold: 1 },
         ];
 
-        const catalog: Record<string, any> = {};
+        const catalog: Record<string, { id: number }> = {};
         for (const p of products) {
             const prod = await tx.product.upsert({
                 where: { name: p.name },
@@ -187,7 +205,7 @@ async function main() {
         }
 
         // ----------------------------------------------------
-        // 7. BAG TEMPLATE ITEMS (COMPOSITE UNIQUE ✅)
+        // 7. BAG TEMPLATE ITEMS
         // ----------------------------------------------------
         console.log('🔗 Liaison des produits aux modèles de sacs...');
         await tx.bagTemplateItem.upsert({
@@ -198,13 +216,17 @@ async function main() {
                 },
             },
             update: { expectedQuantity: 6 },
-            create: { bagTemplateId: lotB.id, productId: catalog['Compresses Stériles 10x10'].id, expectedQuantity: 6 },
+            create: {
+                bagTemplateId: lotB.id,
+                productId: catalog['Compresses Stériles 10x10'].id,
+                expectedQuantity: 6,
+            },
         });
 
         // ----------------------------------------------------
         // 8. INJECTION DE STOCK INITIAL
         // ----------------------------------------------------
-        if (adminUser) {
+        if (adminUserId) {
             console.log('✅ Remplissage des étagères et des sacs...');
             await tx.stock.create({
                 data: {
@@ -219,7 +241,7 @@ async function main() {
                 data: {
                     type: TypeMovement.INPUT,
                     quantity: 100,
-                    userId: adminUser.id,
+                    userId: adminUserId,
                     productId: catalog['Compresses Stériles 10x10'].id,
                     siteId: siteAlbi.id,
                 },
@@ -238,7 +260,7 @@ async function main() {
                 data: {
                     type: TypeMovement.INPUT,
                     quantity: 1,
-                    userId: adminUser.id,
+                    userId: adminUserId,
                     productId: catalog['Défibrillateur (DSA)'].id,
                     siteId: sac814B.id,
                 },
@@ -246,7 +268,7 @@ async function main() {
         }
 
         console.log('🚀 Seeding ADPC 81 terminé avec succès !');
-    }); // <-- Fin de la transaction
+    });
 }
 
 main()

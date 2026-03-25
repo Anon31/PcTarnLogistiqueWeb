@@ -147,12 +147,9 @@ model Site {
   type SiteType @default(INDOOR)
   code String   @unique
 
-  // 🚀 NOUVEAU : Lien vers le modèle théorique si ce site est un sac (OUTDOOR)
-  // Optionnel (Int?) car une Antenne (INDOOR) n'a pas de modèle de sac.
-  bagTemplateId Int?
-  bagTemplate   BagTemplate? @relation(fields: [bagTemplateId], references: [id])
+  // Optional join table
+  bagTemplateSite BagTemplateSite?
 
-  // Relations Prisma
   users          User[]          @relation("SiteUsers")
   vehicles       Vehicle[]
   address        Address?
@@ -160,6 +157,7 @@ model Site {
   stockMovements StockMovement[]
   bagChecks      BagCheck[]
 }
+
 
 model Product {
   id           Int          @id @default(autoincrement())
@@ -237,14 +235,12 @@ model VehicleCheck {
 // LE RÉFÉRENTIEL DES SACS (La Théorie)
 model BagTemplate {
   id   Int    @id @default(autoincrement())
-  name String @unique // ex: "LOT A", "LOT B"
+  name String @unique
 
-  // Relations Prisma
-  items  BagTemplateItem[]
-  checks BagCheck[]
-  sites  Site[] // Les sacs physiques basés sur ce modèle
+  bagTemplateSites BagTemplateSite[]
+  items            BagTemplateItem[]
+  checks           BagCheck[]
 }
-
 // LE CONTENU THÉORIQUE D'UN SAC
 model BagTemplateItem {
   id               Int @id @default(autoincrement())
@@ -259,7 +255,15 @@ model BagTemplateItem {
 
   @@unique([bagTemplateId, productId])
 }
+model BagTemplateSite {
+  id            Int @id @default(autoincrement())
+  siteId        Int @unique  // ensures a site has at most one BagTemplateSite
+  bagTemplateId Int
 
+  site        Site        @relation(fields: [siteId], references: [id])
+  bagTemplate BagTemplate @relation(fields: [bagTemplateId], references: [id])
+
+}
 // LE CONTRÔLE RÉALISÉ (La Pratique)
 model BagCheck {
   id        Int       @id @default(autoincrement())

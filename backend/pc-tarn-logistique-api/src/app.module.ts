@@ -9,8 +9,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
 import { SiteModule } from './modules/site/site.module';
-import { BagTemplateModule } from './modules/bag-template/bag-template.module';
-import { BagTemplateItemModule } from './modules/bag-template-item/bag-template-item.module';
+import { BagTemplateModule } from './modules/bag/bag-template/bag-template.module';
+import { BagTemplateItemModule } from './modules/bag/bag-template-item/bag-template-item.module';
+import { BagTemplateSiteModule } from './modules/bag/bag-template-site/bag-template-site.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { BagTemplateItemModule } from './modules/bag-template-item/bag-template-
         SiteModule,
         BagTemplateModule,
         BagTemplateItemModule,
+        BagTemplateSiteModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],
