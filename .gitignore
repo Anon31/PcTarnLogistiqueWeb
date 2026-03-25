@@ -23,4 +23,6 @@ Thumbs.db
 # --- 🐳 Docker (Volumes & Logs) ---
 postgres_data/
 pgadmin_data/
+vault_data/
+vault_logs/
 docker-compose.override.yml
