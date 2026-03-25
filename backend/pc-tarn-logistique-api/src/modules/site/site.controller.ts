@@ -23,12 +23,19 @@ export class SiteController {
     create(@Body() createSiteDto: CreateSiteDto) {
         return this.siteService.create(createSiteDto);
     }
-
+    
     @Get()
     @ApiOperation({ summary: 'Recuperer la liste de tous les sites' })
     @ApiResponse({ type: [SiteEntity], status: 200 })
     findAll() {
         return this.siteService.findAll();
+    }
+    
+    @Get('type/outdoors')
+    @ApiOperation({ summary: 'Recuperer tous les sites outdoors(bags)' })
+    @ApiResponse({ type: SiteEntity, status: 200 })
+    FindOutDoors() {
+        return this.siteService.findAllOutDoors();
     }
 
     @Get(':id')
@@ -37,12 +44,7 @@ export class SiteController {
     findOne(@Param('id', ParseIntPipe) id: number) {
         return this.siteService.findOne(id);
     }
-    @Get('outdoors')
-    @ApiOperation({ summary: 'Recuperer tous les sites outdoors(bags)' })
-    @ApiResponse({ type: SiteEntity, status: 200 })
-    FindOutDoors() {
-        return this.siteService.findAllOutDoors();
-    }
+    
 
     @Patch(':id')
     @Roles(Role.ADMIN, Role.MANAGER)
