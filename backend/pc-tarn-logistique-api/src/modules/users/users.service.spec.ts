@@ -36,6 +36,7 @@ describe('UsersService', () => {
                 firstname: 'John',
                 lastname: 'Doe',
                 role: Role.BENEVOLE, // Champ requis par le DTO
+                birthdate: '1990-03-15',
                 siteId: 2,
             };
 
@@ -76,6 +77,7 @@ describe('UsersService', () => {
                 firstname: 'A',
                 lastname: 'B',
                 role: Role.BENEVOLE,
+                birthdate: '1990-03-15',
                 siteId: 2,
             };
 
