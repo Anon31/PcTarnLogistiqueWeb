@@ -1,25 +1,19 @@
 import { EnumsDataService } from '../../../../core/enums/services/enums-data.service';
 import { Component, DestroyRef, inject, OnInit, computed } from '@angular/core';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DatePipe } from '@angular/common';
+import { StockService } from '../../services/product.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { IStockDto } from '../../models/stock';
 import { TableModule } from 'primeng/table';
+import { DatePipe } from '@angular/common';
 import { Button } from 'primeng/button';
 import { Tag } from 'primeng/tag';
-import { TooltipModule } from 'primeng/tooltip';
-import { StockService } from '../../services/product.service';
-import { IStockDto, IProductBatchNumberDto } from '../../models/stock';
-import { EnumsDynamicPipe } from 'src/app/shared/pipes/enums-dynamic-pipe';
 
 @Component({
     selector: 'app-table-stock',
-    standalone: true,
-    imports: [
-        TableModule,
-        Button,
-        Tag,
-        DatePipe,
-        TooltipModule,
-    ],
+    imports: [TableModule, Button, Tag, DatePipe, TooltipModule],
+    providers: [EnumsDynamicPipe],
     templateUrl: './table-stock.component.html',
     styleUrl: './table-stock.component.css',
 })
@@ -33,7 +27,7 @@ export class TableStockComponent implements OnInit {
     expandedRows: { [key: string]: boolean } = {};
 
     statesOptions = computed(() => {
-        // 1. On récupère l'objet envoyé par le backend 
+        // 1. On récupère l'objet envoyé par le backend
         const backendStates = this.enumsData.enumsData()?.roles || {};
         console.log('États bruts du backend :', backendStates);
         // 2. On transforme cet objet en tableau pour PrimeNG : [{label: '...', value: '...'}]
