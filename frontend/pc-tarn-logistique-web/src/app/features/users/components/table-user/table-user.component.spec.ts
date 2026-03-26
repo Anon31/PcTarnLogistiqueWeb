@@ -1,8 +1,8 @@
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableUserComponent } from './table-user.component';
-import { MessageService } from 'primeng/api';
 
 describe('TableUserComponent', () => {
     let component: TableUserComponent;
@@ -11,7 +11,12 @@ describe('TableUserComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [TableUserComponent],
-            providers: [ToasterService, MessageService, provideHttpClientTesting()],
+            providers: [
+                ToasterService,
+                ConfirmationService,
+                MessageService,
+                provideHttpClientTesting(),
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TableUserComponent);
