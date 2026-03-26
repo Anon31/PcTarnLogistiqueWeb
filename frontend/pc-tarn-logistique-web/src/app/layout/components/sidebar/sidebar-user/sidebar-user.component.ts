@@ -1,8 +1,8 @@
 import { AuthService } from '../../../../core/services/auth.service';
 import { RoleLabelPipe } from '../../../../shared/pipes/role-label.pipe';
 import { Component, inject } from '@angular/core';
-import { Button } from 'primeng/button';
 import { RouterLink } from '@angular/router';
+import { Button } from 'primeng/button';
 
 @Component({
     selector: 'app-sidebar-user',

@@ -19,7 +19,7 @@ describe('BagTemplateController', () => {
         controller = module.get<BagTemplateController>(BagTemplateController);
     });
 
-    it('should be defined', () => {
+    it('doit être défini', () => {
         expect(controller).toBeDefined();
     });
 });

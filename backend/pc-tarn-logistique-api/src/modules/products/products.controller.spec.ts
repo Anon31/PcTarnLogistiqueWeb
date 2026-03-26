@@ -28,7 +28,7 @@ describe('ProductsController', () => {
         controller = module.get<ProductsController>(ProductsController);
     });
 
-    it('doit être défini (should be defined)', () => {
+    it('doit être défini', () => {
         expect(controller).toBeDefined();
     });
 

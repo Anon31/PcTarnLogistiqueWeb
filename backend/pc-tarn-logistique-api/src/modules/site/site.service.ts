@@ -7,7 +7,7 @@ import { SiteEntity } from './entities/site.entity';
 
 const siteRelations = {
     address: true,
-    bagTemplate: true, // ✅ include bagTemplate relation
+    bagChecks:true,
 } satisfies Prisma.SiteInclude;
 
 type SiteWithRelations = Prisma.SiteGetPayload<{
@@ -38,9 +38,14 @@ export class SiteService {
 
     async findAllOutDoors() {
         const sites = await this.prisma.site.findMany({
-            where: { type: SiteType.OUTDOOR },
-            include: siteRelations,
-            orderBy: { id: 'asc' },
+            where: { type: SiteType.OUTDOOR},
+            include: {
+                address:true,
+                bagChecks:{
+                    orderBy:{date: 'desc'}
+                }
+            },
+            orderBy: { id: 'asc' }
         });
 
         return sites.map((site) => this.toEntity(site));
@@ -85,21 +90,19 @@ export class SiteService {
     // ---------------------------
 
     private buildCreateData(dto: CreateSiteDto): Prisma.SiteCreateInput {
-        const { address, bagTemplateId, ...siteData } = dto;
+        const { address, ...siteData } = dto;
 
         return {
             ...siteData,
-            bagTemplate: { connect: { id: bagTemplateId } }, // ✅ required relation
             address: address ? { create: address } : undefined,
         };
     }
 
     private buildUpdateData(dto: UpdateSiteDto): Prisma.SiteUpdateInput {
-        const { address, bagTemplateId, ...siteData } = dto;
+        const { address,...siteData } = dto;
 
         return {
             ...siteData,
-            ...(bagTemplateId ? { bagTemplate: { connect: { id: bagTemplateId } } } : {}),
             address: address ? { upsert: { create: address, update: address } } : undefined,
         };
     }
@@ -108,8 +111,6 @@ export class SiteService {
         return new SiteEntity({
             ...site,
             // On convertit les 'null' de Prisma en 'undefined' pour TypeScript
-            bagTemplateId: site.bagTemplateId ?? undefined,
-            bagTemplate: site.bagTemplate ?? undefined,
             address: site.address ?? undefined,
         });
     }

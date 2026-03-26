@@ -1,9 +1,9 @@
 import { Role } from '@prisma/client';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../core/decorators/roles.decorator';
-import { RolesGuard } from '../../core/guards/roles.guard';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../../../core/decorators/roles.decorator';
+import { RolesGuard } from '../../../core/guards/roles.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { BagTemplateItemService } from './bag-template-item.service';
 import { CreateBagTemplateItemDto } from './dto/create-bag-template-item.dto';
 import { UpdateBagTemplateItemDto } from './dto/update-bag-template-item.dto';

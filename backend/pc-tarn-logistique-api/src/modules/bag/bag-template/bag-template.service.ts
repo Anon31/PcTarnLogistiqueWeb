@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateBagTemplateDto } from './dto/create-bag-template.dto';
 import { UpdateBagTemplateDto } from './dto/update-bag-template.dto';
 import { BagTemplateEntity } from './entities/bag-template.entity';

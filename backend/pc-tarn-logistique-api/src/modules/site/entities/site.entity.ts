@@ -1,4 +1,4 @@
-import { BagTemplateEntity } from '../../bag-template/entities/bag-template.entity';
+import { BagTemplateEntity } from '../../bag/bag-template/entities/bag-template.entity';
 import { Site, SiteType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 

@@ -14,7 +14,7 @@ describe('SystemController', () => {
         controller = module.get<SystemController>(SystemController);
     });
 
-    it('should be defined', () => {
+    it('doit être défini', () => {
         expect(controller).toBeDefined();
     });
 });

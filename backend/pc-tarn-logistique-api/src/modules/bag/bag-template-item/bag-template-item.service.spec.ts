@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ItemCategory } from '@prisma/client';
-import { MockPrismaService, providePrismaMock } from '../../mocks/prisma-mock';
-import { PrismaService } from '../../prisma/prisma.service';
+import { MockPrismaService, providePrismaMock } from '../../../mocks/prisma-mock';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { BagTemplateItemService } from './bag-template-item.service';
 
 describe('BagTemplateItemService', () => {
@@ -18,12 +18,12 @@ describe('BagTemplateItemService', () => {
         prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
     });
 
-    it('should be defined', () => {
+    it('doit être défini', () => {
         expect(service).toBeDefined();
     });
 
     describe('create', () => {
-        it('creates a bag template item', async () => {
+        it("doit créer un article théorique de modèle de sac", async () => {
             const dto = {
                 expectedQuantity: 6,
                 bagTemplateId: 1,
@@ -54,7 +54,7 @@ describe('BagTemplateItemService', () => {
     });
 
     describe('findAll', () => {
-        it('returns bag template items with relations', async () => {
+        it('doit retourner les articles théoriques avec leurs relations', async () => {
             prismaMock.bagTemplateItem.findMany.mockResolvedValue([
                 {
                     id: 1,
@@ -84,7 +84,7 @@ describe('BagTemplateItemService', () => {
     });
 
     describe('findOne', () => {
-        it('returns a bag template item when it exists', async () => {
+        it("doit retourner un article théorique si l'ID existe", async () => {
             prismaMock.bagTemplateItem.findUnique.mockResolvedValue({
                 id: 1,
                 expectedQuantity: 6,
@@ -109,7 +109,7 @@ describe('BagTemplateItemService', () => {
             expect(result.bagTemplate?.name).toEqual('LOT B');
         });
 
-        it('throws NotFoundException when the bag template item does not exist', async () => {
+        it("doit lever une NotFoundException si l'article théorique n'existe pas", async () => {
             prismaMock.bagTemplateItem.findUnique.mockResolvedValue(null as any);
 
             await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
@@ -117,7 +117,7 @@ describe('BagTemplateItemService', () => {
     });
 
     describe('update', () => {
-        it('updates a bag template item', async () => {
+        it('doit mettre à jour un article théorique', async () => {
             prismaMock.bagTemplateItem.findUnique.mockResolvedValue({
                 id: 1,
                 expectedQuantity: 6,
@@ -164,7 +164,7 @@ describe('BagTemplateItemService', () => {
     });
 
     describe('remove', () => {
-        it('deletes a bag template item when the ID exists', async () => {
+        it("doit supprimer un article théorique si l'ID existe", async () => {
             const mockBagTemplateItem = {
                 id: 1,
                 expectedQuantity: 6,
