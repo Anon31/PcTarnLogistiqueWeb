@@ -2,8 +2,8 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { IStockDto, IStockPayload, IProductBatchNumberDto } from '../../shared/interfaces/stock';
-import { environment } from '../../../environments/environment';
+import { IStockDto, IStockPayload, IProductBatchNumberDto } from '../models/stock';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
