@@ -1,18 +1,15 @@
 import { ClassSerializerInterceptor, INestApplication, Provider, ValidationPipe } from '@nestjs/common';
+import { JwtAuthGuard } from '../../src/modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../src/core/guards/roles.guard';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { RolesGuard } from '../../src/core/guards/roles.guard';
-import { JwtAuthGuard } from '../../src/modules/auth/guards/jwt-auth.guard';
 
 type CreateControllerE2eAppOptions = {
     controllers: Array<new (...args: never[]) => unknown>;
     providers: Provider[];
 };
 
-export async function createControllerE2eApp({
-    controllers,
-    providers,
-}: CreateControllerE2eAppOptions): Promise<INestApplication> {
+export async function createControllerE2eApp({ controllers, providers }: CreateControllerE2eAppOptions): Promise<INestApplication> {
     const moduleRef = await Test.createTestingModule({
         controllers,
         providers,

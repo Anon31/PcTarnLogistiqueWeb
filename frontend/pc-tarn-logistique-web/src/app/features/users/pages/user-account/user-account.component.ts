@@ -1,12 +1,12 @@
 import { PageCardWrapperComponent } from '../../../../shared/components/page-card-wrapper/page-card-wrapper.component';
-import { IUserDto, IUserPayload, IUserUpdatePasswordPayload } from '../../models/user.model';
 import { FormPasswordComponent } from '../../components/form-password/form-password.component';
+import { IUserDto, IUserPayload, IUserUpdatePasswordPayload } from '../../models/user.model';
 import { FormUserComponent } from '../../components/form-user/form-user.component';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '../../../../core/services/auth.service';
-import { UserService } from '../../services/user.service';
 import { Component, effect, inject, signal } from '@angular/core';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
 @Component({
