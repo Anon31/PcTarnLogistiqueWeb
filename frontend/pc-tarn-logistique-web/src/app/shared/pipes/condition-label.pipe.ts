@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Condition } from '../enums/condition.enum';
+import { EnumsDataService } from '../../core/enums/services/enums-data.service';
+
 
 @Pipe({
     name: 'conditionLabel',
