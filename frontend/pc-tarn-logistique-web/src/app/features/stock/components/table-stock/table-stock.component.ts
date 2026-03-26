@@ -1,3 +1,4 @@
+import { EnumsDataService } from '../../../../core/enums/services/enums-data.service';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
@@ -19,8 +20,6 @@ import { ConditionSeverityPipe } from '../../../../shared/pipes/condition-severi
         Tag,
         DatePipe,
         TooltipModule,
-        ConditionLabelPipe,
-        ConditionSeverityPipe,
     ],
     templateUrl: './table-stock.component.html',
     styleUrl: './table-stock.component.css',
@@ -28,6 +27,7 @@ import { ConditionSeverityPipe } from '../../../../shared/pipes/condition-severi
 export class TableStockComponent implements OnInit {
     stockService = inject(StockService);
     destroyRef = inject(DestroyRef);
+    enumsData = inject(EnumsDataService);
 
     // Gestion des lignes expandées : { [stockId]: true }
     expandedRows: { [key: string]: boolean } = {};
