@@ -1,20 +1,27 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { EnumsDataService } from '../../core/enums/services/enums-data.service';
-
 
 @Pipe({
     name: 'conditionLabel',
-    standalone: true,
 })
 export class ConditionLabelPipe implements PipeTransform {
-    private labels: Record<Condition, string> = {
-        [Condition.BON]: 'Bon',
-        [Condition.MOYEN]: 'Moyen',
-        [Condition.A_CHANGER]: 'À changer',
-        [Condition.HS]: 'Hors service',
-    };
+    transform(value: string | undefined | null): string {
+        if (!value) return '';
 
-    transform(value: Condition | string): string {
-        return this.labels[value as Condition] ?? value;
+        // Normalisation pour gérer les majuscules/minuscules
+        const state = value.toUpperCase();
+
+        switch (state) {
+            case 'BON':
+                return 'Bon';
+            case 'MOYEN':
+                return 'Moyen';
+            case 'A_CHANGER':
+                return 'À changer';
+            case 'HS':
+                return 'Hors service';
+            default:
+                // Si l'état n'est pas connu, on l'affiche tel quel avec la première lettre en maj
+                return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+        }
     }
 }

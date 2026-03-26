@@ -1,4 +1,3 @@
-import { Condition } from '../enums/condition.enum';
 
 export interface IProductDto {
     id: number;
@@ -25,7 +24,7 @@ export interface IProductBatchNumberDto {
 export interface IStockDto {
     id: number;
     quantity: number;
-    condition: Condition;
+    condition: string;
     productId: number;
     siteId?: number;
     productBatchNumberId?: number;
@@ -37,7 +36,7 @@ export interface IStockDto {
 
 export interface IStockPayload {
     quantity: number;
-    condition: Condition;
+    condition: string;
     productId: number;
     siteId?: number;
     productBatchNumberId?: number;
