@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { PageCardWrapperComponent } from '../../../../shared/components/page-card-wrapper/page-card-wrapper.component';
 
 @Component({
-    selector: 'app-stock-create.component',
+    selector: 'app-product-create',
     imports: [PageCardWrapperComponent],
-    templateUrl: './stock-create.component.html',
-    styleUrl: './stock-create.component.css',
+    templateUrl: './product-create.component.html',
+    styleUrl: './product-create.component.css',
 })
-export class StockCreateComponent {}
+export class ProductCreateComponent {}

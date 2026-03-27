@@ -65,7 +65,9 @@ export const mainLayoutRoutes: Routes = [
                 path: 'stocks',
                 title: 'Gestion des stocks',
                 loadComponent: () =>
-                    import('../features/stock/stock.component').then((m) => m.StockComponent),
+                    import('../features/products/products.component').then(
+                        (m) => m.ProductsComponent,
+                    ),
                 children: [
                     {
                         path: '',
@@ -74,18 +76,18 @@ export const mainLayoutRoutes: Routes = [
                     },
                     {
                         path: 'rechercher',
-                        title: 'Rechercher un article',
+                        title: 'Rechercher un produit',
                         loadComponent: () =>
-                            import('../features/stock/pages/stock-list.component/stock-list.component').then(
-                                (m) => m.StockListComponent,
+                            import('../features/products/pages/product-list/product-list.component').then(
+                                (m) => m.ProductListComponent,
                             ),
                     },
                     {
                         path: 'creer',
-                        title: 'Créer un article',
+                        title: 'Créer un produit',
                         loadComponent: () =>
-                            import('../features/stock/pages/stock-create.component/stock-create.component').then(
-                                (m) => m.StockCreateComponent,
+                            import('../features/products/pages/product-create/product-create.component').then(
+                                (m) => m.ProductCreateComponent,
                             ),
                     },
                 ],
