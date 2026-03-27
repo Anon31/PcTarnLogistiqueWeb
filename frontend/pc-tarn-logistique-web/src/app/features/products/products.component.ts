@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
     selector: 'app-stock',
     imports: [RouterOutlet],
-    templateUrl: './stock.component.html',
-    styleUrl: './stock.component.css',
+    templateUrl: './products.component.html',
+    styleUrl: './products.component.css',
 })
-export class StockComponent {}
+export class ProductsComponent {}
