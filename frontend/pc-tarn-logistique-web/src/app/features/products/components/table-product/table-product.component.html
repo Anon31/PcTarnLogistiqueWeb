@@ -1,0 +1,188 @@
+<div class="rounded-2xl overflow-hidden shadow-glow text-sm font-light">
+    <p-table #productsTable
+        [value]="productService.products()"
+        [globalFilterFields]="['name', 'category']"
+        [rowHover]="true"
+        [size]="'small'"
+        dataKey="id"
+        editMode="row">
+
+        <!-- BARRE DE RECHERCHE DU TABLEAU -->
+        <ng-template pTemplate="caption">
+            <!-- Utilisation de -mx-2 pour annuler le padding natif de PrimeNG (8px) -->
+            <div class="flex justify-between items-center -mx-2 pt-2 pb-6">
+                <!-- GAUCHE : Outil de filtrage global -->
+                <span class="w-full sm:w-auto">
+                    <input
+                        pInputText
+                        type="text"
+                        (input)="productsTable.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Rechercher un produit..."
+                        class="w-full sm:w-64 p-inputtext-sm" />
+                </span>
+
+                <!-- DROITE : Actions de gestion -->
+                <div class="flex items-center">
+                    <!-- 🔒 PROTECTION RBAC : Rapatrié ici, ce bouton route vers le formulaire -->
+                    @if (permissionService.canManageUsers()) {
+                        <p-button
+                            label="Créer un produit"
+                            icon="pi pi-plus"
+                            [rounded]="true"
+                            [raised]="true"
+                            size="small"
+                            routerLink="/stocks/creer" />
+                    }
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="name" style="width:35%">Nom <p-sortIcon field="name" /></th>
+                <th pSortableColumn="category" style="width:20%">Catégorie <p-sortIcon field="category" /></th>
+                <th pSortableColumn="minThreshold" style="width:15%">Seuil min. <p-sortIcon field="minThreshold" /></th>
+                <th style="width:15%">Périssable</th>
+                <th style="width:15%" class="text-center">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="product">
+                <td>
+                    <p-cellEditor>
+                        <ng-template #input><input pInputText type="text" [(ngModel)]="product.name" class="w-full p-inputtext-sm" /></ng-template>
+                        <ng-template #output><span class="font-medium">{{product.name}}</span></ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template #input><input pInputText type="text" [(ngModel)]="product.category" class="w-full p-inputtext-sm" /></ng-template>
+                        <ng-template #output><p-tag [value]="product.category" severity="secondary" [rounded]="true" /></ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template #input><input pInputText type="number" [(ngModel)]="product.minThreshold" class="w-full p-inputtext-sm" /></ng-template>
+                        <ng-template #output>{{product.minThreshold}} u.</ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-tag
+                        [value]="product.isPerishable ? 'OUI' : 'NON'"
+                        [severity]="product.isPerishable ? 'warn' : 'info'"
+                        [rounded]="true" />
+                </td>
+                <td class="text-center">
+                    <div class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                            <p-button pInitEditableRow icon="pi pi-pencil" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="onRowEditInit(product)" />
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" severity="danger" size="small" (click)="onDelete($event, product.id)" />
+                        }
+                        @if (editing) {
+                            <p-button pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" severity="success" size="small" (click)="onRowEditSave(product)" />
+                            <p-button pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="secondary" size="small" (click)="onRowEditCancel(product, ri)" />
+                        }
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<div class="m-2">
+    <span class="text-xs opacity-70 ml-1">Total : {{ productService.products().length }} références catalogue.</span>
+</div>
+
+<p-confirmpopup></p-confirmpopup>
+
+<!--<div class="rounded-2xl overflow-hidden shadow-glow text-sm font-light">-->
+<!--    <p-table-->
+<!--        [value]="productService.products()"-->
+<!--        dataKey="id"-->
+<!--        [expandedRowKeys]="expandedRows"-->
+<!--        [size]="'small'"-->
+<!--        [resizableColumns]="true">-->
+
+<!--        <ng-template pTemplate="header">-->
+<!--            <tr>-->
+<!--                <th style="width:3rem"></th>-->
+<!--                <th pSortableColumn="productMetadata.name" style="width:25%">Produit <p-sortIcon field="productMetadata.name" /></th>-->
+<!--                <th pSortableColumn="productMetadata.category" style="width:15%">Catégorie <p-sortIcon field="productMetadata.category" /></th>-->
+<!--                <th pSortableColumn="site.name" style="width:15%">Site <p-sortIcon field="site.name" /></th>-->
+<!--                <th pSortableColumn="quantity" style="width:12%">Quantité <p-sortIcon field="quantity" /></th>-->
+<!--                <th style="width:15%">Condition</th>-->
+<!--                <th style="width:10%" class="text-center">Actions</th>-->
+<!--            </tr>-->
+<!--        </ng-template>-->
+
+<!--        <ng-template pTemplate="body" let-product let-expanded="expanded">-->
+<!--            <tr>-->
+<!--                <td>-->
+<!--                    <p-button-->
+<!--                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"-->
+<!--                        [text]="true"-->
+<!--                        [rounded]="true"-->
+<!--                        severity="secondary"-->
+<!--                        size="small"-->
+<!--                        (click)="toggleRow(product)" />-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <div class="flex flex-col">-->
+<!--                        <span class="font-medium">{{ product.productMetadata?.name }}</span>-->
+<!--                        @if (product.productMetadata?.isPerishable) {-->
+<!--                            <span class="text-[10px] uppercase tracking-wider text-orange-500 font-bold">Périssable</span>-->
+<!--                        }-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td><p-tag [rounded]="true" [value]="product.productMetadata?.category" severity="secondary" /></td>-->
+<!--                <td>{{ product.site?.name }} <span class="text-xs opacity-50">({{ product.site?.code }})</span></td>-->
+<!--                <td>-->
+<!--                    <span [class.text-red-500]="isBelowThreshold(product)" [class.font-bold]="isBelowThreshold(product)">-->
+<!--                        {{ product.quantity }}-->
+<!--                    </span>-->
+<!--                    @if (isBelowThreshold(product)) {-->
+<!--                        <i class="pi pi-exclamation-triangle text-red-500 ml-1" pTooltip="Seuil critique atteint"></i>-->
+<!--                    }-->
+<!--                </td>-->
+<!--                <td><p-tag [rounded]="true" [value]="product.condition" severity="info" /></td>-->
+<!--                <td class="text-center">-->
+<!--                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="onDelete($event, product.id)" />-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        </ng-template>-->
+
+<!--        &lt;!&ndash; Détail du Lot (Expansion) &ndash;&gt;-->
+<!--        <ng-template pTemplate="rowexpansion" let-product>-->
+<!--            <tr>-->
+<!--                <td colspan="7">-->
+<!--                    <div class="p-4 bg-white/5 rounded-xl m-2 border border-white/10">-->
+<!--                        <div class="flex justify-between items-center mb-4">-->
+<!--                            <h4 class="font-semibold"><i class="pi pi-box mr-2"></i>Détails du lot</h4>-->
+<!--                            <p-button label="Ajouter un lot" icon="pi pi-plus" size="small" [outlined]="true" (click)="onAddBatch(product)" />-->
+<!--                        </div>-->
+
+<!--                        @if (product.productBatchNumber) {-->
+<!--                            <div class="grid grid-cols-3 gap-4 text-xs">-->
+<!--                                <div class="flex flex-col">-->
+<!--                                    <span class="opacity-60">Numéro de lot</span>-->
+<!--                                    <span class="font-mono font-bold">{{ product.productBatchNumber.number }}</span>-->
+<!--                                </div>-->
+<!--                                <div class="flex flex-col">-->
+<!--                                    <span class="opacity-60">Expiration</span>-->
+<!--                                    <span [class.text-red-500]="isExpiringSoon(product.productBatchNumber.expiryDate)">-->
+<!--                                        {{ product.productBatchNumber.expiryDate | date:'dd/MM/yyyy' }}-->
+<!--                                    </span>-->
+<!--                                </div>-->
+<!--                                <div class="flex flex-col">-->
+<!--                                    <span class="opacity-60">Statut</span>-->
+<!--                                    <p-tag [value]="product.productBatchNumber.status" [severity]="product.productBatchNumber.status === 'DISPONIBLE' ? 'success' : 'danger'" size="small" />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        } @else {-->
+<!--                            <p class="text-center py-4 opacity-50 italic text-xs">Aucun lot associé.</p>-->
+<!--                        }-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        </ng-template>-->
+<!--    </p-table>-->
+<!--</div>-->
