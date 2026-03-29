@@ -16,9 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 💡 FORÇAGE MINUSCULES : Le registre Docker interdit les majuscules
-      - name: Set lowercase image name
-        run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      # 💡 NETTOYAGE DES VARIABLES :
+      # 1. IMAGE_NAME en minuscules (Requis par GHCR)
+      # 2. DOCKER_TAG sans slash (Docker interdit les slashs dans les tags, utile pour les PR)
+      - name: Set environment variables
+        run: |
+          echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "DOCKER_TAG=$(echo ${{ github.ref_name }} | sed 's/\//-/g')" >> $GITHUB_ENV
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -46,7 +50,7 @@ jobs:
           context: ./backend/pc-tarn-logistique-api
           file: ./backend/pc-tarn-logistique-api/Dockerfile
           push: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/${{ env.IMAGE_NAME }}-backend:${{ github.ref_name }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}-backend:${{ env.DOCKER_TAG }}
 
       # 🏗️ FRONTEND
       - name: Build and push Frontend image
@@ -55,7 +59,7 @@ jobs:
           context: ./frontend/pc-tarn-logistique-web
           file: ./frontend/pc-tarn-logistique-web/Dockerfile
           push: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/${{ env.IMAGE_NAME }}-frontend:${{ github.ref_name }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}-frontend:${{ env.DOCKER_TAG }}
 
   # PHASE 2 : DÉPLOIEMENT SSH
   deploy:
@@ -63,8 +67,10 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Set lowercase image name (CD)
-        run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      - name: Set environment variables (CD)
+        run: |
+          echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "DOCKER_TAG=$(echo ${{ github.ref_name }} | sed 's/\//-/g')" >> $GITHUB_ENV
 
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@master
@@ -89,5 +95,6 @@ jobs:
               export SECRET_ID=${{ secrets.VAULT_STAGING_SECRET_ID }}
             fi
             
-            IMAGE_NAME=${{ env.IMAGE_NAME }} docker compose pull
-            IMAGE_NAME=${{ env.IMAGE_NAME }} ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=$TAG FRONT_PORT=$FRONT_PORT BACK_PORT=$BACK_PORT docker compose up -d
+            # Note: On utilise ici le TAG normal (develop/master) car pas de slash sur ces branches
+            IMAGE_NAME=${{ env.IMAGE_NAME }} TAG=${{ github.ref_name }} docker compose pull
+            IMAGE_NAME=${{ env.IMAGE_NAME }} ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=${{ github.ref_name }} FRONT_PORT=$FRONT_PORT BACK_PORT=$BACK_PORT docker compose up -d
