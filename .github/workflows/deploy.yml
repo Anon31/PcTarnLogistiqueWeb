@@ -1,0 +1,75 @@
+name: CI/CD Pipeline - PC Tarn
+
+on:
+  push:
+    branches: ["master", "develop"]
+  pull_request:
+    branches: ["master", "develop"]
+
+jobs:
+  # PHASE 1 & 2: CI & Build Image
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd backend/pc-tarn-logistique-api && npm ci
+          cd ../../frontend/pc-tarn-logistique-web && npm ci
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+
+  # PHASE 3: Déploiement (CD) Uniquement sur Push
+  deploy:
+    if: github.event_name == 'push'
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd ~/pc-tarn
+            
+            # Détection de l'environnement pour injecter les bons secrets
+            if [[ "${{ github.ref_name }}" == "master" ]]; then
+              export APP_PORT=4202
+              export TAG=master
+              export ROLE_ID=${{ secrets.VAULT_PROD_ROLE_ID }}
+              export SECRET_ID=${{ secrets.VAULT_PROD_SECRET_ID }}
+            else
+              export APP_PORT=4201
+              export TAG=develop
+              export ROLE_ID=${{ secrets.VAULT_STAGING_ROLE_ID }}
+              export SECRET_ID=${{ secrets.VAULT_STAGING_SECRET_ID }}
+            fi
+            
+            # Déploiement dynamique
+            docker compose pull
+            ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=$TAG APP_PORT=$APP_PORT docker compose up -d
