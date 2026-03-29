@@ -7,7 +7,7 @@ on:
     branches: ["master", "develop"]
 
 jobs:
-  # PHASE 1 & 2: CI & Build Image
+  # Étape 1 : Construction de l'image Docker
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
@@ -16,16 +16,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 💡 Conversion du nom du repo en minuscules (Obligatoire pour Docker Registry)
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # Installation propre des dépendances pour valider que le code compile
       - name: Install dependencies
         run: |
           cd backend/pc-tarn-logistique-api && npm ci
           cd ../../frontend/pc-tarn-logistique-web && npm ci
 
+      # Connexion au registre de conteneurs de GitHub
       - name: Log in to GHCR
         if: github.event_name == 'push'
         uses: docker/login-action@v3
@@ -34,20 +40,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Création du "paquet" (Image Docker) et envoi vers GitHub
       - name: Build and push Docker image
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
 
-  # PHASE 3: Déploiement (CD) Uniquement sur Push
+  # Étape 2 : Déploiement sur le serveur VPS
   deploy:
     if: github.event_name == 'push'
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: Set lowercase image name (CD)
+        run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      # Connexion SSH sécurisée pour piloter Docker sur le VPS
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -55,9 +66,10 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd ~/pc-tarn
+            # 1. Navigation dans le dossier de l'application
+            cd ~/pc-tarn || mkdir -p ~/pc-tarn && cd ~/pc-tarn
             
-            # Détection de l'environnement pour injecter les bons secrets
+            # 2. Logique d'aiguillage des secrets selon la branche (Staging vs Production)
             if [[ "${{ github.ref_name }}" == "master" ]]; then
               export APP_PORT=4202
               export TAG=master
@@ -70,6 +82,8 @@ jobs:
               export SECRET_ID=${{ secrets.VAULT_STAGING_SECRET_ID }}
             fi
             
-            # Déploiement dynamique
-            docker compose pull
-            ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=$TAG APP_PORT=$APP_PORT docker compose up -d
+            # 3. Mise à jour des images Docker sur le VPS
+            IMAGE_NAME=${{ env.IMAGE_NAME }} docker compose pull
+            
+            # 4. Redémarrage des conteneurs avec les nouvelles variables injectées
+            IMAGE_NAME=${{ env.IMAGE_NAME }} ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=$TAG APP_PORT=$APP_PORT docker compose up -d
