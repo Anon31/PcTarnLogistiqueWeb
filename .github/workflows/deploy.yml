@@ -2,9 +2,9 @@ name: CI/CD Pipeline - PC Tarn
 
 on:
   push:
-    branches: ["master", "develop"] # Déclenchement sur push
+    branches: ["master", "develop"]
   pull_request:
-    branches: ["master", "develop"] # Déclenchement sur PR pour test
+    branches: ["master", "develop"]
 
 jobs:
   build-and-push:
@@ -15,8 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 💡 SÉCURITÉ : Le registre Docker (GHCR) exige des noms en minuscules.
-      # Cette commande transforme "Anon31/PcTarn..." en "anon31/pctarn..."
       - name: Set lowercase image name
         run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
@@ -25,9 +23,6 @@ jobs:
         with:
           node-version: '20'
 
-      # Installation des dépendances pour valider la compilation avant le build Docker
-      # Note : L'utilisation des parenthèses (cd ... && ...) permet de rester à la racine
-      # pour la commande suivante, rendant le script plus lisible et moins sujet aux erreurs.
       - name: Install dependencies
         run: |
           (cd backend/pc-tarn-logistique-api && npm ci)
@@ -41,32 +36,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 🏗️ CONSTRUCTION DU BACKEND (API NESTJS)
-      - name: Build and push Backend image
+      - name: Build and push Docker image
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: . # Contexte à la racine pour accéder au dossier backend
-          file: ./backend/pc-tarn-logistique-api/Dockerfile # Chemin précis du Dockerfile
+          context: .
           push: true
-          tags: ghcr.io/${{ env.IMAGE_NAME }}-backend:${{ github.ref_name }}
-
-      # 🏗️ CONSTRUCTION DU FRONTEND (WEB ANGULAR)
-      - name: Build and push Frontend image
-        if: github.event_name == 'push'
-        uses: docker/build-push-action@v5
-        with:
-          context: . # Contexte à la racine pour accéder au dossier frontend
-          file: ./frontend/pc-tarn-logistique-web/Dockerfile # Chemin précis du Dockerfile
-          push: true
-          tags: ghcr.io/${{ env.IMAGE_NAME }}-frontend:${{ github.ref_name }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
 
   deploy:
     if: github.event_name == 'push'
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Set lowercase image name (CD)
+      - name: Set environment variables (CD)
         run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Deploy to VPS via SSH
@@ -75,26 +58,26 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          # 💡 On passe les secrets GitHub via les variables d'environnement de l'action
+          envs: IMAGE_NAME,VAULT_STAGING_ROLE_ID,VAULT_STAGING_SECRET_ID,VAULT_PROD_ROLE_ID,VAULT_PROD_SECRET_ID
           script: |
-            # 1. On se place dans le dossier du projet sur le VPS
             cd ~/pc-tarn || mkdir -p ~/pc-tarn && cd ~/pc-tarn
             
-            # 2. On définit les ports et secrets selon la branche (Staging vs Prod)
+            # Détection de l'environnement : develop branche -> staging config
             if [[ "${{ github.ref_name }}" == "master" ]]; then
-              export FRONT_PORT=4202
-              export BACK_PORT=3002
-              export TAG=master
+              export APP_PORT=4202
+              export TAG=production
               export ROLE_ID=${{ secrets.VAULT_PROD_ROLE_ID }}
               export SECRET_ID=${{ secrets.VAULT_PROD_SECRET_ID }}
             else
-              export FRONT_PORT=4201
-              export BACK_PORT=3001
-              export TAG=develop
+              export APP_PORT=4201
+              export TAG=staging
               export ROLE_ID=${{ secrets.VAULT_STAGING_ROLE_ID }}
               export SECRET_ID=${{ secrets.VAULT_STAGING_SECRET_ID }}
             fi
             
-            # 3. On télécharge les deux nouvelles images (Backend et Frontend)
-            IMAGE_NAME=${{ env.IMAGE_NAME }} docker compose pull
-            # 4. On relance les conteneurs avec les variables injectées dynamiquement
-            IMAGE_NAME=${{ env.IMAGE_NAME }} ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=$TAG FRONT_PORT=$FRONT_PORT BACK_PORT=$BACK_PORT docker compose up -d
+            # On force l'export pour docker-compose
+            export IMAGE_NAME=${{ env.IMAGE_NAME }}
+            
+            docker compose pull
+            docker compose up -d
