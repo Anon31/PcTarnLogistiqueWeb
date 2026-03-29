@@ -2,11 +2,12 @@ name: CI/CD Pipeline - PC Tarn
 
 on:
   push:
-    branches: ["master", "develop"] # Déclenchement sur push
+    branches: ["master", "develop"]
   pull_request:
-    branches: ["master", "develop"] # Déclenchement sur PR pour test
+    branches: ["master", "develop"]
 
 jobs:
+  # PHASE 1 : CONSTRUCTION ET VALIDATION
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
@@ -15,8 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 💡 SÉCURITÉ : Le registre Docker (GHCR) exige des noms en minuscules.
-      # Cette commande transforme "Anon31/PcTarn..." en "anon31/pctarn..."
+      # 💡 FORÇAGE MINUSCULES : Le registre Docker interdit les majuscules
       - name: Set lowercase image name
         run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
@@ -25,9 +25,7 @@ jobs:
         with:
           node-version: '20'
 
-      # Installation des dépendances pour valider la compilation avant le build Docker
-      # Note : L'utilisation des parenthèses (cd ... && ...) permet de rester à la racine
-      # pour la commande suivante, rendant le script plus lisible et moins sujet aux erreurs.
+      # 💡 NAVIGATION PROPRE : On utilise des parenthèses pour ne pas perdre le chemin racine
       - name: Install dependencies
         run: |
           (cd backend/pc-tarn-logistique-api && npm ci)
@@ -41,26 +39,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 🏗️ CONSTRUCTION DU BACKEND (API NESTJS)
+      # 🏗️ BACKEND (Note : context fixé sur le dossier backend pour Prisma)
       - name: Build and push Backend image
-        if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: . # Contexte à la racine pour accéder au dossier backend
-          file: ./backend/pc-tarn-logistique-api/Dockerfile # Chemin précis du Dockerfile
-          push: true
+          context: ./backend/pc-tarn-logistique-api
+          file: ./backend/pc-tarn-logistique-api/Dockerfile
+          push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/${{ env.IMAGE_NAME }}-backend:${{ github.ref_name }}
 
-      # 🏗️ CONSTRUCTION DU FRONTEND (WEB ANGULAR)
+      # 🏗️ FRONTEND
       - name: Build and push Frontend image
-        if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: . # Contexte à la racine pour accéder au dossier frontend
-          file: ./frontend/pc-tarn-logistique-web/Dockerfile # Chemin précis du Dockerfile
-          push: true
+          context: ./frontend/pc-tarn-logistique-web
+          file: ./frontend/pc-tarn-logistique-web/Dockerfile
+          push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/${{ env.IMAGE_NAME }}-frontend:${{ github.ref_name }}
 
+  # PHASE 2 : DÉPLOIEMENT SSH
   deploy:
     if: github.event_name == 'push'
     needs: build-and-push
@@ -76,10 +73,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            # 1. On se place dans le dossier du projet sur le VPS
             cd ~/pc-tarn || mkdir -p ~/pc-tarn && cd ~/pc-tarn
             
-            # 2. On définit les ports et secrets selon la branche (Staging vs Prod)
             if [[ "${{ github.ref_name }}" == "master" ]]; then
               export FRONT_PORT=4202
               export BACK_PORT=3002
@@ -94,7 +89,5 @@ jobs:
               export SECRET_ID=${{ secrets.VAULT_STAGING_SECRET_ID }}
             fi
             
-            # 3. On télécharge les deux nouvelles images (Backend et Frontend)
             IMAGE_NAME=${{ env.IMAGE_NAME }} docker compose pull
-            # 4. On relance les conteneurs avec les variables injectées dynamiquement
             IMAGE_NAME=${{ env.IMAGE_NAME }} ROLE_ID=$ROLE_ID SECRET_ID=$SECRET_ID TAG=$TAG FRONT_PORT=$FRONT_PORT BACK_PORT=$BACK_PORT docker compose up -d
