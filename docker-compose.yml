@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5434:5432" # Accessible sur localhost:5434
+      - "5434:5432"
 
   # --- Interface PgAdmin ---
   pgadmin:
@@ -42,28 +42,16 @@ services:
     volumes:
       - ./backend/pc-tarn-logistique-api:/usr/src/app
       - /usr/src/app/node_modules
-      # Pour éviter l'erreur EBUSY (Windows) on isole le dossier de compilation
-      # pour qu'il ne soit PAS partagé avec Windows
       - /usr/src/app/dist
     ports:
       - "3000:3000"
     environment:
       VAULT_ADDR: "http://vault:8200"
-
-      # --- AJOUT DES IDENTIFIANTS VAULT ---
-      # NODE_ENV: "staging"
-      # ROLE_ID: "3da83e8f-1000-575e-33fa-5790830ba306"
-      # SECRET_ID: "a5dd16e0-7e28-1a7c-63b3-085b1e8c2761"
-
-      # ⚠️ ON COMMENTE CES VARIABLES POUR PROUVER QUE C'EST VAULT QUI S'EN CHARGE
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
-
     depends_on:
       - db
       - vault
-      # Cette commande force NestJS à surveiller les fichiers (polling)
-      # Nécessaire pour que les changements (Hot reload) soient détectés dans Docker
     command: npm run start:dev -- --watch --poll
 
   # --- Frontend Angular ---
@@ -71,14 +59,16 @@ services:
     build:
       context: ./frontend/pc-tarn-logistique-web
       dockerfile: Dockerfile
+      # 💡 CRUCIAL : On force Docker à utiliser l'étape "development"
+      # Cela garantit que c'est ton code actuel qui tourne avec le Hot-Reload
+      target: development
     volumes:
       - ./frontend/pc-tarn-logistique-web:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - "4200:4200"
-      # --- IMPORTANT POUR LE HOT RELOAD ANGULAR ---
+    # On garde ta commande de polling pour Windows/Docker Desktop
     command: npm start -- --host 0.0.0.0 --poll 2000
 
 volumes:
   postgres_data:
-
