@@ -8,6 +8,7 @@ import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { SiteEntity } from './entities/site.entity';
+import { BagTemplateItemEntity } from '../bag/bag-template-item/entities/bag-template-item.entity';
 
 @ApiTags('Sites')
 @ApiBearerAuth()
@@ -31,11 +32,18 @@ export class SiteController {
         return this.siteService.findAll();
     }
     
-    @Get('type/outdoors')
+    @Get('outdoors')
     @ApiOperation({ summary: 'Recuperer tous les sites outdoors(bags)' })
     @ApiResponse({ type: SiteEntity, status: 200 })
     FindOutDoors() {
         return this.siteService.findAllOutDoors();
+    }
+
+    @Get('outdoors/:id/bag-items')
+    @ApiOperation({ summary: 'Recuperer les produits attendus dans un site OUTDOOR' })
+    @ApiResponse({ type: BagTemplateItemEntity, status: 200 })
+    findBagItems(@Param('id', ParseIntPipe) id: number) {
+        return this.siteService.findAllExpectedOutdoorItems(id);
     }
 
     @Get(':id')
@@ -44,6 +52,7 @@ export class SiteController {
     findOne(@Param('id', ParseIntPipe) id: number) {
         return this.siteService.findOne(id);
     }
+
     
 
     @Patch(':id')

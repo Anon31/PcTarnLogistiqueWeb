@@ -4,6 +4,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { SiteEntity } from './entities/site.entity';
+import { BagTemplateSiteService } from '../bag/bag-template-site/bag-template-site.service';
+import { json } from 'stream/consumers';
 
 const siteRelations = {
     address: true,
@@ -50,7 +52,18 @@ export class SiteService {
 
         return sites.map((site) => this.toEntity(site));
     }
+    
+    async findAllExpectedOutdoorItems(id:number){
+        const bagTemplateSite = this.prisma.bagTemplateSite.findFirst(
+            {
+                where:{
+                    siteId:id
+                }
+            }
 
+        )
+        return bagTemplateSite
+    }
     async findOne(id: number) {
         const site = await this.prisma.site.findUnique({
             where: { id },
