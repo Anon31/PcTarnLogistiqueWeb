@@ -9,6 +9,10 @@ import { CreateBagTemplateItemDto } from './dto/create-bag-template-item.dto';
 import { UpdateBagTemplateItemDto } from './dto/update-bag-template-item.dto';
 import { BagTemplateItemEntity } from './entities/bag-template-item.entity';
 
+/**
+ * Controleur REST dedie aux articles theoriques composant un modele de sac.
+ * Il permet de gerer les associations entre un modele et un produit attendu.
+ */
 @ApiTags('Bag Template Items')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -16,6 +20,11 @@ import { BagTemplateItemEntity } from './entities/bag-template-item.entity';
 export class BagTemplateItemController {
     constructor(private readonly bagTemplateItemService: BagTemplateItemService) {}
 
+    /**
+     * Cree un article theorique pour un modele de sac.
+     * Cette operation est reservee aux administrateurs et aux managers.
+     * @param createBagTemplateItemDto Donnees de creation de l'article theorique.
+     */
     @Post()
     @Roles(Role.ADMIN, Role.MANAGER)
     @ApiOperation({ summary: "Creer un article theorique d'un modele de sac" })
@@ -24,6 +33,9 @@ export class BagTemplateItemController {
         return this.bagTemplateItemService.create(createBagTemplateItemDto);
     }
 
+    /**
+     * Recupere tous les articles theoriques definis pour les modeles de sac.
+     */
     @Get()
     @ApiOperation({ summary: 'Recuperer la liste des articles theoriques des modeles de sacs' })
     @ApiResponse({ type: [BagTemplateItemEntity], status: 200 })
@@ -31,6 +43,10 @@ export class BagTemplateItemController {
         return this.bagTemplateItemService.findAll();
     }
 
+    /**
+     * Recupere un article theorique via son identifiant.
+     * @param id Identifiant de l'article theorique recherche.
+     */
     @Get(':id')
     @ApiOperation({ summary: "Recuperer un article theorique d'un modele de sac par son ID" })
     @ApiResponse({ type: BagTemplateItemEntity, status: 200 })
@@ -38,6 +54,12 @@ export class BagTemplateItemController {
         return this.bagTemplateItemService.findOne(id);
     }
 
+    /**
+     * Met a jour un article theorique existant.
+     * Cette operation est reservee aux administrateurs et aux managers.
+     * @param id Identifiant de l'article theorique a modifier.
+     * @param updateBagTemplateItemDto Donnees de mise a jour.
+     */
     @Patch(':id')
     @Roles(Role.ADMIN, Role.MANAGER)
     @ApiOperation({ summary: "Mettre a jour un article theorique d'un modele de sac par son ID" })
@@ -46,6 +68,11 @@ export class BagTemplateItemController {
         return this.bagTemplateItemService.update(id, updateBagTemplateItemDto);
     }
 
+    /**
+     * Supprime un article theorique par son identifiant.
+     * Cette operation est reservee aux administrateurs et aux managers.
+     * @param id Identifiant de l'article theorique a supprimer.
+     */
     @Delete(':id')
     @Roles(Role.ADMIN, Role.MANAGER)
     @ApiOperation({ summary: "Supprimer un article theorique d'un modele de sac par son ID" })

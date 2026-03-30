@@ -2,6 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, Min } from 'class-validator';
 
+/**
+ * DTO utilise pour associer un modele de sac a un site.
+ * Il transporte les identifiants necessaires a la creation du lien.
+ */
 export class CreateBagTemplateSiteDto {
     @ApiProperty({
         description: 'Identifiant du site rattache',

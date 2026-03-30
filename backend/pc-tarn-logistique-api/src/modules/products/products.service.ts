@@ -21,14 +21,43 @@ export class ProductsService {
     }
 
     /**
-     * Récupère tous les produits de la base de données. Les produits sont triés par ID croissant pour une lecture plus intuitive.
+ * Récupère tous les produits ainsi que les informations du stock et du dernier movement effectué sur chaque lot de produits de la base de données. Les produits sont triés par ID croissant pour une lecture plus intuitive.
      */
     async findAll() {
-        const products = await this.prisma.product.findMany({
-            orderBy: { id: 'asc' },
-        });
+            const products = await this.prisma.product.findMany({
+                orderBy: { id: 'asc' },
+                include: {
+                        stocks: {
+                            select: {
+                            id: true,
+                            quantity: true,
+                            condition: true,
+                            site: {
+                                select: {
+                                name: true
+                                }
+                            },
+                            productBatchNumber: {
+                                select:{
+                                    id: true,
+                                    number: true,
+                                    status: true,
+                                    expiryDate: true,
+                                    stockMovements:{
+                                        orderBy: { createdAt: 'desc' },
+                                        take:1,
+                                    }
+                                }
+                            }
+                            }
+                        }
+                    }
+                
+            });
+
         return products.map((product) => new ProductEntity(product));
     }
+
 
     /**
      * Trouve un produit par son ID. Si le produit n'existe pas, une exception NotFoundException est levée.

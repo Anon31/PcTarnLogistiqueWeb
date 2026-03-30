@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BagTemplate } from '@prisma/client';
 
+/**
+ * Entite de sortie representant un modele de sac expose par l'API.
+ * Elle peut embarquer la liste des articles theoriques associes.
+ */
 export class BagTemplateEntity implements BagTemplate {
     @ApiProperty({ description: 'Identifiant unique du modele de sac', example: 1 })
     id: number;
@@ -28,6 +32,10 @@ export class BagTemplateEntity implements BagTemplate {
         };
     }>;
 
+    /**
+     * Construit une entite a partir d'un objet partiel.
+     * @param partial Donnees a affecter a l'entite.
+     */
     constructor(partial: Partial<BagTemplateEntity>) {
         Object.assign(this, partial);
     }
