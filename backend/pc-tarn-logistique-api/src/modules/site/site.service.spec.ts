@@ -124,6 +124,7 @@ describe('SiteService', () => {
                     address: true,
                     bagChecks: {
                         orderBy: { date: 'desc' },
+                        take: 1,
                     },
                 },
                 orderBy: { id: 'asc' },
