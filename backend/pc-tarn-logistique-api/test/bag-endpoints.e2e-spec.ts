@@ -134,10 +134,7 @@ describe('Bag endpoints (e2e)', () => {
         it('POST /api/v1/bag-templates doit creer un modele de sac', async () => {
             bagTemplateServiceMock.create.mockResolvedValue(bagTemplateResponse);
 
-            const response = await request(app.getHttpServer())
-                .post('/api/v1/bag-templates')
-                .send(bagTemplatePayload)
-                .expect(201);
+            const response = await request(app.getHttpServer()).post('/api/v1/bag-templates').send(bagTemplatePayload).expect(201);
 
             expect(response.body).toEqual(bagTemplateResponse);
             expect(bagTemplateServiceMock.create).toHaveBeenCalledWith(bagTemplatePayload);
@@ -188,10 +185,7 @@ describe('Bag endpoints (e2e)', () => {
 
             bagTemplateServiceMock.update.mockResolvedValue(updatedBagTemplateResponse);
 
-            const response = await request(app.getHttpServer())
-                .patch('/api/v1/bag-templates/1')
-                .send(updatePayload)
-                .expect(200);
+            const response = await request(app.getHttpServer()).patch('/api/v1/bag-templates/1').send(updatePayload).expect(200);
 
             expect(response.body).toEqual(updatedBagTemplateResponse);
             expect(bagTemplateServiceMock.update).toHaveBeenCalledWith(1, updatePayload);
@@ -281,10 +275,7 @@ describe('Bag endpoints (e2e)', () => {
 
             bagTemplateItemServiceMock.update.mockResolvedValue(updatedBagTemplateItemResponse);
 
-            const response = await request(app.getHttpServer())
-                .patch('/api/v1/bag-template-items/1')
-                .send(updatePayload)
-                .expect(200);
+            const response = await request(app.getHttpServer()).patch('/api/v1/bag-template-items/1').send(updatePayload).expect(200);
 
             expect(response.body).toEqual(updatedBagTemplateItemResponse);
             expect(bagTemplateItemServiceMock.update).toHaveBeenCalledWith(1, updatePayload);
@@ -367,10 +358,7 @@ describe('Bag endpoints (e2e)', () => {
 
             bagTemplateSiteServiceMock.update.mockResolvedValue(updatedBagTemplateSiteResponse);
 
-            const response = await request(app.getHttpServer())
-                .patch('/api/v1/bag-template-sites/1')
-                .send(updatePayload)
-                .expect(200);
+            const response = await request(app.getHttpServer()).patch('/api/v1/bag-template-sites/1').send(updatePayload).expect(200);
 
             expect(response.body).toEqual(updatedBagTemplateSiteResponse);
             expect(bagTemplateSiteServiceMock.update).toHaveBeenCalledWith(1, updatePayload);

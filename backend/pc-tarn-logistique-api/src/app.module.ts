@@ -14,7 +14,6 @@ import { BagTemplateItemModule } from './modules/bag/bag-template-item/bag-templ
 import { BagTemplateSiteModule } from './modules/bag/bag-template-site/bag-template-site.module';
 import { ProductBatchNumberModule } from './modules/products/product-batch-number/product-batch-number.module';
 
-
 @Module({
     imports: [
         ConfigModule.forRoot({

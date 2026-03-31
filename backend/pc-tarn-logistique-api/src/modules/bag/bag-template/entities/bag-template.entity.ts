@@ -18,7 +18,7 @@ export class BagTemplateEntity implements BagTemplate {
         type: Object,
         description: 'Articles theoriques rattaches au modele de sac',
     })
-    items?: Array<{
+    items?: {
         id: number;
         expectedQuantity: number;
         bagTemplateId: number;
@@ -30,7 +30,7 @@ export class BagTemplateEntity implements BagTemplate {
             minThreshold: number;
             isPerishable: boolean;
         };
-    }>;
+    }[];
 
     /**
      * Construit une entite a partir d'un objet partiel.

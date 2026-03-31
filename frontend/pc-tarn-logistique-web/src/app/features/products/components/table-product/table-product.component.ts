@@ -26,7 +26,7 @@ export class TableProductComponent implements OnInit {
     permissionService = inject(PermissionService);
     destroyRef = inject(DestroyRef);
 
-    clonedProducts: { [s: string]: IProductDto } = {};
+    clonedProducts: Record<string, IProductDto> = {};
 
     ngOnInit(): void {
         this.productService.getAllProducts();
@@ -66,7 +66,7 @@ export class TableProductComponent implements OnInit {
 
     onDelete(event: Event, id: number) {
         this.confirmationService.confirm({
-            target: event.target as EventTarget,
+            target: event.target!,
             message: 'Supprimer définitivement ce produit du catalogue ?',
             icon: 'pi pi-exclamation-triangle',
             acceptLabel: 'Supprimer',
