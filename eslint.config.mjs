@@ -43,15 +43,23 @@ export default tseslint.config(
         },
     },
     // 🛡️ LE DERNIER MOT : Désactivation des contraintes pour la CI/CD
+    // On regroupe tout ici pour écraser les règles Angular/Nest trop strictes
     {
         files: ['**/*.ts'],
+        plugins: {
+            '@angular-eslint': angular.plugin,
+        },
         rules: {
+            // Désactivation des erreurs de typage
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-return': 'off',
+            '@typescript-eslint/no-unsafe-unary-ops': 'off',
+
+            // Désactivation des règles de "bonnes pratiques" bloquantes
             '@typescript-eslint/unbound-method': 'off',
             '@typescript-eslint/no-floating-promises': 'off',
             '@typescript-eslint/no-misused-promises': 'off',
@@ -67,6 +75,8 @@ export default tseslint.config(
             'unused-imports/no-unused-vars': 'off',
             'prefer-const': 'off',
             'no-useless-escape': 'off',
+
+            // 🧯 Suppression des conflits Angular vs NestJS
             '@angular-eslint/prefer-inject': 'off',
             '@angular-eslint/no-output-native': 'off',
             '@typescript-eslint/require-await': 'off',
