@@ -1,7 +1,11 @@
-import { BagTemplateEntity } from '../../bag/bag-template/entities/bag-template.entity';
-import { Site, SiteType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Site, SiteType } from '@prisma/client';
+import { BagTemplateEntity } from '../../bag/bag-template/entities/bag-template.entity';
 
+/**
+ * Entite de sortie representant un site expose par l'API.
+ * Elle peut embarquer le modele de sac theorique et l'adresse associee.
+ */
 export class SiteEntity implements Site {
     @ApiProperty({ description: 'Identifiant unique du site', example: 1 })
     id: number;
@@ -19,19 +23,17 @@ export class SiteEntity implements Site {
     @ApiProperty({ description: 'Code unique du site', example: 'ALB' })
     code: string;
 
-    // 1ère CORRECTION : On autorise le "null" car un site INDOOR n'a pas de sac
     @ApiProperty({
         required: false,
         nullable: true,
-        description: 'ID du modèle de sac si le site est de type OUTDOOR',
+        description: 'Identifiant du modele de sac si le site est de type OUTDOOR',
     })
     bagTemplateId: number | null;
 
-    // 2ème CORRECTION : On ajoute l'objet complet bagTemplate pour le service
     @ApiProperty({
         required: false,
         type: () => BagTemplateEntity,
-        description: 'Le modèle théorique du sac lié à ce site',
+        description: 'Le modele theorique du sac lie a ce site',
     })
     bagTemplate?: BagTemplateEntity;
 
@@ -51,6 +53,10 @@ export class SiteEntity implements Site {
         siteId: number | null;
     } | null;
 
+    /**
+     * Construit une entite a partir d'un objet partiel.
+     * @param partial Donnees a affecter a l'entite.
+     */
     constructor(partial: Partial<SiteEntity>) {
         Object.assign(this, partial);
     }
