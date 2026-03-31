@@ -5,12 +5,12 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 
-# --- ÉTAPE 2 : DÉVELOPPEMENT (Ton Dockerfile actuel exact) ---
-# C'est cette étape qui sera utilisée en local pour le Hot-Reload
+# --- ÉTAPE 2 : DÉVELOPPEMENT ---
+# Cette étape sera utilisée en local pour le Hot-Reload
 FROM base AS development
 RUN npm install -g @angular/cli
 EXPOSE 4200
-# On garde ta commande exacte
+
 CMD ["npm", "start", "--", "--host", "0.0.0.0", "--poll", "2000"]
 
 # --- ÉTAPE 3 : BUILD DE PRODUCTION ---
