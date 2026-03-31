@@ -9,8 +9,8 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
      * Si la requête n'est pas pour le login, ajouter le token JWT dans les en-têtes
      */
     if (req.url.search(toExclude) === -1) {
-        let jwt = authService.getToken();
-        let reqWithToken = req.clone({
+        const jwt = authService.getToken();
+        const reqWithToken = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${jwt}`,
             },

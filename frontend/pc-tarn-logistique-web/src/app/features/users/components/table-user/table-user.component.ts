@@ -43,7 +43,7 @@ export class TableUserComponent implements OnInit {
     destroyRef = inject(DestroyRef);
 
     // Pour gérer l'annulation de l'édition (rollback)
-    clonedUsers: { [s: string]: IUserDto } = {};
+    clonedUsers: Record<string, IUserDto> = {};
 
     rolesOptions = computed(() => {
         // 1. On récupère l'objet envoyé par le backend (ex: { ADMIN: "ADMIN", BENEVOLE: "BENEVOLE" })
@@ -51,7 +51,7 @@ export class TableUserComponent implements OnInit {
         console.log('Rôles bruts du backend :', backendRoles);
         // 2. On transforme cet objet en tableau pour PrimeNG : [{label: '...', value: '...'}]
         return Object.values(backendRoles).map((roleValue) => ({
-            label: this.enumsPipe.transform(roleValue as string),
+            label: this.enumsPipe.transform(roleValue),
             value: roleValue,
         }));
     });
@@ -129,7 +129,7 @@ export class TableUserComponent implements OnInit {
         event.stopPropagation(); // IMPORTANT : Empêche l'interférence avec la ligne du tableau
 
         this.confirmationService.confirm({
-            target: event.target as EventTarget,
+            target: event.target!,
             message:
                 'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
             icon: 'pi pi-info-circle', // Icône rouge pour appuyer le danger

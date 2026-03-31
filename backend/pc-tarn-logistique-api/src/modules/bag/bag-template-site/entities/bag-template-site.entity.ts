@@ -6,7 +6,7 @@ import { BagTemplateSite } from '@prisma/client';
  * Elle peut embarquer les informations detaillees du site et du modele associes.
  */
 export class BagTemplateSiteEntity implements BagTemplateSite {
-    @ApiProperty({ description: "Identifiant unique du lien site/modele de sac", example: 1 })
+    @ApiProperty({ description: 'Identifiant unique du lien site/modele de sac', example: 1 })
     id: number;
 
     @ApiProperty({ description: 'Identifiant du site rattache', example: 1 })

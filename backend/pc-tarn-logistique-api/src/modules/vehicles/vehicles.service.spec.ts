@@ -18,7 +18,7 @@ describe('VehiclesService', () => {
 
         service = module.get<VehiclesService>(VehiclesService);
         // Cast indispensable pour dire à TypeScript que prismaMock possède les fonctions de jest (mockResolvedValue, etc)
-        prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
+        prismaMock = module.get(PrismaService);
     });
 
     it('doit être défini', () => {

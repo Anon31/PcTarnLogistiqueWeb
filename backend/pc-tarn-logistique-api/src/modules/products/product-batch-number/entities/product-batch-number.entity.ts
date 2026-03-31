@@ -33,7 +33,7 @@ export class ProductBatchNumberEntity implements ProductBatchNumber {
         type: Object,
         description: 'Stocks actuellement rattaches a ce lot',
     })
-    stocks?: Array<{
+    stocks?: {
         id: number;
         quantity: number;
         condition: Condition;
@@ -53,7 +53,7 @@ export class ProductBatchNumberEntity implements ProductBatchNumber {
             type: SiteType;
             code: string;
         } | null;
-    }>;
+    }[];
 
     @ApiProperty({
         required: false,
@@ -61,7 +61,7 @@ export class ProductBatchNumberEntity implements ProductBatchNumber {
         type: Object,
         description: 'Mouvements de stock historises pour ce lot',
     })
-    stockMovements?: Array<{
+    stockMovements?: {
         id: number;
         type: TypeMovement;
         createdAt: Date;
@@ -83,7 +83,7 @@ export class ProductBatchNumberEntity implements ProductBatchNumber {
             type: SiteType;
             code: string;
         };
-    }>;
+    }[];
 
     /**
      * Construit une entite a partir d'un objet partiel.

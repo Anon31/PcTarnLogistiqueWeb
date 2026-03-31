@@ -31,13 +31,13 @@ export class FormUserComponent {
 
     // 🚀 SIGNALS OUTPUTS
     save = output<IUserPayload>();
-    cancel = output<void>();
+    cancelClick = output<void>();
     requestPasswordChange = output<void>(); // Événement pour demander l'ouverture de la modale
 
     rolesOptions = computed(() => {
         const backendRoles = this.enumsData.enumsData()?.roles || {};
         return Object.values(backendRoles).map((roleValue) => ({
-            label: this.enumsPipe.transform(roleValue as string),
+            label: this.enumsPipe.transform(roleValue),
             value: roleValue,
         }));
     });

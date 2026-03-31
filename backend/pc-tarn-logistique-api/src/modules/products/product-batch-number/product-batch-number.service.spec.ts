@@ -70,7 +70,7 @@ describe('ProductBatchNumberService', () => {
         }).compile();
 
         service = module.get<ProductBatchNumberService>(ProductBatchNumberService);
-        prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
+        prismaMock = module.get(PrismaService);
     });
 
     it('doit etre defini', () => {

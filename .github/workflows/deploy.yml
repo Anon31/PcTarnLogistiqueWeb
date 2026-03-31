@@ -30,6 +30,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      # 🛡️ GARDE-FOU : LINT & TESTS (Backend)
+      - name: Install, Lint and Test Backend
+        working-directory: ./backend/pc-tarn-logistique-api
+        run: |
+          npm ci
+          npx prisma generate
+          npm run lint
+          npm run test
+
+      # 🛡️ GARDE-FOU : LINT & TESTS (Frontend)
+      - name: Install, Lint and Test Frontend
+        working-directory: ./frontend/pc-tarn-logistique-web
+        run: |
+          npm ci
+          npm run lint
+          npm run test -- --watch=false
 
       - name: Log in to GHCR
         if: github.event_name == 'push'

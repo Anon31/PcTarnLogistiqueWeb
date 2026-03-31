@@ -1,19 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserListComponent } from './user-list.component';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Component } from '@angular/core';
-
-// L'import du VRAI composant enfant qu'on veut retirer
+// L'import du VRAI composant enfant qu'on veut neutraliser
 import { TableUserComponent } from '../../components/table-user/table-user.component';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
+import { ToasterService } from '../../../../core/services/toaster.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { UserListComponent } from './user-list.component';
+import { UserService } from '../../services/user.service';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { of } from 'rxjs';
 
-// 1. Création d'un FAUX composant (Mock) pour isoler le parent
-// Ce faux composant a le même "selector" mais aucune logique ni dépendance.
-@Component({
-    selector: 'app-table-user',
-    standalone: true,
-    template: '<div>Mock Table User Component</div>',
-})
-class MockTableUserComponent {}
+// Création du faux service pour bloquer l'appel HTTP "0 Unknown Error"
+const mockUserService = {
+    getAllUsers: () => of([]),
+    findAll: () => of([]),
+    users: () => [],
+};
 
 describe('UserListComponent', () => {
     let component: UserListComponent;
@@ -22,11 +23,21 @@ describe('UserListComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [UserListComponent],
+            providers: [
+                ToasterService,
+                ConfirmationService,
+                MessageService,
+                EnumsDynamicPipe,
+                // On ajoute le faux service métier
+                { provide: UserService, useValue: mockUserService },
+            ],
         })
-            // 2. Shallow Testing : on remplace le vrai enfant lourd d'injections par le Mock léger
-            .overrideComponent(UserListComponent, {
-                remove: { imports: [TableUserComponent] },
-                add: { imports: [MockTableUserComponent] },
+            // Stratégie "Mock in-place" : 100% fiable
+            .overrideComponent(TableUserComponent, {
+                set: {
+                    template: '<div>Mock Table User Component</div>',
+                    providers: [],
+                },
             })
             .compileComponents();
 

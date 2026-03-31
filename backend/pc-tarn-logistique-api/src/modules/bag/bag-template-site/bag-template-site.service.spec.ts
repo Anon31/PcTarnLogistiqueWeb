@@ -15,7 +15,7 @@ describe('BagTemplateSiteService', () => {
         }).compile();
 
         service = module.get<BagTemplateSiteService>(BagTemplateSiteService);
-        prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
+        prismaMock = module.get(PrismaService);
     });
 
     it('doit être défini', () => {

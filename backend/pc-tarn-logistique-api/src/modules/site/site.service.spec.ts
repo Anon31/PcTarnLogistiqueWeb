@@ -15,7 +15,7 @@ describe('SiteService', () => {
         }).compile();
 
         service = module.get<SiteService>(SiteService);
-        prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
+        prismaMock = module.get(PrismaService);
     });
 
     it('doit être défini', () => {
@@ -38,16 +38,16 @@ describe('SiteService', () => {
             };
 
             prismaMock.site.create.mockResolvedValue({
+                id: 1,
+                ...dto,
+                address: {
                     id: 1,
-                    ...dto,
-                    address: {
-                        id: 1,
-                        ...dto.address,
-                        userId: null,
-                        siteId: 1,
-                    },
-                    bagChecks: [],
-                } as any);
+                    ...dto.address,
+                    userId: null,
+                    siteId: 1,
+                },
+                bagChecks: [],
+            } as any);
 
             const result = await service.create(dto);
 

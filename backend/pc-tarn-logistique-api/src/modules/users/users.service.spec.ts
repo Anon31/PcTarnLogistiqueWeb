@@ -40,7 +40,9 @@ describe('UsersService', () => {
                 siteId: 2,
             };
 
-            // @ts-ignore (mockDeep gère les types complexes de Prisma)
+            /*
+             @ts-expect-error (mockDeep gère les types complexes de Prisma)
+            */
             prismaMock.user.create.mockResolvedValue({
                 id: 1,
                 ...dto, // Copie les champs simples
