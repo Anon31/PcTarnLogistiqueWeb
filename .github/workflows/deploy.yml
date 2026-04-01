@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: ["master", "develop"]
 
+# 💡 Forcer GitHub Actions à utiliser Node 24 pour faire taire l'avertissement de dépréciation
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
