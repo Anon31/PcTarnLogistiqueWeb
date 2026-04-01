@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: ["master", "develop"]
 
+# 💡 Forcer GitHub Actions à utiliser Node 24 (Future-proof 2026)
+# (Note: Le warning "forced to run on Node 24" affiché dans GitHub est 100% normal.
+# Il disparaîtra dès que les auteurs des actions mettront à jour leur code source interne).
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -61,7 +64,7 @@ jobs:
 
       - name: Build and push Backend image
         if: github.event_name == 'push'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./backend/pc-tarn-logistique-api
           file: ./backend/pc-tarn-logistique-api/Dockerfile
@@ -70,7 +73,7 @@ jobs:
 
       - name: Build and push Frontend image
         if: github.event_name == 'push'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./frontend/pc-tarn-logistique-web
           file: ./frontend/pc-tarn-logistique-web/Dockerfile
