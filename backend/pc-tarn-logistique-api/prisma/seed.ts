@@ -1,4 +1,4 @@
-import { PrismaClient, Role, SiteType, VehicleType, VehicleStatus, ItemCategory, Condition, TypeMovement } from '@prisma/client';
+import { PrismaClient, Role, SiteType, VehicleType, VehicleStatus, ItemCategory, Condition, TypeMovement, BatchStatus } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
@@ -224,7 +224,25 @@ async function main() {
         });
 
         // ----------------------------------------------------
-        // 8. INJECTION DE STOCK INITIAL
+        // 8. LOTS DE FABRICATION PRODUITS
+        // ----------------------------------------------------
+        console.log('📦 Création des lots de fabrication produits...');
+        const compressesBatchNumber =
+            (await tx.productBatchNumber.findFirst({
+                where: {
+                    number: 'LOT-COMP-2027-01',
+                },
+            })) ??
+            (await tx.productBatchNumber.create({
+                data: {
+                    number: 'LOT-COMP-2027-01',
+                    expiryDate: new Date('2027-01-31T00:00:00.000Z'),
+                    status: BatchStatus.VALID,
+                },
+            }));
+
+        // ----------------------------------------------------
+        // 9. INJECTION DE STOCK INITIAL
         // ----------------------------------------------------
         if (adminUserId) {
             console.log('✅ Remplissage des étagères et des sacs...');
@@ -234,6 +252,7 @@ async function main() {
                     condition: Condition.BON,
                     productId: catalog['Compresses Stériles 10x10'].id,
                     siteId: siteAlbi.id,
+                    ProductBatchNumberId: compressesBatchNumber.id,
                 },
             });
 
@@ -242,6 +261,7 @@ async function main() {
                     type: TypeMovement.INPUT,
                     quantity: 100,
                     userId: adminUserId,
+                    productBatchNumberId: compressesBatchNumber.id,
                     productId: catalog['Compresses Stériles 10x10'].id,
                     siteId: siteAlbi.id,
                 },

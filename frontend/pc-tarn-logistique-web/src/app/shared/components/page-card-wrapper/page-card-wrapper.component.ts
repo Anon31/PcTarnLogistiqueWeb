@@ -10,14 +10,14 @@ import { Divider } from 'primeng/divider';
 })
 export class PageCardWrapperComponent {
     /** Titre principal de la page */
-    @Input() title: string = '';
+    @Input() title = '';
 
     /** Icône de la page (ex: 'pi pi-users') */
-    @Input() icon: string = '';
+    @Input() icon = '';
 
     /** Description ou sous-titre */
-    @Input() subtitle: string = '';
+    @Input() subtitle = '';
 
     /** Masquer le séparateur visuel */
-    @Input() hideDivider: boolean = false;
+    @Input() hideDivider = false;
 }

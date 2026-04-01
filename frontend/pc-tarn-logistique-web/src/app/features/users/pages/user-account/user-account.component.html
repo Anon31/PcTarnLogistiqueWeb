@@ -5,7 +5,7 @@
                 mode="edit-self"
                 [userData]="fullUserProfile()"
                 (save)="onUpdateProfile($event)"
-                (cancel)="onCancel()"
+                (cancelClick)="onCancel()"
                 (requestPasswordChange)="openPasswordDialog()">
             </app-form-user>
         }

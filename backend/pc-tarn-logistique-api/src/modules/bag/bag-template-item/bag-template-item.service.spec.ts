@@ -15,7 +15,7 @@ describe('BagTemplateItemService', () => {
         }).compile();
 
         service = module.get<BagTemplateItemService>(BagTemplateItemService);
-        prismaMock = module.get(PrismaService) as unknown as MockPrismaService;
+        prismaMock = module.get(PrismaService);
     });
 
     it('doit être défini', () => {
@@ -23,7 +23,7 @@ describe('BagTemplateItemService', () => {
     });
 
     describe('create', () => {
-        it("doit créer un article théorique de modèle de sac", async () => {
+        it('doit créer un article théorique de modèle de sac', async () => {
             const dto = {
                 expectedQuantity: 6,
                 bagTemplateId: 1,

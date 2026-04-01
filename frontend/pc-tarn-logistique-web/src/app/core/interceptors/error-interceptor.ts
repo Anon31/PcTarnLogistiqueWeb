@@ -33,7 +33,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 );
             }
             // Cas 4 : Erreurs métiers renvoyées par le backend NestJS (ex: P2002 Doublon)
-            else if (error.error && error.error.message) {
+            else if (error.error?.message) {
                 // NestJS peut renvoyer un tableau de messages (class-validator) ou une string
                 const message = Array.isArray(error.error.message)
                     ? error.error.message.join(', ')

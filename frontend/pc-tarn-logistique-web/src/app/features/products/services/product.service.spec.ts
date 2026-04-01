@@ -52,7 +52,7 @@ describe('ProductService', () => {
 
     describe('patchProduct', () => {
         it('devrait envoyer une requête PATCH et mettre à jour le produit localement (optimisme)', () => {
-            // Initialisation de l'état local
+            // Initialisation de l'état local (On contourne le 'private' de TS avec les crochets)
             service['productsSignal'].set([...mockProducts]);
 
             const updatedInfo: Partial<IProductPayload> = { name: 'Produit A Modifié' };
@@ -74,6 +74,7 @@ describe('ProductService', () => {
 
     describe('deleteProduct', () => {
         it('devrait envoyer une requête DELETE et retirer le produit du signal', () => {
+            // Initialisation de l'état local (On contourne le 'private' de TS avec les crochets)
             service['productsSignal'].set([...mockProducts]);
 
             service.deleteProduct(1).subscribe();
@@ -90,6 +91,7 @@ describe('ProductService', () => {
 
     describe('rollbackProduct', () => {
         it("devrait restaurer un produit à un index spécifique (gestion d'erreur)", () => {
+            // Initialisation de l'état local (On contourne le 'private' de TS avec les crochets)
             service['productsSignal'].set([...mockProducts]);
             const originalProduct = { ...mockProducts[0] };
 

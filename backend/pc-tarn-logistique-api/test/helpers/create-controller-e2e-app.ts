@@ -4,10 +4,10 @@ import { RolesGuard } from '../../src/core/guards/roles.guard';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 
-type CreateControllerE2eAppOptions = {
-    controllers: Array<new (...args: never[]) => unknown>;
+interface CreateControllerE2eAppOptions {
+    controllers: (new (...args: never[]) => unknown)[];
     providers: Provider[];
-};
+}
 
 export async function createControllerE2eApp({ controllers, providers }: CreateControllerE2eAppOptions): Promise<INestApplication> {
     const moduleRef = await Test.createTestingModule({

@@ -4,6 +4,10 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { CreateAddressDto } from '../../../shared/dto/create-address.dto';
 
+/**
+ * DTO utilise pour creer un site.
+ * Il transporte les informations d'identification du site et son adresse eventuelle.
+ */
 export class CreateSiteDto {
     @ApiProperty({ description: 'Nom du site', example: "Antenne d'Albi" })
     @IsString()
