@@ -23,7 +23,7 @@
 
                 <!-- DROITE : Actions de gestion -->
                 <div class="flex items-center">
-                    <!-- 🔒 PROTECTION RBAC : Rapatrié ici, ce bouton route vers le formulaire -->
+                    <!-- 🔒 PROTECTION RBAC : Ce bouton route vers le formulaire de création -->
                     @if (permissionService.canManageUsers()) {
                         <p-button
                             label="Créer un produit"
@@ -39,10 +39,23 @@
         <ng-template pTemplate="header">
             <tr>
                 <th pSortableColumn="name" style="width:35%">Nom <p-sortIcon field="name" /></th>
-                <th pSortableColumn="category" style="width:20%">Catégorie <p-sortIcon field="category" /></th>
+                <th pSortableColumn="category" style="width:20%">
+                    <div class="flex justify-center ">
+                        Catégorie
+                        <p-sortIcon class="ml-1" field="category" />
+                    </div>
+                </th>
                 <th pSortableColumn="minThreshold" style="width:15%">Seuil min. <p-sortIcon field="minThreshold" /></th>
-                <th style="width:15%">Périssable</th>
-                <th style="width:15%" class="text-center">Actions</th>
+                <th style="width:15%">
+                    <div class="flex items-center justify-center ">
+                        Périssable
+                    </div>
+                </th>
+                <th style="width:15%" class="">
+                    <div class="flex items-center justify-center ">
+                        Action
+                    </div>
+                </th>
             </tr>
         </ng-template>
 
@@ -54,7 +67,7 @@
                         <ng-template #output><span class="font-medium">{{product.name}}</span></ng-template>
                     </p-cellEditor>
                 </td>
-                <td>
+                <td class="flex items-center justify-center">
                     <p-cellEditor>
                         <ng-template #input><input pInputText type="text" [(ngModel)]="product.category" class="w-full p-inputtext-sm" /></ng-template>
                         <ng-template #output><p-tag [value]="product.category" severity="secondary" [rounded]="true" /></ng-template>
@@ -66,21 +79,21 @@
                         <ng-template #output>{{product.minThreshold}} u.</ng-template>
                     </p-cellEditor>
                 </td>
-                <td>
+                <td class="flex items-center justify-center">
                     <p-tag
                         [value]="product.isPerishable ? 'OUI' : 'NON'"
                         [severity]="product.isPerishable ? 'warn' : 'info'"
                         [rounded]="true" />
                 </td>
                 <td class="text-center">
-                    <div class="flex items-center justify-center gap-2">
+                    <div class="flex items-center justify-center space-x-1">
                         @if (!editing) {
-                            <p-button pInitEditableRow icon="pi pi-pencil" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="onRowEditInit(product)" />
-                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" severity="danger" size="small" (click)="onDelete($event, product.id)" />
+                            <p-button size="small" pInitEditableRow icon="pi pi-pencil" [rounded]="true" [text]="true" [raised]="true" (click)="onRowEditInit(product)" />
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="onDelete($event, product.id)" />
                         }
                         @if (editing) {
-                            <p-button pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" severity="success" size="small" (click)="onRowEditSave(product)" />
-                            <p-button pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="secondary" size="small" (click)="onRowEditCancel(product, ri)" />
+                            <p-button pSaveEditableRow icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="onRowEditSave(product)" />
+                            <p-button pCancelEditableRow icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="onRowEditCancel(product, ri)" />
                         }
                     </div>
                 </td>
