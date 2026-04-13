@@ -52,7 +52,12 @@ export class SiteEntity implements Site {
         userId: number | null;
         siteId: number | null;
     } | null;
-
+    bagchecks?: {
+        id: number;
+        date: Date;
+        userId: number;
+        siteId: number;
+    }[] | null;
     /**
      * Construit une entite a partir d'un objet partiel.
      * @param partial Donnees a affecter a l'entite.

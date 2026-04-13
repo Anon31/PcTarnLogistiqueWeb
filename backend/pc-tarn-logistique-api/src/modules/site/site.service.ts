@@ -13,6 +13,7 @@ const siteRelations = {
 type SiteWithRelations = Prisma.SiteGetPayload<{
     include: typeof siteRelations;
 }>;
+type SiteWithoutRelations = Omit<SiteWithRelations, keyof typeof siteRelations>;
 
 /**
  * Service metier charge de la gestion des sites.
@@ -36,11 +37,10 @@ export class SiteService {
     }
 
     /**
-     * Recupere tous les sites avec leurs relations utiles.
+     * Recupere tous les sites sans leurs relations utiles.
      */
     async findAll() {
         const sites = await this.prisma.site.findMany({
-            include: siteRelations,
             orderBy: { id: 'asc' },
         });
 
@@ -180,11 +180,10 @@ export class SiteService {
      * Transforme un resultat Prisma en entite API.
      * @param site Site charge avec ses relations.
      */
-    private toEntity(site: SiteWithRelations) {
+    private toEntity(site: SiteWithRelations | SiteWithoutRelations) {
         return new SiteEntity({
             ...site,
             // On convertit les valeurs null de Prisma en undefined pour TypeScript.
-            address: site.address ?? undefined,
         });
     }
 }
