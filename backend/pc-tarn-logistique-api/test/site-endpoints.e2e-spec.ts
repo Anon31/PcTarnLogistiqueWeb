@@ -97,10 +97,10 @@ describe('Site endpoints (e2e)', () => {
         expect(siteServiceMock.findAll).toHaveBeenCalledWith();
     });
 
-    it('GET /api/v1/sites/type/outdoors doit retourner les sites outdoor', async () => {
+    it('GET /api/v1/sites/outdoors doit retourner les sites outdoor', async () => {
         siteServiceMock.findAllOutDoors.mockResolvedValue([outdoorSiteResponse]);
 
-        const response = await request(app.getHttpServer()).get('/api/v1/sites/type/outdoors').expect(200);
+        const response = await request(app.getHttpServer()).get('/api/v1/sites/outdoors').expect(200);
 
         expect(response.body).toEqual([outdoorSiteResponse]);
         expect(siteServiceMock.findAllOutDoors).toHaveBeenCalledWith();
