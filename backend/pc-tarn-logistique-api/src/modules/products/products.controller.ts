@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../core/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -7,6 +7,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { RolesGuard } from '../../core/guards/roles.guard';
 import { ProductEntity } from './entities/product.entity';
 import { ProductsService } from './products.service';
+import { UserQueryDto } from './dto/query-product-dto';
 import { Role } from '@prisma/client';
 
 @ApiTags('Produits')
@@ -34,10 +35,15 @@ export class ProductsController {
     @Get()
     @ApiOperation({ summary: 'Récupérer la liste de tous les produits' })
     @ApiResponse({ type: [ProductEntity], status: 200 })
-    findAll() {
-        return this.productsService.findAll();
+    findAll(@Query() query: UserQueryDto) {
+        if (query.siteId) {
+            const site : number = parseInt(query.siteId)
+ 
+            return this.productsService.findAllBySite(site);
+        }
+        return query;
     }
-
+    
     /**
      * Récupérer un produit par son ID. Cette opération est ouverte à tous les utilisateurs authentifiés.
      * @param id

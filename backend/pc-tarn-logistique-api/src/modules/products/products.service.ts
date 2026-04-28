@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
+import { count, debug } from 'console';
 
 @Injectable()
 export class ProductsService {
@@ -56,6 +57,40 @@ export class ProductsService {
 
         return products.map((product) => new ProductEntity(product));
     }
+async findAllBySite(siteId: number) {
+    const products = await this.prisma.product.findMany({
+        where: {
+            stocks: {
+                some: { siteId },
+            },
+        },
+        select: {
+            id: true,
+            name: true,
+            category: true,
+            minThreshold: true,
+            isPerishable: true,
+            stocks: {
+                where: { siteId },
+                select: {
+                    quantity: true,
+                },
+            },
+        },
+        orderBy: { id: 'desc' },
+    });
+
+    return products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        minThreshold: product.minThreshold,
+        isPerishable: product.isPerishable,
+        quantity: product.stocks.reduce((sum, stock) => sum + stock.quantity, 0),
+        siteId,
+    }));
+}
+
 
     /**
      * Trouve un produit par son ID. Si le produit n'existe pas, une exception NotFoundException est levée.
