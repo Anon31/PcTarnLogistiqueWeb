@@ -7,7 +7,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { RolesGuard } from '../../core/guards/roles.guard';
 import { ProductEntity } from './entities/product.entity';
 import { ProductsService } from './products.service';
-import { UserQueryDto } from './dto/query-product-dto';
+import { QueryProductDto } from './dto/query-product-dto';
 import { Role } from '@prisma/client';
 
 @ApiTags('Produits')
@@ -35,15 +35,14 @@ export class ProductsController {
     @Get()
     @ApiOperation({ summary: 'Récupérer la liste de tous les produits' })
     @ApiResponse({ type: [ProductEntity], status: 200 })
-    findAll(@Query() query: UserQueryDto) {
-        if (query.siteId) {
-            const site : number = parseInt(query.siteId)
- 
-            return this.productsService.findAllBySite(site);
+    findAll(@Query() query: QueryProductDto) {
+        if (query.siteId !== undefined) {
+            return this.productsService.findAllBySite(query.siteId);
         }
-        return query;
+
+        return this.productsService.findAll();
     }
-    
+
     /**
      * Récupérer un produit par son ID. Cette opération est ouverte à tous les utilisateurs authentifiés.
      * @param id
