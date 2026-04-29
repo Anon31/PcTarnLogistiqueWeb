@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductBatchSummaryEntity } from './entities/product-batch-summary.entity';
 import { ProductEntity } from './entities/product.entity';
 
 @Injectable()
@@ -89,6 +90,61 @@ export class ProductsService {
             quantity: product.stocks.reduce((sum, stock) => sum + stock.quantity, 0),
             siteId,
         }));
+    }
+
+    async findBatchBySite(productId: number, siteId: number) {
+        const product = await this.prisma.product.findUnique({
+            where: { id: productId },
+            select: {
+                id: true,
+                name: true,
+                stocks: {
+                    where: { siteId },
+                    select: {
+                        id: true,
+                        quantity: true,
+                        productBatchNumber: {
+                            select: {
+                                number: true,
+                                expiryDate: true,
+                                status: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        if (!product) {
+            throw new NotFoundException(`Produit #${productId} introuvable`);
+        }
+
+        const quantity = product.stocks.reduce((sum, stock) => sum + stock.quantity, 0);
+        const selectedStock = [...product.stocks]
+            .filter((stock) => stock.productBatchNumber)
+            .sort((left, right) => {
+                const leftExpiry = left.productBatchNumber?.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+                const rightExpiry = right.productBatchNumber?.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+                if (leftExpiry !== rightExpiry) {
+                    return leftExpiry - rightExpiry;
+                }
+
+                return left.id - right.id;
+            })[0];
+
+        if (!selectedStock?.productBatchNumber) {
+            throw new NotFoundException(`Aucun lot trouve pour le produit #${productId} sur le site #${siteId}`);
+        }
+
+        return new ProductBatchSummaryEntity({
+            id: product.id,
+            name: product.name,
+            number: selectedStock.productBatchNumber.number,
+            expiryDate: selectedStock.productBatchNumber.expiryDate,
+            status: selectedStock.productBatchNumber.status,
+            quantity,
+        });
     }
 
     /**

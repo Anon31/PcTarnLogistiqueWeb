@@ -3,7 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { NotFoundException } from '@nestjs/common';
-import { ItemCategory } from '@prisma/client';
+import { BatchStatus, ItemCategory } from '@prisma/client';
 
 describe('ProductsService', () => {
     let service: ProductsService;
@@ -71,6 +71,73 @@ describe('ProductsService', () => {
         });
     });
 
+    describe('findAllBySite', () => {
+        it('doit retourner les produits du site avec la quantite cumulee', async () => {
+            prismaMock.product.findMany.mockResolvedValue([
+                {
+                    id: 2,
+                    name: 'Compresse sterile',
+                    category: ItemCategory.MALAISE,
+                    minThreshold: 10,
+                    isPerishable: true,
+                    stocks: [{ quantity: 40 }, { quantity: 60 }],
+                },
+                {
+                    id: 1,
+                    name: 'Pansement',
+                    category: ItemCategory.MALAISE,
+                    minThreshold: 5,
+                    isPerishable: false,
+                    stocks: [{ quantity: 12 }],
+                },
+            ] as any);
+
+            const result = await service.findAllBySite(1);
+
+            expect(prismaMock.product.findMany).toHaveBeenCalledWith({
+                where: {
+                    stocks: {
+                        some: { siteId: 1 },
+                    },
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    category: true,
+                    minThreshold: true,
+                    isPerishable: true,
+                    stocks: {
+                        where: { siteId: 1 },
+                        select: {
+                            quantity: true,
+                        },
+                    },
+                },
+                orderBy: { id: 'desc' },
+            });
+            expect(result).toEqual([
+                {
+                    id: 2,
+                    name: 'Compresse sterile',
+                    category: ItemCategory.MALAISE,
+                    minThreshold: 10,
+                    isPerishable: true,
+                    quantity: 100,
+                    siteId: 1,
+                },
+                {
+                    id: 1,
+                    name: 'Pansement',
+                    category: ItemCategory.MALAISE,
+                    minThreshold: 5,
+                    isPerishable: false,
+                    quantity: 12,
+                    siteId: 1,
+                },
+            ]);
+        });
+    });
+
     /**
      * TEST DE LA FONCTION FIND ONE
      */
@@ -91,6 +158,83 @@ describe('ProductsService', () => {
 
             // On s'attend à ce que l'appel lève une exception HTTP 404
             await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('findBatchBySite', () => {
+        it('doit retourner le lot principal et la quantite totale du produit sur le site', async () => {
+            prismaMock.product.findUnique.mockResolvedValue({
+                id: 2,
+                name: 'Compresse sterile',
+                stocks: [
+                    {
+                        id: 9,
+                        quantity: 40,
+                        productBatchNumber: {
+                            number: 'REF2027',
+                            expiryDate: new Date('2025-12-31T00:00:00.000Z'),
+                            status: BatchStatus.VALID,
+                        },
+                    },
+                    {
+                        id: 7,
+                        quantity: 60,
+                        productBatchNumber: {
+                            number: 'REF2026',
+                            expiryDate: new Date('2024-12-31T00:00:00.000Z'),
+                            status: BatchStatus.VALID,
+                        },
+                    },
+                ],
+            } as any);
+
+            const result = await service.findBatchBySite(2, 1);
+
+            expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
+                where: { id: 2 },
+                select: {
+                    id: true,
+                    name: true,
+                    stocks: {
+                        where: { siteId: 1 },
+                        select: {
+                            id: true,
+                            quantity: true,
+                            productBatchNumber: {
+                                select: {
+                                    number: true,
+                                    expiryDate: true,
+                                    status: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+            expect(result).toEqual({
+                id: 2,
+                name: 'Compresse sterile',
+                number: 'REF2026',
+                expiryDate: new Date('2024-12-31T00:00:00.000Z'),
+                status: BatchStatus.VALID,
+                quantity: 100,
+            });
+        });
+
+        it("doit lever une NotFoundException si le produit n'existe pas", async () => {
+            prismaMock.product.findUnique.mockResolvedValue(null as any);
+
+            await expect(service.findBatchBySite(2, 1)).rejects.toThrow(NotFoundException);
+        });
+
+        it("doit lever une NotFoundException si aucun lot n'est trouve sur le site", async () => {
+            prismaMock.product.findUnique.mockResolvedValue({
+                id: 2,
+                name: 'Compresse sterile',
+                stocks: [{ id: 1, quantity: 100, productBatchNumber: null }],
+            } as any);
+
+            await expect(service.findBatchBySite(2, 1)).rejects.toThrow(NotFoundException);
         });
     });
 
