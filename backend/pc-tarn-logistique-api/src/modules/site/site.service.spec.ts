@@ -75,23 +75,18 @@ describe('SiteService', () => {
                     name: "Antenne d'Albi",
                     code: 'ALB',
                     type: SiteType.INDOOR,
-                    address: null,
-                    bagChecks: [],
                 },
                 {
                     id: 2,
                     name: 'Sac 814A',
                     code: '814A',
                     type: SiteType.OUTDOOR,
-                    address: null,
-                    bagChecks: [],
                 },
             ] as any);
 
             const result = await service.findAll();
 
             expect(prismaMock.site.findMany).toHaveBeenCalledWith({
-                include: { address: true, bagChecks: true },
                 orderBy: { id: 'asc' },
             });
             expect(result).toHaveLength(2);
@@ -152,7 +147,7 @@ describe('SiteService', () => {
                 include: { address: true, bagChecks: true },
             });
             expect(result.code).toEqual('ALB');
-            expect(result.address).toBeUndefined();
+            expect(result.address).toBeNull();
         });
 
         it("doit lever une NotFoundException si le site n'existe pas", async () => {
@@ -242,7 +237,7 @@ describe('SiteService', () => {
                 include: { address: true, bagChecks: true },
             });
             expect(result.id).toEqual(1);
-            expect(result.address).toBeUndefined();
+            expect(result.address).toBeNull();
         });
     });
 });
