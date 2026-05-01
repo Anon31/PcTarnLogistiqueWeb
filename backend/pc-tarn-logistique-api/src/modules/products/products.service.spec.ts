@@ -161,8 +161,8 @@ describe('ProductsService', () => {
         });
     });
 
-    describe('findBatchBySite', () => {
-        it('doit retourner le lot principal et la quantite totale du produit sur le site', async () => {
+    describe('findBatchesBySite', () => {
+        it('doit retourner tous les lots du produit avec leur quantite sur le site', async () => {
             prismaMock.product.findUnique.mockResolvedValue({
                 id: 2,
                 name: 'Compresse sterile',
@@ -171,6 +171,7 @@ describe('ProductsService', () => {
                         id: 9,
                         quantity: 40,
                         productBatchNumber: {
+                            id: 12,
                             number: 'REF2027',
                             expiryDate: new Date('2025-12-31T00:00:00.000Z'),
                             status: BatchStatus.VALID,
@@ -180,6 +181,17 @@ describe('ProductsService', () => {
                         id: 7,
                         quantity: 60,
                         productBatchNumber: {
+                            id: 11,
+                            number: 'REF2026',
+                            expiryDate: new Date('2024-12-31T00:00:00.000Z'),
+                            status: BatchStatus.VALID,
+                        },
+                    },
+                    {
+                        id: 8,
+                        quantity: 15,
+                        productBatchNumber: {
+                            id: 11,
                             number: 'REF2026',
                             expiryDate: new Date('2024-12-31T00:00:00.000Z'),
                             status: BatchStatus.VALID,
@@ -188,7 +200,7 @@ describe('ProductsService', () => {
                 ],
             } as any);
 
-            const result = await service.findBatchBySite(2, 1);
+            const result = await service.findBatchesBySite(2, 1);
 
             expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
                 where: { id: 2 },
@@ -202,6 +214,7 @@ describe('ProductsService', () => {
                             quantity: true,
                             productBatchNumber: {
                                 select: {
+                                    id: true,
                                     number: true,
                                     expiryDate: true,
                                     status: true,
@@ -211,30 +224,38 @@ describe('ProductsService', () => {
                     },
                 },
             });
-            expect(result).toEqual({
+            expect(result[0]).toEqual({
                 id: 2,
                 name: 'Compresse sterile',
                 number: 'REF2026',
                 expiryDate: new Date('2024-12-31T00:00:00.000Z'),
                 status: BatchStatus.VALID,
-                quantity: 100,
+                quantity: 75,
+            });
+            expect(result[1]).toEqual({
+                id: 2,
+                name: 'Compresse sterile',
+                number: 'REF2027',
+                expiryDate: new Date('2025-12-31T00:00:00.000Z'),
+                status: BatchStatus.VALID,
+                quantity: 40,
             });
         });
 
         it("doit lever une NotFoundException si le produit n'existe pas", async () => {
             prismaMock.product.findUnique.mockResolvedValue(null as any);
 
-            await expect(service.findBatchBySite(2, 1)).rejects.toThrow(NotFoundException);
+            await expect(service.findBatchesBySite(2, 1)).rejects.toThrow(NotFoundException);
         });
 
-        it("doit lever une NotFoundException si aucun lot n'est trouve sur le site", async () => {
+        it('doit retourner un tableau vide si aucun lot n est trouve sur le site', async () => {
             prismaMock.product.findUnique.mockResolvedValue({
                 id: 2,
                 name: 'Compresse sterile',
                 stocks: [{ id: 1, quantity: 100, productBatchNumber: null }],
             } as any);
 
-            await expect(service.findBatchBySite(2, 1)).rejects.toThrow(NotFoundException);
+            await expect(service.findBatchesBySite(2, 1)).resolves.toEqual([]);
         });
     });
 

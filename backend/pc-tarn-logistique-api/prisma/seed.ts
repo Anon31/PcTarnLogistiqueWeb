@@ -191,6 +191,18 @@ const productBatches: SeedBatch[] = [
         status: BatchStatus.VALID,
     },
     {
+        key: 'compresses-2027-09',
+        number: 'LOT-COMP-2027-09',
+        expiryDate: new Date('2027-09-30T00:00:00.000Z'),
+        status: BatchStatus.VALID,
+    },
+    {
+        key: 'compresses-2028-04',
+        number: 'LOT-COMP-2028-04',
+        expiryDate: new Date('2028-04-30T00:00:00.000Z'),
+        status: BatchStatus.VALID,
+    },
+    {
         key: 'serum-2027-06',
         number: 'LOT-SER-2027-06',
         expiryDate: new Date('2027-06-30T00:00:00.000Z'),
@@ -334,6 +346,23 @@ const initialStocks: SeedStock[] = allSites.flatMap((site) =>
         };
     }),
 );
+
+const additionalStocks: SeedStock[] = [
+    {
+        siteCode: 'CST',
+        productName: 'Compresses Stériles 10x10',
+        quantity: 45,
+        condition: Condition.BON,
+        batchKey: 'compresses-2027-09',
+    },
+    {
+        siteCode: 'CST',
+        productName: 'Compresses Stériles 10x10',
+        quantity: 35,
+        condition: Condition.BON,
+        batchKey: 'compresses-2028-04',
+    },
+];
 
 async function main() {
     console.log('Starting ADPC 81 seed...');
@@ -604,7 +633,7 @@ async function main() {
             if (adminUserId) {
                 console.log('Injecting stock in every site...');
 
-                for (const stockSeed of initialStocks) {
+                for (const stockSeed of [...initialStocks, ...additionalStocks]) {
                     const siteId = siteCatalog[stockSeed.siteCode].id;
                     const productId = productCatalog[stockSeed.productName].id;
                     const batchId = stockSeed.batchKey ? batchCatalog[stockSeed.batchKey].id : null;

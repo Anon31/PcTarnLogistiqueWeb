@@ -92,7 +92,7 @@ export class ProductsService {
         }));
     }
 
-    async findBatchBySite(productId: number, siteId: number) {
+    async findBatchesBySite(productId: number, siteId: number) {
         const product = await this.prisma.product.findUnique({
             where: { id: productId },
             select: {
@@ -105,6 +105,7 @@ export class ProductsService {
                         quantity: true,
                         productBatchNumber: {
                             select: {
+                                id: true,
                                 number: true,
                                 expiryDate: true,
                                 status: true,
@@ -119,32 +120,44 @@ export class ProductsService {
             throw new NotFoundException(`Produit #${productId} introuvable`);
         }
 
-        const quantity = product.stocks.reduce((sum, stock) => sum + stock.quantity, 0);
-        const selectedStock = [...product.stocks]
-            .filter((stock) => stock.productBatchNumber)
-            .sort((left, right) => {
-                const leftExpiry = left.productBatchNumber?.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-                const rightExpiry = right.productBatchNumber?.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+        const batches = new Map<number, ProductBatchSummaryEntity>();
 
-                if (leftExpiry !== rightExpiry) {
-                    return leftExpiry - rightExpiry;
-                }
+        for (const stock of product.stocks) {
+            const batch = stock.productBatchNumber;
+            if (!batch) {
+                continue;
+            }
 
-                return left.id - right.id;
-            })[0];
+            const currentBatch = batches.get(batch.id);
+            if (currentBatch) {
+                currentBatch.quantity += stock.quantity;
+                continue;
+            }
 
-        if (!selectedStock?.productBatchNumber) {
-            throw new NotFoundException(`Aucun lot trouve pour le produit #${productId} sur le site #${siteId}`);
+            batches.set(
+                batch.id,
+                new ProductBatchSummaryEntity({
+                    id: product.id,
+                    name: product.name,
+                    number: batch.number,
+                    expiryDate: batch.expiryDate,
+                    status: batch.status,
+                    quantity: stock.quantity,
+                }),
+            );
         }
 
-        return new ProductBatchSummaryEntity({
-            id: product.id,
-            name: product.name,
-            number: selectedStock.productBatchNumber.number,
-            expiryDate: selectedStock.productBatchNumber.expiryDate,
-            status: selectedStock.productBatchNumber.status,
-            quantity,
+        return [...batches.values()].sort((left, right) => {
+            const leftExpiry = left.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+            const rightExpiry = right.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+            if (leftExpiry !== rightExpiry) {
+                return leftExpiry - rightExpiry;
+            }
+
+            return left.number.localeCompare(right.number);
         });
+        
     }
 
     /**

@@ -46,10 +46,10 @@ export class ProductsController {
     }
 
     @Get(':productId/batchs')
-    @ApiOperation({ summary: "Recuperer le lot principal d'un produit pour un site donne" })
-    @ApiResponse({ type: ProductBatchSummaryEntity, status: 200 })
-    findBatchBySite(@Param('productId', ParseIntPipe) productId: number, @Query() query: QueryProductBatchDto) {
-        return this.productsService.findBatchBySite(productId, query.siteId);
+    @ApiOperation({ summary: "Recuperer tous les lots d'un produit pour un site donne" })
+    @ApiResponse({ type: [ProductBatchSummaryEntity], status: 200 })
+    findBatchesBySite(@Param('productId', ParseIntPipe) productId: number, @Query() query: QueryProductBatchDto) {
+        return this.productsService.findBatchesBySite(productId, query.siteId);
     }
 
     

@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BatchStatus } from '@prisma/client';
 
 export class ProductBatchSummaryEntity {
-    @ApiProperty({ description: 'Identifiant du produit', example: 2 })
+    @ApiProperty({ description: 'Identifiant du produit parent', example: 2 })
     id: number;
 
     @ApiProperty({ description: 'Nom du produit', example: 'Compresse sterile' })
     name: string;
 
-    @ApiProperty({ description: 'Numero du lot retenu pour le site', example: 'REF2026' })
+    @ApiProperty({ description: 'Numero du lot', example: 'REF2026' })
     number: string;
 
     @ApiProperty({
@@ -27,8 +27,8 @@ export class ProductBatchSummaryEntity {
     status: BatchStatus;
 
     @ApiProperty({
-        description: 'Quantite totale du produit sur le site selectionne, tous lots confondus',
-        example: 100,
+        description: 'Quantite disponible pour ce lot sur le site selectionne',
+        example: 40,
     })
     quantity: number;
 
