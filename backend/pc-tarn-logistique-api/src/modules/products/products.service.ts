@@ -147,6 +147,7 @@ export class ProductsService {
             );
         }
 
+        
         return [...batches.values()].sort((left, right) => {
             const leftExpiry = left.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
             const rightExpiry = right.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
@@ -157,7 +158,7 @@ export class ProductsService {
 
             return left.number.localeCompare(right.number);
         });
-        
+
     }
 
     /**
