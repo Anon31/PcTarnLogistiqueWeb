@@ -5,7 +5,9 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { RolesGuard } from '../../core/guards/roles.guard';
+import { QueryProductBatchDto } from './dto/query-product-batch.dto';
 import { ProductEntity } from './entities/product.entity';
+import { ProductBatchSummaryEntity } from './entities/product-batch-summary.entity';
 import { ProductsService } from './products.service';
 import { QueryProductDto } from './dto/query-product-dto';
 import { Role } from '@prisma/client';
@@ -41,6 +43,13 @@ export class ProductsController {
         }
 
         return this.productsService.findAll();
+    }
+
+    @Get(':productId/batchs')
+    @ApiOperation({ summary: "Recuperer tous les lots d'un produit pour un site donne" })
+    @ApiResponse({ type: [ProductBatchSummaryEntity], status: 200 })
+    findBatchesBySite(@Param('productId', ParseIntPipe) productId: number, @Query() query: QueryProductBatchDto) {
+        return this.productsService.findBatchesBySite(productId, query.siteId);
     }
 
     

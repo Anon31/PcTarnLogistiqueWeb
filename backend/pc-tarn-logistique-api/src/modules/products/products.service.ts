@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductBatchSummaryEntity } from './entities/product-batch-summary.entity';
 import { ProductEntity } from './entities/product.entity';
 
 @Injectable()
@@ -89,6 +90,75 @@ export class ProductsService {
             quantity: product.stocks.reduce((sum, stock) => sum + stock.quantity, 0),
             siteId,
         }));
+    }
+
+    async findBatchesBySite(productId: number, siteId: number) {
+        const product = await this.prisma.product.findUnique({
+            where: { id: productId },
+            select: {
+                id: true,
+                name: true,
+                stocks: {
+                    where: { siteId },
+                    select: {
+                        id: true,
+                        quantity: true,
+                        productBatchNumber: {
+                            select: {
+                                id: true,
+                                number: true,
+                                expiryDate: true,
+                                status: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        if (!product) {
+            throw new NotFoundException(`Produit #${productId} introuvable`);
+        }
+
+        const batches = new Map<number, ProductBatchSummaryEntity>();
+
+        for (const stock of product.stocks) {
+            const batch = stock.productBatchNumber;
+            if (!batch) {
+                continue;
+            }
+
+            const currentBatch = batches.get(batch.id);
+            if (currentBatch) {
+                currentBatch.quantity += stock.quantity;
+                continue;
+            }
+
+            batches.set(
+                batch.id,
+                new ProductBatchSummaryEntity({
+                    id: product.id,
+                    name: product.name,
+                    number: batch.number,
+                    expiryDate: batch.expiryDate,
+                    status: batch.status,
+                    quantity: stock.quantity,
+                }),
+            );
+        }
+
+        
+        return [...batches.values()].sort((left, right) => {
+            const leftExpiry = left.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+            const rightExpiry = right.expiryDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+            if (leftExpiry !== rightExpiry) {
+                return leftExpiry - rightExpiry;
+            }
+
+            return left.number.localeCompare(right.number);
+        });
+
     }
 
     /**
