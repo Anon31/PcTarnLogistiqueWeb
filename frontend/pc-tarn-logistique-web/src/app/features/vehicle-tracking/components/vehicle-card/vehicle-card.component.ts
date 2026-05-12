@@ -6,12 +6,12 @@ import { Card } from 'primeng/card';
 import { Tag } from 'primeng/tag';
 
 @Component({
-    selector: 'app-card-vehicle',
+    selector: 'app-vehicle-card',
     imports: [Card, Button, DecimalPipe, Tag],
-    templateUrl: './card-vehicle.component.html',
-    styleUrl: './card-vehicle.component.css',
+    templateUrl: './vehicle-card.component.html',
+    styleUrl: './vehicle-card.component.css',
 })
-export class CardVehicleComponent implements OnInit {
+export class VehicleCardComponent implements OnInit {
     vehicleService = inject(VehicleService);
 
     ngOnInit() {

@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { VehicleCardComponent } from './vehicle-card.component';
 
-import { VehicleTrackingHome } from './vehicle-tracking-home';
-
-describe('VehicleTrackingHome', () => {
-    let component: VehicleTrackingHome;
-    let fixture: ComponentFixture<VehicleTrackingHome>;
+describe('VehicleCardComponent', () => {
+    let component: VehicleCardComponent;
+    let fixture: ComponentFixture<VehicleCardComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [VehicleTrackingHome],
+            imports: [VehicleCardComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(VehicleTrackingHome);
+        fixture = TestBed.createComponent(VehicleCardComponent);
         component = fixture.componentInstance;
         await fixture.whenStable();
     });

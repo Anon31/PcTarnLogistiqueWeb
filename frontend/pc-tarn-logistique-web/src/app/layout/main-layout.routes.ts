@@ -132,8 +132,8 @@ export const mainLayoutRoutes: Routes = [
                         path: 'rechercher',
                         title: 'Rechercher, signaler ou créer un véhicule',
                         loadComponent: () =>
-                            import('../features/vehicle-tracking/pages/vehicle-tracking-home/vehicle-tracking-home').then(
-                                (m) => m.VehicleTrackingHome,
+                            import('../features/vehicle-tracking/pages/vehicle-tracking-home/vehicle-tracking-home.component').then(
+                                (m) => m.VehicleTrackingHomeComponent,
                             ),
                     },
                 ],
