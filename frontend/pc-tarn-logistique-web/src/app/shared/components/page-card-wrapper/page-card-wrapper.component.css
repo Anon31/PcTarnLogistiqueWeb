@@ -11,11 +11,6 @@
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* Padding du corps de la carte */
-:host ::ng-deep .card-wrapper-override .p-card-body {
-    padding: 3rem;
-}
-
 :host-context(.dark-mode) ::ng-deep .card-wrapper-override,
 :host-context([data-theme="dark"]) ::ng-deep .card-wrapper-override {
     /* Fond : Blanc à 5% d'opacité (Exactement comme .user-card) */

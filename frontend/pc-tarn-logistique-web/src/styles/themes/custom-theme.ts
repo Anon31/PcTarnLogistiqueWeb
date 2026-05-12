@@ -390,6 +390,25 @@ export const CustomTheme = definePreset(Material, {
                 },
             },
         },
+        card: {
+            colorScheme: {
+                light: {
+                    root: {
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '16px',
+                    },
+                },
+                dark: {
+                    root: {
+                        color: 'var(--primary-50)',
+                        background: 'color-mix(in srgb, var(--primary-800) 95%, transparent)',
+                        borderRadius: '16px',
+                        // Ombre forte pour détacher le popup du fond sombre
+                        shadow: '0 20px 40px -4px rgba(0, 0, 0, 0.6)',
+                    },
+                },
+            },
+        },
         toast: {
             root: {
                 width: '24rem',
