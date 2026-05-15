@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SiteController } from './site.controller';
 import { SiteService } from './site.service';
+import { StockMovementService } from '../stock-movement/stock-movement.service';
 
 /**
  * Module NestJS dedie a la gestion des sites.
@@ -9,6 +10,6 @@ import { SiteService } from './site.service';
  */
 @Module({
     controllers: [SiteController],
-    providers: [SiteService, PrismaService],
+    providers: [SiteService, PrismaService,StockMovementService],
 })
 export class SiteModule {}

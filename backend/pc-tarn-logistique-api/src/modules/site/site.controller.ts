@@ -1,5 +1,5 @@
 import { Role } from '@prisma/client';
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../core/decorators/roles.decorator';
 import { RolesGuard } from '../../core/guards/roles.guard';
@@ -9,6 +9,8 @@ import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { SiteEntity } from './entities/site.entity';
 import { SiteService } from './site.service';
+import { StockMovement } from '../stock-movement/entities/stock-movement.entity';
+import { StockMovementService } from '../stock-movement/stock-movement.service';
 
 /**
  * Controleur REST dedie a la gestion des sites logistiques.
@@ -19,7 +21,7 @@ import { SiteService } from './site.service';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('sites')
 export class SiteController {
-    constructor(private readonly siteService: SiteService) {}
+    constructor(private readonly siteService: SiteService,private readonly stockMovementsService: StockMovementService) {}
 
     /**
      * Cree un nouveau site.
@@ -42,6 +44,21 @@ export class SiteController {
     @ApiResponse({ type: [SiteEntity], status: 200 })
     findAll() {
         return this.siteService.findAll();
+    }
+    
+    /**
+     * Recupere les Movements de stock d'un site.
+     * @param id Identifiant du site
+     */
+    @Get('/:id/stock-movements')
+    @ApiOperation({ summary: 'Recupere les Movements de stock d\'un site dans l\'ordre anthéchronologique' })
+    @ApiResponse({ type: [StockMovement], status: 200 })
+    findAllStockMovements(@Param('id', ParseIntPipe) id: number,@Query('last') last:number) {
+
+        if(last == 1 ){
+            return this.stockMovementsService.findLastBySite(id)
+        }
+        return this.stockMovementsService.findAllBySite(id);
     }
 
     /**
@@ -102,4 +119,5 @@ export class SiteController {
     remove(@Param('id', ParseIntPipe) id: number) {
         return this.siteService.remove(id);
     }
+    
 }
