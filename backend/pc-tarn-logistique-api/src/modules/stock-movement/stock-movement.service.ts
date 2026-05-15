@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { isDefined } from 'class-validator';
 
 const stockMovementRelations = {
   user: true,
@@ -15,15 +16,41 @@ const stockMovementRelations = {
 @Injectable()
 export class StockMovementService {
   constructor(private readonly prisma: PrismaService) {}
- create(createStockMovementDto: CreateStockMovementDto) {
+async create(createStockMovementDto: CreateStockMovementDto) {
+  return this.prisma.$transaction(async (tx) => {
 
-    const newStockMovement = this.prisma.stockMovement.create(
-      { 
-        data: createStockMovementDto
-      }
-    )
-    return newStockMovement
-      }
+    const newStockMovement = await tx.stockMovement.create({
+      data: createStockMovementDto,
+    });
+    const condition = {
+            siteId:newStockMovement.siteId,
+            productId:newStockMovement.productId,
+            ProductBatchNumberId:newStockMovement.productBatchNumberId
+          }
+
+    switch(newStockMovement.type){
+      case 'INPUT':
+        await tx.stock.updateMany({
+          where:condition ,
+          data:{
+            quantity: {
+              increment: newStockMovement.quantity,
+            },
+          }
+        });
+      case 'OUTPUT':
+        await tx.stock.updateMany({
+          where:condition,
+          data:{
+            quantity: {
+              decrement: newStockMovement.quantity,
+            },
+          }
+        });
+    }
+    return newStockMovement;
+  });
+}
 
   findAll() {
     const stockMovements = this.prisma.stockMovement.findMany({
