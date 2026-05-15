@@ -1,11 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, TypeMovement } from '@prisma/client';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { isDefined } from 'class-validator';
 
 const stockMovementRelations = {
-  user: true,
   productBatchNumber: true,
   site: true,
   product: true,
@@ -19,6 +18,17 @@ export class StockMovementService {
 async create(createStockMovementDto: CreateStockMovementDto) {
   return this.prisma.$transaction(async (tx) => {
 
+    if (isDefined(createStockMovementDto.createdAt)) {
+      const existingMovement = await tx.stockMovement.findFirst({
+        where: { createdAt: createStockMovementDto.createdAt },
+        select: { id: true },
+      });
+
+      if (existingMovement) {
+        throw new BadRequestException('createdAt d’un mouvement de stock doit etre unique');
+      }
+    }
+
     const newStockMovement = await tx.stockMovement.create({
       data: createStockMovementDto,
     });
@@ -28,34 +38,44 @@ async create(createStockMovementDto: CreateStockMovementDto) {
             ProductBatchNumberId:newStockMovement.productBatchNumberId
           }
 
-    switch(newStockMovement.type){
-      case 'INPUT':
-        await tx.stock.updateMany({
-          where:condition ,
-          data:{
-            quantity: {
-              increment: newStockMovement.quantity,
-            },
-          }
-        });
-      case 'OUTPUT':
-        await tx.stock.updateMany({
-          where:condition,
-          data:{
-            quantity: {
-              decrement: newStockMovement.quantity,
-            },
-          }
-        });
-    }
-    return newStockMovement;
+  switch (newStockMovement.type) {
+    case TypeMovement.INPUT:
+      await tx.stock.updateMany({
+        where: condition,
+        data: {
+          quantity: {
+            increment: newStockMovement.quantity,
+          },
+        },
+      });
+      break;
+
+    case TypeMovement.OUTPUT:
+      await tx.stock.updateMany({
+        where: condition,
+        data: {
+          quantity: {
+            decrement: newStockMovement.quantity,
+          },
+        },
+      });
+      break;
+  }
+    const stock = tx.stock.findFirst({
+      where:condition
+    })
+    return {stock,newStockMovement};
   });
 }
 
   findAll() {
     const stockMovements = this.prisma.stockMovement.findMany({
-      include: stockMovementRelations,
-      orderBy: { id: 'asc' },
+      orderBy: { createdAt: 'desc' },
+      include:{
+          productBatchNumber: true,
+          site: true,
+          product: true,
+      }
     });
     return stockMovements;
   }

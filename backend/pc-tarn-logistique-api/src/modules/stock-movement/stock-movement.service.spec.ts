@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeMovement } from '@prisma/client';
+import { BadRequestException } from '@nestjs/common';
 import { MockPrismaService, providePrismaMock } from '../../mocks/prisma-mock';
 import { PrismaService } from '../../prisma/prisma.service';
 import { StockMovementService } from './stock-movement.service';
@@ -9,7 +10,6 @@ describe('StockMovementService', () => {
     let prismaMock: MockPrismaService;
 
     const stockMovementRelations = {
-        user: true,
         productBatchNumber: true,
         site: true,
         product: true,
@@ -40,22 +40,68 @@ describe('StockMovementService', () => {
                 quantity: 10,
             };
 
+            prismaMock.$transaction.mockImplementation(async (callback: any) => callback(prismaMock));
+            prismaMock.stock.updateMany.mockResolvedValue({ count: 1 } as any);
+            prismaMock.stockMovement.findFirst.mockResolvedValue(null as any);
             prismaMock.stockMovement.create.mockResolvedValue({
                 id: 1,
                 ...dto,
-                user: { id: 1, email: 'admin@test.com' },
-                site: { id: 1, code: 'ALB' },
-                product: { id: 1, name: 'Compresses Steriles 10x10' },
-                productBatchNumber: { id: 1, number: 'LOT-COMP-2027-01' },
+            } as any);
+            prismaMock.stock.findFirst.mockResolvedValue({
+                id: 1,
+                siteId: 1,
+                productId: 1,
+                ProductBatchNumberId: 1,
+                quantity: 999,
             } as any);
 
             const result = await service.create(dto as any);
 
+            expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+            expect(prismaMock.stockMovement.create).toHaveBeenCalledTimes(1);
             expect(prismaMock.stockMovement.create).toHaveBeenCalledWith({
                 data: dto,
             });
-            expect(result.id).toEqual(1);
-            expect(result.site.code).toEqual('ALB');
+            expect(result.newStockMovement.id).toEqual(1);
+
+            const expectedWhere = {
+                siteId: 1,
+                productId: 1,
+                ProductBatchNumberId: 1,
+            };
+
+            expect(prismaMock.stock.updateMany).toHaveBeenCalledTimes(1);
+            expect(prismaMock.stock.updateMany).toHaveBeenCalledWith({
+                where: expectedWhere,
+                data: { quantity: { increment: 10 } },
+            });
+            expect(prismaMock.stock.findFirst).toHaveBeenCalledWith({ where: expectedWhere });
+        });
+    });
+
+    describe("Should be unique", () => {
+        it('doit lever une BadRequestException si un mouvement existe deja avec le meme createdAt', async () => {
+            const createdAt = new Date('2026-05-15T10:00:00.000Z');
+            const dto = {
+                userId: 1,
+                siteId: 1,
+                productId: 1,
+                productBatchNumberId: 1,
+                type: TypeMovement.INPUT,
+                createdAt,
+                quantity: 10,
+            };
+
+            prismaMock.$transaction.mockImplementation(async (callback: any) => callback(prismaMock));
+            prismaMock.stockMovement.findFirst.mockResolvedValue({ id: 42 } as any);
+
+            await expect(service.create(dto as any)).rejects.toBeInstanceOf(BadRequestException);
+            expect(prismaMock.stockMovement.create).not.toHaveBeenCalled();
+            expect(prismaMock.stock.updateMany).not.toHaveBeenCalled();
+            expect(prismaMock.stockMovement.findFirst).toHaveBeenCalledWith({
+                where: { createdAt },
+                select: { id: true },
+            });
         });
     });
 
@@ -67,7 +113,7 @@ describe('StockMovementService', () => {
 
             expect(prismaMock.stockMovement.findMany).toHaveBeenCalledWith({
                 include: stockMovementRelations,
-                orderBy: { id: 'asc' },
+                orderBy: { createdAt: 'desc' },
             });
         });
     });
