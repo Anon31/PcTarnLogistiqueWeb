@@ -79,7 +79,7 @@ describe('StockMovementService', () => {
         });
     });
 
-    describe("Should be unique", () => {
+    describe('Should be unique', () => {
         it('doit lever une BadRequestException si un mouvement existe deja avec le meme createdAt', async () => {
             const createdAt = new Date('2026-05-15T10:00:00.000Z');
             const dto = {
