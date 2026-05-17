@@ -18,19 +18,9 @@ export class StockMovementService {
 async create(createStockMovementDto: CreateStockMovementDto) {
   return this.prisma.$transaction(async (tx) => {
 
-    if (isDefined(createStockMovementDto.createdAt)) {
-      const existingMovement = await tx.stockMovement.findFirst({
-        where: { createdAt: createStockMovementDto.createdAt },
-        select: { id: true },
-      });
-
-      if (existingMovement) {
-        throw new BadRequestException('createdAt d’un mouvement de stock doit etre unique');
-      }
-    }
-
     const newStockMovement = await tx.stockMovement.create({
       data: createStockMovementDto,
+
     });
     const condition = {
             siteId:newStockMovement.siteId,
@@ -51,20 +41,38 @@ async create(createStockMovementDto: CreateStockMovementDto) {
       break;
 
     case TypeMovement.OUTPUT:
-      await tx.stock.updateMany({
-        where: condition,
-        data: {
-          quantity: {
-            decrement: newStockMovement.quantity,
-          },
-        },
-      });
+        let stockQuantity = -1
+
+        await tx.stock.findFirst({
+          where:condition
+        }).then(data => {
+          if (data) {
+            stockQuantity = isDefined(data.quantity)? data.quantity : -1
+            
+          }
+        })
+
+        if(stockQuantity && stockQuantity > 0){
+          await tx.stock.updateMany({
+            where: condition,
+            data: {
+              quantity: {
+                decrement: newStockMovement.quantity,
+              },
+            },
+          });
+       }else{
+        return new BadRequestException('le stock est déjà vide')
+       }
+
+
       break;
   }
-    const stock = tx.stock.findFirst({
-      where:condition
-    })
-    return {stock,newStockMovement};
+  let stock = tx.stock.findFirst({
+    where:condition
+    
+  })
+    return stock
   });
 }
 
