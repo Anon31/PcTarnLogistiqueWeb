@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'vehicleStatusSeverity', standalone: true })
+@Pipe({ name: 'vehicleStatusSeverity' })
 export class VehicleStatusSeverityPipe implements PipeTransform {
     transform(value: string | undefined): 'success' | 'warn' | 'danger' | 'info' | 'secondary' {
         switch (value) {

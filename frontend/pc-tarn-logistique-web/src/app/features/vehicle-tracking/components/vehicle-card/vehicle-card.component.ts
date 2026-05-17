@@ -1,19 +1,16 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
-import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
-import { Tag } from 'primeng/tag';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-
-import { VehicleService } from '../../services/vehicle.service';
-import { IVehicleDto } from '../../models/vehicle.model';
 import { VehicleFormChecklistComponent } from '../vehicle-form-checklist/vehicle-form-checklist.component';
-
-// Import de mes nouveaux Pipes de performance
 import { VehicleStatusSeverityPipe } from '../../pipes/vehicle-status-severity.pipe';
 import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic.pipe';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { VehicleService } from '../../services/vehicle.service';
+import { IVehicleDto } from '../../models/vehicle.model';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { Button } from 'primeng/button';
+import { Subscription } from 'rxjs';
+import { Card } from 'primeng/card';
+import { Tag } from 'primeng/tag';
 
 @Component({
     selector: 'app-vehicle-card',
