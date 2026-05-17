@@ -1,11 +1,10 @@
-<form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+<form [formGroup]="checklistForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
-        <label class="text-sm font-semibold">Ancien mot de passe</label>
-        <p-password formControlName="currentPassword" [toggleMask]="true" class="w-full" inputStyleClass="w-full" [feedback]="false"></p-password>
+        <label for="mileage" class="text-sm font-semibold">Kilométrage</label>
+        <p-input-number formControlName="mileage" class="w-full" inputStyleClass="w-full"></p-input-number>
     </div>
     <div class="flex flex-col gap-2">
-        <label class="text-sm font-semibold">Nouveau mot de passe</label>
-        <p-password formControlName="newPassword" [toggleMask]="true" class="w-full" inputStyleClass="w-full"></p-password>
+    <!-- Continuer la checklist -->
     </div>
     <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 mt-4">
         <div class="w-full">
@@ -16,12 +15,12 @@
                 [rounded]="true"
                 size="small"
                 styleClass="w-full"
-                (click)="onCancel()">
+                (onClick)="onCancel()">
             </p-button>
         </div>
         <div class="w-full">
             <p-button
-                label="Mettre à jour"
+                label="Valider"
                 icon="pi pi-check"
                 [rounded]="true"
                 [raised]="true"

@@ -5,14 +5,14 @@ import { Password } from 'primeng/password';
 import { Button } from 'primeng/button';
 
 @Component({
-    selector: 'app-form-password',
+    selector: 'app-user-form-password',
     standalone: true,
     imports: [ReactiveFormsModule, Button, Password],
-    templateUrl: './form-password.component.html',
+    templateUrl: './user-form-password.component.html',
 })
-export class FormPasswordComponent {
-    private fb = inject(NonNullableFormBuilder);
-    private ref = inject(DynamicDialogRef);
+export class UserFormPasswordComponent {
+    private readonly fb = inject(NonNullableFormBuilder);
+    private readonly ref = inject(DynamicDialogRef);
 
     passwordForm = this.fb.group({
         currentPassword: ['', Validators.required],

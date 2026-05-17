@@ -1,6 +1,6 @@
 // L'import du VRAI composant enfant qu'on veut neutraliser
-import { TableUserComponent } from '../../components/table-user/table-user.component';
-import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
+import { UserTableComponent } from '../../components/user-table/user-table.component';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic.pipe';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -33,7 +33,7 @@ describe('UserListComponent', () => {
             ],
         })
             // Stratégie "Mock in-place" : 100% fiable
-            .overrideComponent(TableUserComponent, {
+            .overrideComponent(UserTableComponent, {
                 set: {
                     template: '<div>Mock Table User Component</div>',
                     providers: [],

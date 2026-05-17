@@ -2,7 +2,7 @@ import { minimumAgeValidator } from '../../../../shared/validators/minimum-age-v
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EnumsDataService } from '../../../../core/enums/services/enums-data.service';
 import { Component, inject, computed, effect, input, output } from '@angular/core';
-import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic.pipe';
 import { IUserDto, IUserPayload } from '../../models/user.model';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
@@ -14,16 +14,16 @@ import { Button } from 'primeng/button';
 export type UserFormMode = 'create' | 'edit-admin' | 'edit-self';
 
 @Component({
-    selector: 'app-form-user',
+    selector: 'app-user-form',
     standalone: true,
     imports: [ReactiveFormsModule, Button, Divider, Password, InputText, Select, NgClass],
     providers: [EnumsDynamicPipe],
-    templateUrl: './form-user.component.html',
+    templateUrl: './user-form.component.html',
 })
-export class FormUserComponent {
-    private fb = inject(NonNullableFormBuilder);
-    private enumsPipe = inject(EnumsDynamicPipe);
-    private enumsData = inject(EnumsDataService);
+export class UserFormComponent {
+    private readonly fb = inject(NonNullableFormBuilder);
+    private readonly enumsPipe = inject(EnumsDynamicPipe);
+    private readonly enumsData = inject(EnumsDataService);
 
     // 🚀 SIGNALS INPUTS
     mode = input<UserFormMode>('create');

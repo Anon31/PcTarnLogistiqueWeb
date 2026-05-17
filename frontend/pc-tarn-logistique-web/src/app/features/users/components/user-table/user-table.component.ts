@@ -1,7 +1,7 @@
 import { EnumsDataService } from '../../../../core/enums/services/enums-data.service';
 import { PermissionService } from '../../../../core/services/permission.service';
 import { Component, DestroyRef, inject, OnInit, computed } from '@angular/core';
-import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic.pipe';
 import { IUserDto, IUserPayload } from '../../models/user.model';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { UserService } from '../../services/user.service';
@@ -17,7 +17,7 @@ import { Select } from 'primeng/select';
 import { Tag } from 'primeng/tag';
 
 @Component({
-    selector: 'app-table-user',
+    selector: 'app-user-table',
     imports: [
         Tag,
         TableModule,
@@ -30,10 +30,10 @@ import { Tag } from 'primeng/tag';
         RouterLink,
     ],
     providers: [EnumsDynamicPipe],
-    templateUrl: './table-user.component.html',
-    styleUrl: './table-user.component.css',
+    templateUrl: './user-table.component.html',
+    styleUrl: './user-table.component.css',
 })
-export class TableUserComponent implements OnInit {
+export class UserTableComponent implements OnInit {
     userService = inject(UserService);
     toasterService = inject(ToasterService);
     confirmationService = inject(ConfirmationService);

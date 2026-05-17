@@ -5,12 +5,12 @@
         subtitle="Mettez à jour les informations de votre utilisateur."
         [hideDivider]="false">
         @if (loadedUser()) {
-            <app-form-user
+            <app-user-form
                 mode="edit-admin"
                 [userData]="loadedUser()"
                 (save)="onUpdate($event)"
                 (cancelClick)="onCancel()">
-            </app-form-user>
+            </app-user-form>
         }
     </app-page-card-wrapper>
 </section>

@@ -1,16 +1,17 @@
-import { VehicleChecklistComponent } from './vehicle-checklist.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('VehicleChecklistComponent', () => {
-    let component: VehicleChecklistComponent;
-    let fixture: ComponentFixture<VehicleChecklistComponent>;
+import { UserFormComponent } from './user-form.component';
+
+describe('UserFormComponent', () => {
+    let component: UserFormComponent;
+    let fixture: ComponentFixture<UserFormComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [VehicleChecklistComponent],
+            imports: [UserFormComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(VehicleChecklistComponent);
+        fixture = TestBed.createComponent(UserFormComponent);
         component = fixture.componentInstance;
         await fixture.whenStable();
     });

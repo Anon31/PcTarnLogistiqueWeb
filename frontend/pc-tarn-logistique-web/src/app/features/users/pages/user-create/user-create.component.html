@@ -4,10 +4,10 @@
         icon="pi pi-user-plus"
         subtitle="Créer vos utilisateurs"
         [hideDivider]="false">
-        <app-form-user
+        <app-user-form
             mode="create"
             (save)="onCreate($event)"
             (cancelClick)="onCancel()">
-        </app-form-user>
+        </app-user-form>
     </app-page-card-wrapper>
 </section>

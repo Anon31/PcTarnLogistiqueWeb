@@ -1,12 +1,12 @@
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormPasswordComponent } from './form-password.component';
+import { UserFormPasswordComponent } from './user-form-password.component';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-describe('FormPasswordComponent', () => {
-    let component: FormPasswordComponent;
-    let fixture: ComponentFixture<FormPasswordComponent>;
+describe('UserFormPasswordComponent', () => {
+    let component: UserFormPasswordComponent;
+    let fixture: ComponentFixture<UserFormPasswordComponent>;
     let mockDialogRef: any;
 
     beforeEach(async () => {
@@ -16,14 +16,14 @@ describe('FormPasswordComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [FormPasswordComponent],
+            imports: [UserFormPasswordComponent],
             providers: [
                 { provide: DynamicDialogRef, useValue: mockDialogRef },
                 provideNoopAnimations(), // Important pour les composants PrimeNG (Password, etc.)
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(FormPasswordComponent);
+        fixture = TestBed.createComponent(UserFormPasswordComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

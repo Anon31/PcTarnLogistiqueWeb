@@ -12,12 +12,17 @@
                                 {{ vehicle.name }}
                             </h3>
                             <p class="text-sm text-surface-500 mt-0.5">
-                                {{ vehicle.licensePlate }} &bull; {{ vehicle.type || 'Type non défini' }}
+                                {{ vehicle.licensePlate }} &bull; {{ vehicle.type | enumsDynamic:'vehicleTypes' }}
                             </p>
                         </div>
                     </div>
                     <div>
-                        <p-tag [value]="getStatusLabel(vehicle.status)" [severity]="getSeverity(vehicle.status)" [rounded]="true" />
+                        <!-- J'utilise maintenant mes PIPES performants -->
+                        <p-tag
+                            [value]="vehicle.status | enumsDynamic:'vehicleStatuses'"
+                            [severity]="vehicle.status | vehicleStatusSeverity"
+                            [rounded]="true"
+                        />
                     </div>
                 </div>
             </ng-template>
@@ -42,6 +47,7 @@
                     <i class="pi pi-calendar text-surface-400 text-lg"></i>
                     <span>Prochain contrôle technique :</span>
                     <span class="font-medium ml-1">
+                        {{ vehicle.nextTechnicalCheck | date:'dd/MM/yyyy' }}
                     </span>
                 </div>
             </ng-template>
@@ -54,7 +60,8 @@
                             variant="outlined"
                             [rounded]="true"
                             size="small"
-                            styleClass="w-full">
+                            styleClass="w-full"
+                            (onClick)="navigateToDetail(vehicle.id)">
                         </p-button>
                     </div>
                     <div class="w-full">
@@ -64,11 +71,12 @@
                             [rounded]="true"
                             [raised]="true"
                             size="small"
-                            styleClass="w-full">
+                            styleClass="w-full"
+                            (onClick)="openChecklistDialog(vehicle)">
                         </p-button>
                     </div>
                 </div>
             </ng-template>
         </p-card>
-        }
+    }
 </div>

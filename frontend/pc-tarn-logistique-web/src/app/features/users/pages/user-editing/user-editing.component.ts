@@ -1,5 +1,5 @@
 import { PageCardWrapperComponent } from '../../../../shared/components/page-card-wrapper/page-card-wrapper.component';
-import { FormUserComponent } from '../../components/form-user/form-user.component';
+import { UserFormComponent } from '../../components/user-form/user-form.component';
 import { IUserDto, IUserPayload } from '../../models/user.model';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { Component, inject, input, effect, signal } from '@angular/core';
@@ -9,14 +9,14 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-user-editing',
     standalone: true,
-    imports: [PageCardWrapperComponent, FormUserComponent],
+    imports: [PageCardWrapperComponent, UserFormComponent],
     templateUrl: './user-editing.component.html',
     styleUrl: './user-editing.component.css',
 })
 export class UserEditingComponent {
-    private userService = inject(UserService);
-    private toaster = inject(ToasterService);
-    private router = inject(Router);
+    private readonly userService = inject(UserService);
+    private readonly toaster = inject(ToasterService);
+    private readonly router = inject(Router);
 
     // 🚀 L'ID est récupéré depuis l'URL /utilisateurs/compte/:id
     id = input<string>();

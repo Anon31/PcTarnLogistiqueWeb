@@ -1,16 +1,14 @@
 import { EnumReferenceData } from '../../../core/enums/models/enums.models';
 
-/**
- * Ce que l'API nous renvoie après un get user réussi.
- */
 export interface IVehicleDto {
     id: number;
     type: string;
     name: string;
     licensePlate: string;
     mileage: number;
-    status: EnumReferenceData['vehicleStatuses'][string];
+    status: EnumReferenceData['vehicleStatuses'][string]; // Pointe vers les valeurs dynamiques chargées par le backend
     siteId: number;
+    nextTechnicalCheck: string; // ISO Date string
 }
 
 /**

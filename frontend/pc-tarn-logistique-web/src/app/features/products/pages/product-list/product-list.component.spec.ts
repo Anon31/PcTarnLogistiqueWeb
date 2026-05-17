@@ -1,6 +1,6 @@
 // L'import du VRAI composant enfant qu'on veut neutraliser
 import { TableProductComponent } from '../../components/table-product/table-product.component';
-import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic-pipe';
+import { EnumsDynamicPipe } from '../../../../shared/pipes/enums-dynamic.pipe';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

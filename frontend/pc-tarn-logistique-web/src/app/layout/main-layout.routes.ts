@@ -136,6 +136,14 @@ export const mainLayoutRoutes: Routes = [
                                 (m) => m.VehicleTrackingHomeComponent,
                             ),
                     },
+                    {
+                        path: ':id',
+                        title: 'Information du véhicule',
+                        loadComponent: () =>
+                            import('../features/vehicle-tracking/pages/vehicle-information/vehicle-information.component').then(
+                                (m) => m.VehicleInformationComponent,
+                            ),
+                    },
                 ],
             },
             {

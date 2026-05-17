@@ -1,7 +1,7 @@
 import { PageCardWrapperComponent } from '../../../../shared/components/page-card-wrapper/page-card-wrapper.component';
-import { FormPasswordComponent } from '../../components/form-password/form-password.component';
+import { UserFormPasswordComponent } from '../../components/user-form-password/user-form-password.component';
 import { IUserDto, IUserPayload, IUserUpdatePasswordPayload } from '../../models/user.model';
-import { FormUserComponent } from '../../components/form-user/form-user.component';
+import { UserFormComponent } from '../../components/user-form/user-form.component';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -12,15 +12,15 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-user-account',
     providers: [DialogService],
-    imports: [PageCardWrapperComponent, FormUserComponent],
+    imports: [PageCardWrapperComponent, UserFormComponent],
     templateUrl: './user-account.component.html',
 })
 export class UserAccountComponent {
-    private authService = inject(AuthService);
-    private userService = inject(UserService);
-    private router = inject(Router);
-    private toaster = inject(ToasterService);
-    private dialogService = inject(DialogService);
+    private readonly authService = inject(AuthService);
+    private readonly userService = inject(UserService);
+    private readonly router = inject(Router);
+    private readonly toaster = inject(ToasterService);
+    private readonly dialogService = inject(DialogService);
     private dialogRef!: DynamicDialogRef<any> | null;
 
     fullUserProfile = signal<IUserDto | null>(null);
@@ -56,7 +56,7 @@ export class UserAccountComponent {
      * Ouverture de la modale dynamique
      */
     openPasswordDialog() {
-        this.dialogRef = this.dialogService.open(FormPasswordComponent, {
+        this.dialogRef = this.dialogService.open(UserFormPasswordComponent, {
             header: 'Modification du mot de passe',
             width: '25rem',
             modal: true,
@@ -79,7 +79,7 @@ export class UserAccountComponent {
     }
 
     onCancel() {
-        this.router.navigate(['/tableau-de-bord']);
+        this.router.navigate(['/tableau-de-bord']).then();
     }
 
     /**

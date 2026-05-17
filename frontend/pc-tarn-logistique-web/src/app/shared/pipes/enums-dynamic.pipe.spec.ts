@@ -1,4 +1,4 @@
-import { EnumsDynamicPipe } from './enums-dynamic-pipe';
+import { EnumsDynamicPipe } from './enums-dynamic.pipe';
 
 describe('EnumsDynamicPipe', () => {
     it('create an instance', () => {

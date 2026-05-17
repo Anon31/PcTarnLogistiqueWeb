@@ -2,18 +2,18 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormLoginComponent } from './form-login.component';
+import { LoginFormComponent } from './login-form.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
-describe('FormLoginComponent', () => {
-    let component: FormLoginComponent;
-    let fixture: ComponentFixture<FormLoginComponent>;
+describe('LoginFormComponent', () => {
+    let component: LoginFormComponent;
+    let fixture: ComponentFixture<LoginFormComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [FormLoginComponent],
+            imports: [LoginFormComponent],
             providers: [
                 AuthService,
                 ToasterService,
@@ -27,14 +27,14 @@ describe('FormLoginComponent', () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(FormLoginComponent);
+        fixture = TestBed.createComponent(LoginFormComponent);
         component = fixture.componentInstance;
         // Mieux que whenStable() pour initialiser le DOM et le ngOnInit
         fixture.detectChanges();
     });
 
     /**
-     * Ce test vérifie que le composant FormLoginComponent est créé avec succès.
+     * Ce test vérifie que le composant LoginFormComponent est créé avec succès.
      */
     it('should create', () => {
         expect(component).toBeTruthy();

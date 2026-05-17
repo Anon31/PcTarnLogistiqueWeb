@@ -1,13 +1,13 @@
 <section>
     <app-page-card-wrapper title="Mon compte" subtitle="Gérez vos informations." [hideDivider]="false">
         @if (fullUserProfile()) {
-            <app-form-user
+            <app-user-form
                 mode="edit-self"
                 [userData]="fullUserProfile()"
                 (save)="onUpdateProfile($event)"
                 (cancelClick)="onCancel()"
                 (requestPasswordChange)="openPasswordDialog()">
-            </app-form-user>
+            </app-user-form>
         }
     </app-page-card-wrapper>
 </section>

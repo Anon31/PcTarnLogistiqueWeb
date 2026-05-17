@@ -9,17 +9,17 @@ import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 
 @Component({
-    selector: 'app-form-login',
+    selector: 'app-login-form',
     standalone: true,
     imports: [ReactiveFormsModule, Button, FloatLabel, InputText, StyleClass],
-    templateUrl: './form-login.component.html',
-    styleUrl: './form-login.component.css',
+    templateUrl: './login-form.component.html',
+    styleUrl: './login-form.component.css',
 })
-export class FormLoginComponent {
-    private fb = inject(NonNullableFormBuilder);
-    private authService = inject(AuthService);
-    private toastService = inject(ToasterService);
-    private router = inject(Router);
+export class LoginFormComponent {
+    private readonly fb = inject(NonNullableFormBuilder);
+    private readonly authService = inject(AuthService);
+    private readonly toastService = inject(ToasterService);
+    private readonly router = inject(Router);
 
     // Initialisation directe du formulaire (Typage strict garanti)
     loginForm = this.fb.group({

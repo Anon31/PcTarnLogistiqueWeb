@@ -2,15 +2,15 @@ import { ToasterService } from '../../../../core/services/toaster.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { TableUserComponent } from './table-user.component';
+import { UserTableComponent } from './user-table.component';
 
-describe('TableUserComponent', () => {
-    let component: TableUserComponent;
-    let fixture: ComponentFixture<TableUserComponent>;
+describe('UserTableComponent', () => {
+    let component: UserTableComponent;
+    let fixture: ComponentFixture<UserTableComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TableUserComponent],
+            imports: [UserTableComponent],
             providers: [
                 ToasterService,
                 ConfirmationService,
@@ -19,7 +19,7 @@ describe('TableUserComponent', () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(TableUserComponent);
+        fixture = TestBed.createComponent(UserTableComponent);
         component = fixture.componentInstance;
         await fixture.whenStable();
     });

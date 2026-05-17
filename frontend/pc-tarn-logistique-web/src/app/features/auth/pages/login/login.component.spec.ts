@@ -14,7 +14,7 @@ describe('LoginComponent', () => {
             providers: [MessageService],
             // NO_ERRORS_SCHEMA est parfait ici :
             // Il permet de tester que la page "Conteneur" s'affiche bien sans avoir
-            // à gérer les dépendances complexes de l'enfant <app-form-login> (AuthService, Http, etc.)
+            // à gérer les dépendances complexes de l'enfant <app-login-form> (AuthService, Http, etc.)
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
 
@@ -42,9 +42,9 @@ describe('LoginComponent', () => {
         expect(p?.textContent).toContain("Connectez-vous pour accéder à l'application");
     });
 
-    it('should render the form-login child component', () => {
+    it('should render the login-form child component', () => {
         const compiled = fixture.nativeElement as HTMLElement;
         // On vérifie juste que la balise est présente dans le HTML
-        expect(compiled.querySelector('app-form-login')).toBeTruthy();
+        expect(compiled.querySelector('app-login-form')).toBeTruthy();
     });
 });

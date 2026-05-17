@@ -1,5 +1,5 @@
 import { PageCardWrapperComponent } from '../../../../shared/components/page-card-wrapper/page-card-wrapper.component';
-import { FormUserComponent } from '../../components/form-user/form-user.component';
+import { UserFormComponent } from '../../components/user-form/user-form.component';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { UserService } from '../../services/user.service';
 import { IUserPayload } from '../../models/user.model';
@@ -9,14 +9,14 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-user-create',
     standalone: true,
-    imports: [PageCardWrapperComponent, FormUserComponent],
+    imports: [PageCardWrapperComponent, UserFormComponent],
     templateUrl: './user-create.component.html',
     styleUrl: './user-create.component.css',
 })
 export class UserCreateComponent {
-    private userService = inject(UserService);
-    private toaster = inject(ToasterService);
-    private router = inject(Router);
+    private readonly userService = inject(UserService);
+    private readonly toaster = inject(ToasterService);
+    private readonly router = inject(Router);
 
     onCreate(payload: IUserPayload) {
         this.userService.createUser(payload).subscribe({
