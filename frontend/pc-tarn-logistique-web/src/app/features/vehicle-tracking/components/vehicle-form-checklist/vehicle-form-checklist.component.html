@@ -1,33 +1,74 @@
-<form [formGroup]="checklistForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-    <div class="flex flex-col gap-2">
-        <label for="mileage" class="text-sm font-semibold">Kilométrage</label>
-        <p-input-number formControlName="mileage" class="w-full" inputStyleClass="w-full"></p-input-number>
-    </div>
-    <div class="flex flex-col gap-2">
-    <!-- Continuer la checklist -->
-    </div>
-    <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 mt-4">
-        <div class="w-full">
-            <p-button
-                label="Annuler"
-                icon="pi pi-times-circle"
-                variant="outlined"
-                [rounded]="true"
-                size="small"
-                styleClass="w-full"
-                (onClick)="onCancel()">
-            </p-button>
+<div class="mb-4">
+    <p class="text-surface-500 text-sm mb-4">Complétez la checklist de vérification du véhicule</p>
+</div>
+
+<form [formGroup]="checklistForm" (ngSubmit)="onSubmit()" class="flex flex-col h-full">
+
+    <div class="flex flex-col gap-3 overflow-y-auto pr-2 max-h-[60vh]">
+
+        <div class="flex flex-col gap-1 p-3 border border-surface-200 rounded-lg bg-surface-50 mb-2">
+            <label for="mileage" class="text-sm font-medium text-surface-900">Relevé Kilométrique (actuel: {{ vehicle?.mileage | number }})</label>
+            <p-inputNumber formControlName="mileage" inputId="mileage" class="w-full" styleClass="w-full"
+                [min]="vehicle?.mileage || 0" suffix=" km"
+                [ngClass]="{'ng-invalid ng-dirty': checklistForm.controls.mileage.invalid && checklistForm.controls.mileage.touched}">
+            </p-inputNumber>
+            @if (checklistForm.controls.mileage.errors?.['min'] && checklistForm.controls.mileage.touched) {
+                <small class="text-red-500">Le kilométrage ne peut pas reculer.</small>
+            }
         </div>
-        <div class="w-full">
-            <p-button
-                label="Valider"
-                icon="pi pi-check"
-                [rounded]="true"
-                [raised]="true"
-                size="small"
-                styleClass="w-full"
-                type="submit">
-            </p-button>
+
+        <div formGroupName="checks" class="flex flex-col gap-3">
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="engineOil" binary="true" inputId="engineOil"></p-checkbox>
+                <label for="engineOil" class="text-sm text-surface-800 cursor-pointer flex-1">Niveau huile moteur</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="coolant" binary="true" inputId="coolant"></p-checkbox>
+                <label for="coolant" class="text-sm text-surface-800 cursor-pointer flex-1">Niveau liquide de refroidissement</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="brakeFluid" binary="true" inputId="brakeFluid"></p-checkbox>
+                <label for="brakeFluid" class="text-sm text-surface-800 cursor-pointer flex-1">Niveau liquide de frein</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="windshieldWasher" binary="true" inputId="windshieldWasher"></p-checkbox>
+                <label for="windshieldWasher" class="text-sm text-surface-800 cursor-pointer flex-1">Niveau lave-glace</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="tires" binary="true" inputId="tires"></p-checkbox>
+                <label for="tires" class="text-sm text-surface-800 cursor-pointer flex-1">État des pneumatiques (usure et pression)</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="lights" binary="true" inputId="lights"></p-checkbox>
+                <label for="lights" class="text-sm text-surface-800 cursor-pointer flex-1">Fonctionnement des feux</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="siren" binary="true" inputId="siren"></p-checkbox>
+                <label for="siren" class="text-sm text-surface-800 cursor-pointer flex-1">Gyrophare et avertisseur sonore</label>
+            </div>
+            <div class="flex items-center gap-3 p-3 border border-surface-200 rounded-lg hover:bg-surface-50">
+                <p-checkbox formControlName="bodywork" binary="true" inputId="bodywork"></p-checkbox>
+                <label for="bodywork" class="text-sm text-surface-800 cursor-pointer flex-1">État de la carrosserie</label>
+            </div>
+        </div>
+
+        <!-- OBSERVATIONS -->
+        <div class="flex flex-col gap-2 mt-4">
+            <label for="observations" class="text-sm font-medium text-surface-900">Observations (optionnel)</label>
+            <textarea pTextarea formControlName="observations" id="observations" rows="3"
+                placeholder="Notez ici tout problème..." class="w-full p-3"></textarea>
+        </div>
+    </div>
+
+    <!-- FOOTER FIXE -->
+    <div class="flex items-center justify-between pt-6 mt-4 border-t border-surface-200">
+        <span class="text-sm text-surface-500 font-medium">
+            <!-- Fonctionnalité dynamique demandée -->
+            {{ completedChecksCount() }} / {{ totalChecks }} vérifications effectuées
+        </span>
+        <div class="flex gap-3">
+            <p-button label="Annuler" variant="outlined" [rounded]="true" size="small" (onClick)="onCancel()"></p-button>
+            <p-button label="Enregistrer la vérification" type="submit" [rounded]="true" [raised]="true" size="small"></p-button>
         </div>
     </div>
 </form>
