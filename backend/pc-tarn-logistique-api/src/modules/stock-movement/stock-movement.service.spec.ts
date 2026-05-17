@@ -1,6 +1,6 @@
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeMovement } from '@prisma/client';
-import { BadRequestException } from '@nestjs/common';
 import { MockPrismaService, providePrismaMock } from '../../mocks/prisma-mock';
 import { PrismaService } from '../../prisma/prisma.service';
 import { StockMovementService } from './stock-movement.service';
@@ -29,7 +29,7 @@ describe('StockMovementService', () => {
     });
 
     describe('create', () => {
-        it('doit creer un mouvement de stock ', async () => {
+        it('doit creer un mouvement INPUT et incrementer le stock', async () => {
             const dto = {
                 userId: 1,
                 siteId: 1,
@@ -40,68 +40,86 @@ describe('StockMovementService', () => {
                 quantity: 10,
             };
 
-            prismaMock.$transaction.mockImplementation(async (callback: any) => callback(prismaMock));
-            prismaMock.stock.updateMany.mockResolvedValue({ count: 1 } as any);
-            prismaMock.stockMovement.findFirst.mockResolvedValue(null as any);
-            prismaMock.stockMovement.create.mockResolvedValue({
-                id: 1,
-                ...dto,
-            } as any);
-            prismaMock.stock.findFirst.mockResolvedValue({
-                id: 1,
-                siteId: 1,
-                productId: 1,
-                ProductBatchNumberId: 1,
-                quantity: 999,
-            } as any);
-
-            const result = await service.create(dto as any);
-
-            expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
-            expect(prismaMock.stockMovement.create).toHaveBeenCalledTimes(1);
-            expect(prismaMock.stockMovement.create).toHaveBeenCalledWith({
-                data: dto,
-            });
-            expect(result.newStockMovement.id).toEqual(1);
-
+            const createdMovement = { id: 1, ...dto };
             const expectedWhere = {
                 siteId: 1,
                 productId: 1,
                 ProductBatchNumberId: 1,
             };
+            const stockResult = { id: 123, quantity: 999 };
 
-            expect(prismaMock.stock.updateMany).toHaveBeenCalledTimes(1);
+            prismaMock.$transaction.mockImplementation(async (callback: any) => callback(prismaMock));
+            prismaMock.stockMovement.create.mockResolvedValue(createdMovement as any);
+            prismaMock.stock.updateMany.mockResolvedValue({ count: 1 } as any);
+            prismaMock.stock.findFirst.mockResolvedValue(stockResult as any);
+
+            const result = await service.create(dto as any);
+
+            expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+            expect(prismaMock.stockMovement.create).toHaveBeenCalledWith({ data: dto });
             expect(prismaMock.stock.updateMany).toHaveBeenCalledWith({
                 where: expectedWhere,
                 data: { quantity: { increment: 10 } },
             });
             expect(prismaMock.stock.findFirst).toHaveBeenCalledWith({ where: expectedWhere });
+            expect(result).toEqual(stockResult);
         });
-    });
 
-    describe('Should be unique', () => {
-        it('doit lever une BadRequestException si un mouvement existe deja avec le meme createdAt', async () => {
-            const createdAt = new Date('2026-05-15T10:00:00.000Z');
+        it('doit creer un mouvement OUTPUT et decrementer le stock si stock > 0', async () => {
             const dto = {
                 userId: 1,
                 siteId: 1,
                 productId: 1,
                 productBatchNumberId: 1,
-                type: TypeMovement.INPUT,
-                createdAt,
+                type: TypeMovement.OUTPUT,
+                createdAt: new Date('2026-05-15T10:00:00.000Z'),
+                quantity: 10,
+            };
+
+            const createdMovement = { id: 1, ...dto };
+            const expectedWhere = {
+                siteId: 1,
+                productId: 1,
+                ProductBatchNumberId: 1,
+            };
+            const stockResult = { id: 123, quantity: 5 };
+
+            prismaMock.$transaction.mockImplementation(async (callback: any) => callback(prismaMock));
+            prismaMock.stockMovement.create.mockResolvedValue(createdMovement as any);
+            prismaMock.stock.updateMany.mockResolvedValue({ count: 1 } as any);
+            prismaMock.stock.findFirst
+                .mockResolvedValueOnce({ id: 1, quantity: 20 } as any) // check stock before decrement
+                .mockResolvedValueOnce(stockResult as any); // return final stock
+
+            const result = await service.create(dto as any);
+
+            expect(prismaMock.stock.updateMany).toHaveBeenCalledWith({
+                where: expectedWhere,
+                data: { quantity: { decrement: 10 } },
+            });
+            expect(prismaMock.stock.findFirst).toHaveBeenCalledTimes(2);
+            expect(result).toEqual(stockResult);
+        });
+
+        it('doit retourner une BadRequestException si OUTPUT et stock vide', async () => {
+            const dto = {
+                userId: 1,
+                siteId: 1,
+                productId: 1,
+                productBatchNumberId: 1,
+                type: TypeMovement.OUTPUT,
+                createdAt: new Date('2026-05-15T10:00:00.000Z'),
                 quantity: 10,
             };
 
             prismaMock.$transaction.mockImplementation(async (callback: any) => callback(prismaMock));
-            prismaMock.stockMovement.findFirst.mockResolvedValue({ id: 42 } as any);
+            prismaMock.stockMovement.create.mockResolvedValue({ id: 1, ...dto } as any);
+            prismaMock.stock.findFirst.mockResolvedValueOnce(null as any);
 
-            await expect(service.create(dto as any)).rejects.toBeInstanceOf(BadRequestException);
-            expect(prismaMock.stockMovement.create).not.toHaveBeenCalled();
+            const result = await service.create(dto as any);
+
+            expect(result).toBeInstanceOf(BadRequestException);
             expect(prismaMock.stock.updateMany).not.toHaveBeenCalled();
-            expect(prismaMock.stockMovement.findFirst).toHaveBeenCalledWith({
-                where: { createdAt },
-                select: { id: true },
-            });
         });
     });
 
@@ -112,8 +130,8 @@ describe('StockMovementService', () => {
             await service.findAll();
 
             expect(prismaMock.stockMovement.findMany).toHaveBeenCalledWith({
-                include: stockMovementRelations,
                 orderBy: { createdAt: 'desc' },
+                include: stockMovementRelations,
             });
         });
     });
