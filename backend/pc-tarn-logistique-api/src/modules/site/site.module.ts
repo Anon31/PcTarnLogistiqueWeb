@@ -10,6 +10,6 @@ import { StockMovementService } from '../stock-movement/stock-movement.service';
  */
 @Module({
     controllers: [SiteController],
-    providers: [SiteService, PrismaService,StockMovementService],
+    providers: [SiteService, PrismaService, StockMovementService],
 })
 export class SiteModule {}

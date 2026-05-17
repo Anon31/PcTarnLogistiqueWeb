@@ -52,8 +52,6 @@ export class ProductsController {
         return this.productsService.findBatchesBySite(productId, query.siteId);
     }
 
-    
-
     /**
      * Récupérer un produit par son ID. Cette opération est ouverte à tous les utilisateurs authentifiés.
      * @param id

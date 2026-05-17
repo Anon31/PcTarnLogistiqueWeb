@@ -21,7 +21,10 @@ import { StockMovementService } from '../stock-movement/stock-movement.service';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('sites')
 export class SiteController {
-    constructor(private readonly siteService: SiteService,private readonly stockMovementsService: StockMovementService) {}
+    constructor(
+        private readonly siteService: SiteService,
+        private readonly stockMovementsService: StockMovementService,
+    ) {}
 
     /**
      * Cree un nouveau site.
@@ -45,18 +48,17 @@ export class SiteController {
     findAll() {
         return this.siteService.findAll();
     }
-    
+
     /**
      * Recupere les Movements de stock d'un site.
      * @param id Identifiant du site
      */
     @Get('/:id/stock-movements')
-    @ApiOperation({ summary: 'Recupere les Movements de stock d\'un site dans l\'ordre anthéchronologique' })
+    @ApiOperation({ summary: "Recupere les Movements de stock d'un site dans l'ordre anthéchronologique" })
     @ApiResponse({ type: [StockMovement], status: 200 })
-    findAllStockMovements(@Param('id', ParseIntPipe) id: number,@Query('last') last:number) {
-
-        if(last == 1 ){
-            return this.stockMovementsService.findLastBySite(id)
+    findAllStockMovements(@Param('id', ParseIntPipe) id: number, @Query('last') last: number) {
+        if (last == 1) {
+            return this.stockMovementsService.findLastBySite(id);
         }
         return this.stockMovementsService.findAllBySite(id);
     }
@@ -119,5 +121,4 @@ export class SiteController {
     remove(@Param('id', ParseIntPipe) id: number) {
         return this.siteService.remove(id);
     }
-    
 }
